@@ -322,26 +322,110 @@ func _draw_vessel_body(vessel: VesselState) -> void:
 		_draw_steam(vessel.temperature_c, top)
 
 
-## Glass is denser toward its edges, clearer in the middle.
+## The body is almost clear in the centre and gains a restrained cool tint near the walls.
+## This keeps the liquid readable without turning every vessel into an opaque cartoon prop.
 func _glass_colors(polygon: PackedVector2Array) -> PackedColorArray:
 	var widest := maxf(VesselGeometry.max_half_width(_profile), 1.0)
+	var top := maxf(VesselGeometry.top_height(_profile), 1.0)
 	var colors := PackedColorArray()
 	for point in polygon:
-		colors.append(Color(GLASS_TINT, lerpf(0.07, 0.28, clampf(absf(point.x) / widest, 0.0, 1.0))))
+		var edge := clampf(absf(point.x) / widest, 0.0, 1.0)
+		var vertical := clampf(absf(point.y) / top, 0.0, 1.0)
+		var alpha := 0.035 + pow(edge, 1.6) * 0.105 + vertical * 0.018
+		colors.append(Color(GLASS_TINT, alpha))
 	return colors
 
 
+## A narrow ribbon follows the vessel profile instead of using a fixed X coordinate.
+## Every generated point is inset from the actual wall, so reflections cannot stick out
+## of a tapered neck or a narrow test tube.
+func _wall_ribbon(top: float, from_fraction: float, to_fraction: float, side: float,
+		inset: float, ribbon_width: float) -> PackedVector2Array:
+	var outside := PackedVector2Array()
+	var inside := PackedVector2Array()
+	if top <= 0.0 or to_fraction <= from_fraction or side == 0.0:
+		return PackedVector2Array()
+	const SAMPLES := 14
+	for index in range(SAMPLES + 1):
+		var fraction := lerpf(from_fraction, to_fraction, float(index) / float(SAMPLES))
+		var height := top * fraction
+		var half_width_at_height := VesselGeometry.half_width_at(_profile, height)
+		if half_width_at_height <= inset + ribbon_width + 0.75:
+			return PackedVector2Array()
+		var edge_x := side * (half_width_at_height - inset)
+		outside.append(Vector2(edge_x, -height))
+		inside.append(Vector2(edge_x - side * ribbon_width, -height))
+	var polygon := outside
+	for index in range(inside.size() - 1, -1, -1):
+		polygon.append(inside[index])
+	return polygon
+
+
+## Fine edge highlights sample the real profile at every point. The inset is always
+## larger than half the stroke width, keeping the stroke inside the glass silhouette.
+func _wall_reflection_line(top: float, from_fraction: float, to_fraction: float,
+		side: float, inset: float) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	if top <= 0.0 or to_fraction <= from_fraction:
+		return points
+	const SAMPLES := 18
+	for index in range(SAMPLES + 1):
+		var fraction := lerpf(from_fraction, to_fraction, float(index) / float(SAMPLES))
+		var height := top * fraction
+		var half_width_at_height := VesselGeometry.half_width_at(_profile, height)
+		if half_width_at_height <= inset + 0.8:
+			return PackedVector2Array()
+		points.append(Vector2(side * (half_width_at_height - inset), -height))
+	return points
+
+
 func _draw_glass_details(top: float) -> void:
-	var wall := float(_equipment.visual.get("wall_px", 3.0))
-	draw_polygon(VesselGeometry.slice_polygon(_profile, 0.0, 6.0), _uniform_colors(VesselGeometry.slice_polygon(_profile, 0.0, 6.0), Color(LabColors.GLASS_EDGE, 0.22)))
-	draw_polyline(VesselGeometry.wall_polyline(_profile), LabColors.GLASS_EDGE, wall, true)
-	var rim_width := VesselGeometry.half_width_at(_profile, top)
-	var rim := _ellipse(Vector2(0.0, -top), rim_width, RIM_HEIGHT)
-	draw_polyline(_closed(rim), LabColors.GLASS_EDGE, 2.0, true)
-	var inset := VesselGeometry.half_width_at(_profile, top * 0.5) - wall - 5.0
-	draw_line(Vector2(-inset, -top * 0.12), Vector2(-inset, -top * 0.88), Color(1.0, 1.0, 1.0, 0.55), 3.0, true)
-	draw_line(Vector2(-inset + 7.0, -top * 0.2), Vector2(-inset + 7.0, -top * 0.7), Color(1.0, 1.0, 1.0, 0.2), 2.0, true)
-	draw_line(Vector2(inset * 0.85, -top * 0.22), Vector2(inset * 0.85, -top * 0.55), Color(1.0, 1.0, 1.0, 0.25), 2.0, true)
+	if top <= 0.0:
+		return
+	var maximum_width := VesselGeometry.max_half_width(_profile)
+	var wall := clampf(float(_equipment.visual.get("wall_px", 2.0)), 1.0, 2.0)
+
+	# A quiet foot tint adds thickness to the base without creating an opaque bottom bar.
+	var foot_height := minf(5.0, maxf(top * 0.045, 1.5))
+	var foot := VesselGeometry.slice_polygon(_profile, 0.0, foot_height)
+	draw_polygon(foot, _uniform_colors(foot, Color(GLASS_TINT, 0.12)))
+
+	# The silhouette uses a soft cool edge, followed by a finer inner highlight.
+	var wall_line := VesselGeometry.wall_polyline(_profile)
+	draw_polyline(wall_line, Color(0.30, 0.48, 0.58, 0.58), wall, true)
+	draw_polyline(wall_line, Color(0.92, 0.98, 1.0, 0.38), 0.75, true)
+
+	# The opening is a shallow glass lip with a second inset ellipse, not a thick cartoon ring.
+	var rim_width := maxf(VesselGeometry.half_width_at(_profile, top) - 1.0, 0.5)
+	var outer_rim := _ellipse(Vector2(0.0, -top), rim_width, RIM_HEIGHT * 0.62)
+	draw_colored_polygon(outer_rim, Color(GLASS_TINT, 0.08))
+	draw_polyline(_closed(outer_rim), Color(0.78, 0.91, 0.98, 0.72), 1.35, true)
+	var inner_rim := _ellipse(Vector2(0.0, -top + 0.7),
+		maxf(rim_width - maxf(wall * 1.35, 1.5), 0.5), RIM_HEIGHT * 0.28)
+	draw_polyline(_closed(inner_rim), Color(1.0, 1.0, 1.0, 0.34), 0.75, true)
+
+	# Side refractions adapt to narrow tubes, wide beakers and the tapered flask shoulder.
+	var inset := 1.9 if maximum_width < 12.0 else 4.2
+	var ribbon_width := 0.85 if maximum_width < 12.0 else 2.2
+	var left_ribbon := _wall_ribbon(top, 0.13, 0.91, -1.0, inset, ribbon_width)
+	if not left_ribbon.is_empty():
+		draw_colored_polygon(left_ribbon, Color(1.0, 1.0, 1.0, 0.075 if maximum_width < 12.0 else 0.095))
+	var right_ribbon := _wall_ribbon(top, 0.20, 0.79, 1.0, inset + 1.8, ribbon_width * 0.62)
+	if not right_ribbon.is_empty():
+		draw_colored_polygon(right_ribbon, Color(1.0, 1.0, 1.0, 0.035))
+
+	var left_edge := _wall_reflection_line(top, 0.15, 0.90, -1.0, inset + ribbon_width + 0.9)
+	if not left_edge.is_empty():
+		draw_polyline(left_edge, Color(1.0, 1.0, 1.0, 0.32), 1.05, true)
+	var secondary_edge := _wall_reflection_line(top, 0.24, 0.76, 1.0, inset + ribbon_width + 2.0)
+	if not secondary_edge.is_empty():
+		draw_polyline(secondary_edge, Color(1.0, 1.0, 1.0, 0.16), 0.75, true)
+
+	# A small base caustic is only drawn when the vessel is wide enough to contain it.
+	var base_width := VesselGeometry.half_width_at(_profile, 0.0)
+	if base_width > 5.0:
+		var base_glint := _ellipse(Vector2(0.0, -1.8), base_width - 3.0, 1.35)
+		draw_polyline(_closed(base_glint), Color(1.0, 1.0, 1.0, 0.22), 0.8, true)
 
 
 func _uniform_colors(polygon: PackedVector2Array, color: Color) -> PackedColorArray:
@@ -361,16 +445,38 @@ func _draw_contents(vessel: VesselState) -> void:
 
 
 func _draw_liquid(level_height: float, vessel: VesselState, heat: float) -> void:
+	if level_height <= 0.5:
+		return
 	var body := VesselGeometry.slice_polygon(_profile, 0.0, level_height)
-	var deep := _shown_color.darkened(0.16)
-	var light := _shown_color.lightened(0.1)
+	var deep := _shown_color.darkened(0.22)
+	var light := _shown_color.lightened(0.08)
 	var colors := PackedColorArray()
 	for point in body:
-		colors.append(deep.lerp(light, clampf(-point.y / level_height, 0.0, 1.0)))
+		var vertical := clampf(-point.y / maxf(level_height, 0.01), 0.0, 1.0)
+		colors.append(deep.lerp(light, vertical))
 	draw_polygon(body, colors)
-	var surface_width := VesselGeometry.half_width_at(_profile, level_height)
-	draw_colored_polygon(_ellipse(Vector2(0.0, -level_height), surface_width, RIM_HEIGHT * 0.9), Color(light, minf(_shown_color.a, 0.75)).lightened(0.12))
-	draw_polyline(_closed(_ellipse(Vector2(0.0, -level_height), surface_width, RIM_HEIGHT * 0.9)), Color(1.0, 1.0, 1.0, 0.5), 1.5, true)
+
+	# A restrained meniscus and inner contour make the liquid read as a volume inside glass.
+	var surface_width := maxf(VesselGeometry.half_width_at(_profile, level_height) - 1.1, 0.5)
+	var surface_height := RIM_HEIGHT * 0.58
+	var surface := _ellipse(Vector2(0.0, -level_height), surface_width, surface_height)
+	draw_colored_polygon(surface, Color(light, minf(maxf(_shown_color.a, 0.18), 0.48)))
+	draw_polyline(_closed(surface), Color(1.0, 1.0, 1.0, 0.38), 1.0, true)
+	var inner_surface := _ellipse(Vector2(0.0, -level_height + 0.45),
+		surface_width * 0.78, surface_height * 0.34)
+	draw_polyline(_closed(inner_surface), Color(deep, 0.34), 0.75, true)
+
+	# Reflections on the liquid stay inside the liquid boundary and follow tapered walls.
+	var maximum_width := VesselGeometry.max_half_width(_profile)
+	var inset := 1.4 if maximum_width < 12.0 else 4.4
+	var band_width := 0.65 if maximum_width < 12.0 else 1.1
+	var left_reflection := _wall_ribbon(level_height, 0.30, 0.88, -1.0, inset, band_width)
+	if not left_reflection.is_empty():
+		draw_colored_polygon(left_reflection, Color(1.0, 1.0, 1.0, 0.105))
+	var right_reflection := _wall_ribbon(level_height, 0.38, 0.82, 1.0, inset + 1.2, band_width * 0.55)
+	if not right_reflection.is_empty():
+		draw_colored_polygon(right_reflection, Color(1.0, 1.0, 1.0, 0.045))
+
 	if heat > 0.05:
 		_draw_convection(level_height, heat)
 	if HeatSystem.is_boiling(vessel, _sim.database):
@@ -392,31 +498,72 @@ func _draw_convection(level_height: float, heat: float) -> void:
 func _draw_bubbles(level_height: float) -> void:
 	var time_s := _seconds()
 	for index in range(BUBBLE_COUNT * 2):
-		var phase := fmod(time_s * 0.9 + float(index) * 0.31, 1.0)
-		var bubble_height := phase * level_height
-		var width := VesselGeometry.half_width_at(_profile, bubble_height) * 0.78
-		var x := sin(float(index) * 2.3 + time_s * 1.3) * width
-		var radius := 2.0 + float(index % 3)
-		draw_circle(Vector2(x, -bubble_height), radius, Color(1.0, 1.0, 1.0, 0.18))
-		draw_arc(Vector2(x, -bubble_height), radius, 0.0, TAU, 12, Color(1.0, 1.0, 1.0, 0.6), 1.0, true)
+		var phase := fposmod(time_s * 0.9 + float(index) * 0.31, 1.0)
+		var approximate_width := VesselGeometry.half_width_at(_profile, level_height * 0.5)
+		var radius := minf(2.0 + float(index % 3), maxf(approximate_width - 1.0, 1.0))
+		var usable_height := maxf(level_height - radius * 2.0 - 2.0, 0.0)
+		var bubble_height := radius + 1.0 + phase * usable_height
+		var local_width := VesselGeometry.half_width_at(_profile, bubble_height)
+		var horizontal_limit := maxf(local_width - radius - 1.0, 0.0)
+		var x := sin(float(index) * 2.3 + time_s * 1.3) * horizontal_limit * 0.62
+		var centre := Vector2(x, -bubble_height)
+		draw_circle(centre, radius, Color(1.0, 1.0, 1.0, 0.14))
+		draw_arc(centre, radius, 0.0, TAU, 12, Color(1.0, 1.0, 1.0, 0.54), 0.9, true)
 
 
 func _draw_solid(vessel: VesselState) -> void:
-	var fraction := _shown_solid_ml / maxf(vessel.capacity_ml, 1.0)
+	var fraction := clampf(_shown_solid_ml / maxf(vessel.capacity_ml, 1.0), 0.0, 0.94)
+	if fraction <= 0.0:
+		return
 	var solid_height := maxf(VesselGeometry.height_for_fraction(_profile, fraction), 2.0)
 	var body := VesselGeometry.slice_polygon(_profile, 0.0, solid_height)
+	var bed_deep := last_solid_color.darkened(0.34)
+	var bed_light := last_solid_color.darkened(0.08)
 	var colors := PackedColorArray()
 	for point in body:
-		colors.append(last_solid_color.darkened(0.2).lerp(last_solid_color, clampf(-point.y / solid_height, 0.0, 1.0)))
+		var vertical := clampf(-point.y / maxf(solid_height, 0.01), 0.0, 1.0)
+		colors.append(bed_deep.lerp(bed_light, vertical))
 	draw_polygon(body, colors)
-	var peak_width := VesselGeometry.half_width_at(_profile, solid_height)
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(-peak_width, -solid_height), Vector2(0.0, -solid_height - 6.0), Vector2(peak_width, -solid_height)]),
-		last_solid_color)
-	for index in range(SPECKLE_COUNT):
-		var y := solid_height * _hash01(index, 78.233) * 0.9 + 1.0
-		var x := (_hash01(index, 12.9898) * 2.0 - 1.0) * VesselGeometry.half_width_at(_profile, y) * 0.85
-		draw_rect(Rect2(x, -y, 3.0, 3.0), Color(1.0, 1.0, 1.0, 0.35))
+
+	# Draw the top of the settled bed inside the current vessel width.
+	var bed_half_width := maxf(VesselGeometry.half_width_at(_profile, solid_height) - 1.0, 0.5)
+	var bed_surface := _ellipse(Vector2(0.0, -solid_height + 0.35), bed_half_width, 1.15)
+	draw_colored_polygon(bed_surface, Color(last_solid_color.lightened(0.08), 0.82))
+	draw_polyline(_closed(bed_surface), Color(1.0, 1.0, 1.0, 0.22), 0.7, true)
+
+	# Keep different solids visually distinct. Grain positions are deterministic and bounded
+	# by the vessel profile, while their actual amounts remain owned by VesselState.
+	var chemical_ids: Array = vessel.solids.keys()
+	chemical_ids.sort()
+	var total_mass := 0.0
+	for chemical_id in chemical_ids:
+		total_mass += maxf(float(vessel.solids[chemical_id]), 0.0)
+	if total_mass <= 0.0:
+		return
+
+	for chemical_index in range(chemical_ids.size()):
+		var chemical_id := str(chemical_ids[chemical_index])
+		var chemical := _sim.database.get_chemical(chemical_id)
+		var grain_color := last_solid_color if chemical == null else chemical.color
+		grain_color = Color(grain_color.r, grain_color.g, grain_color.b, 1.0)
+		var share := maxf(float(vessel.solids[chemical_id]), 0.0) / total_mass
+		var grain_count := clampi(int(round(5.0 + 20.0 * share)), 5, 24)
+		var seed_value := float(chemical_index + 1) * 7919.0
+		for index in range(grain_count):
+			var y := solid_height * (0.12 + _hash01(index, seed_value + 78.233) * 0.74) + 0.5
+			var local_half_width := VesselGeometry.half_width_at(_profile, y)
+			var radius := 1.0 + _hash01(index, seed_value + 4.17) * 1.35
+			var horizontal_limit := maxf(local_half_width - radius - 1.2, 0.0)
+			var x := (_hash01(index, seed_value + 12.9898) * 2.0 - 1.0) * horizontal_limit
+			var grain := PackedVector2Array([
+				Vector2(x - radius, -y),
+				Vector2(x, -y - radius * 0.82),
+				Vector2(x + radius, -y),
+				Vector2(x, -y + radius * 0.62)
+			])
+			draw_colored_polygon(grain, grain_color.darkened(0.10))
+			draw_line(Vector2(x - radius * 0.35, -y - radius * 0.12),
+				Vector2(x, -y - radius * 0.68), Color(1.0, 1.0, 1.0, 0.34), 0.65, true)
 
 
 ## Heat shimmer and steam above the rim of a hot vessel.
