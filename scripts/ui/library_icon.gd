@@ -28,6 +28,18 @@ func configure(new_kind: Kind, new_tint: Color, new_profile: Array = []) -> void
 	queue_redraw()
 
 
+static func _ellipse(center: Vector2, radius_x: float, radius_y: float) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for index in range(24):
+		var angle := TAU * float(index) / 24.0
+		points.append(center + Vector2(cos(angle) * radius_x, sin(angle) * radius_y))
+	return points
+
+
+static func _hash01(index: int, salt: float) -> float:
+	return fposmod(sin(float(index) * 12.9898 + salt) * 43758.5453, 1.0)
+
+
 func _draw() -> void:
 	match kind:
 		Kind.REAGENT_LIQUID, Kind.REAGENT_SOLID:
@@ -44,27 +56,58 @@ func _draw() -> void:
 
 func _draw_reagent() -> void:
 	var box := Rect2(Vector2(MARGIN_PX, MARGIN_PX), size - Vector2(MARGIN_PX, MARGIN_PX) * 2.0)
-	var neck_width := box.size.x * 0.42
-	var body := Rect2(box.position.x, box.end.y - box.size.y * BOTTLE_BODY_FRACTION, box.size.x, box.size.y * BOTTLE_BODY_FRACTION)
+	var neck_width := box.size.x * 0.38
+	var body := Rect2(box.position.x + 1.0, box.end.y - box.size.y * BOTTLE_BODY_FRACTION, box.size.x - 2.0, box.size.y * BOTTLE_BODY_FRACTION)
 	var neck := Rect2(box.get_center().x - neck_width * 0.5, box.position.y + 6.0, neck_width, body.position.y - box.position.y - 4.0)
-	draw_rect(neck, Color(LabColors.GLASS_FILL, 0.3))
-	draw_rect(Rect2(neck.position.x - 1.0, box.position.y, neck.size.x + 2.0, 7.0), LabColors.METAL)
-	draw_style_box(LabTheme.box(Color(LabColors.GLASS_FILL, 0.25), LabColors.GLASS_EDGE, 2, 8), body)
-	var fill := body.grow(-3.0)
-	if kind == Kind.REAGENT_LIQUID:
-		fill.position.y += fill.size.y * 0.25
-		fill.size.y *= 0.75
-		draw_style_box(LabTheme.box(Color(tint, maxf(tint.a, 0.55)), Color(0, 0, 0, 0), 0, 5), fill)
-	else:
-		var heap := Rect2(fill.position.x, fill.end.y - fill.size.y * 0.5, fill.size.x, fill.size.y * 0.5)
-		draw_style_box(LabTheme.box(Color(tint, 1.0), Color(0, 0, 0, 0), 0, 5), heap)
-		for index in range(SPECKLE_COUNT):
-			var fx := fmod(float(index) * 0.618, 1.0)
-			var fy := fmod(float(index) * 0.381 + 0.2, 1.0)
-			draw_circle(Vector2(heap.position.x + 3.0 + fx * (heap.size.x - 6.0), heap.position.y + 2.0 + fy * (heap.size.y - 4.0)),
-				1.4, Color(1.0, 1.0, 1.0, 0.35))
-	draw_rect(Rect2(body.position.x + 6.0, body.position.y + 6.0, 3.0, body.size.y - 12.0), Color(1.0, 1.0, 1.0, 0.3))
 
+	# Cap, neck and shoulders are layered so the reagent thumbnail reads as a glass bottle.
+	draw_rect(Rect2(neck.position.x - 1.0, box.position.y, neck.size.x + 2.0, 7.0), LabColors.METAL)
+	draw_line(Vector2(neck.position.x, box.position.y + 1.0), Vector2(neck.end.x, box.position.y + 1.0), Color(1.0, 1.0, 1.0, 0.30), 1.0)
+	draw_rect(neck, Color(LabColors.GLASS_FILL, 0.24))
+	draw_line(Vector2(neck.position.x + 2.0, neck.position.y + 2.0), Vector2(neck.position.x + 2.0, neck.end.y), Color(1.0, 1.0, 1.0, 0.34), 1.0)
+
+	draw_style_box(LabTheme.box(Color(LabColors.GLASS_FILL, 0.15), Color(LabColors.GLASS_EDGE, 0.92), 1, 7), body)
+	var fill := body.grow(-4.0)
+	if kind == Kind.REAGENT_LIQUID:
+		var liquid_top := fill.position.y + fill.size.y * 0.28
+		var liquid := Rect2(fill.position.x + 1.0, liquid_top, fill.size.x - 2.0, fill.end.y - liquid_top - 1.0)
+		draw_rect(liquid, Color(tint, maxf(tint.a, 0.48)))
+		var surface := _ellipse(Vector2(liquid.get_center().x, liquid.position.y + 1.0), liquid.size.x * 0.5, 2.3)
+		draw_colored_polygon(surface, Color(tint.lightened(0.12), minf(maxf(tint.a, 0.48) + 0.10, 0.72)))
+		surface.append(surface[0])
+		draw_polyline(surface, Color(1.0, 1.0, 1.0, 0.45), 1.0, true)
+		draw_line(Vector2(liquid.position.x + 2.0, liquid.position.y + 7.0), Vector2(liquid.position.x + 2.0, liquid.end.y - 3.0),
+			Color(1.0, 1.0, 1.0, 0.18), 1.0, true)
+	else:
+		var bed_top := fill.position.y + fill.size.y * 0.48
+		var heap := PackedVector2Array([
+			Vector2(fill.position.x + 1.0, fill.end.y - 1.0),
+			Vector2(fill.position.x + 2.0, bed_top + 5.0),
+			Vector2(fill.get_center().x, bed_top - 1.0),
+			Vector2(fill.end.x - 2.0, bed_top + 5.0),
+			Vector2(fill.end.x - 1.0, fill.end.y - 1.0)
+		])
+		draw_colored_polygon(heap, Color(tint, 0.88))
+		for index in range(SPECKLE_COUNT + 8):
+			var fx := _hash01(index, 12.9898)
+			var fy := _hash01(index, 78.233)
+			var x := lerpf(fill.position.x + 4.0, fill.end.x - 4.0, fx)
+			var y := lerpf(bed_top + 3.0, fill.end.y - 4.0, fy)
+			var radius := 1.0 + _hash01(index, 4.17) * 1.4
+			var grain := PackedVector2Array([
+				Vector2(x - radius, y),
+				Vector2(x, y - radius),
+				Vector2(x + radius, y),
+				Vector2(x, y + radius * 0.7)
+			])
+			draw_colored_polygon(grain, tint.lightened(0.18 if index % 3 == 0 else 0.04))
+
+	# Fine inner reflections and a restrained outer edge avoid the chunky cartoon outline.
+	draw_line(Vector2(body.position.x + 5.0, body.position.y + 7.0), Vector2(body.position.x + 5.0, body.end.y - 7.0),
+		Color(1.0, 1.0, 1.0, 0.34), 1.2, true)
+	draw_line(Vector2(body.end.x - 4.0, body.position.y + 10.0), Vector2(body.end.x - 4.0, body.end.y - 10.0),
+		Color(1.0, 1.0, 1.0, 0.13), 1.0, true)
+	draw_style_box(LabTheme.box(Color(0.0, 0.0, 0.0, 0.0), LabColors.GLASS_EDGE, 1, 7), body)
 
 func _draw_profile(with_bulb: bool) -> void:
 	if profile.size() < 2:
