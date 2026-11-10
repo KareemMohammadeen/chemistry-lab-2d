@@ -459,7 +459,7 @@ func _draw_solid(vessel: VesselState) -> void:
 		grain_color = Color(grain_color.r, grain_color.g, grain_color.b, 1.0)
 		var share := maxf(float(vessel.solids[chemical_id]), 0.0) / total_mass
 		var grain_count := clampi(int(round(6.0 + 22.0 * share)), 6, 28)
-		var seed_value := float(abs(chemical_id.hash()) % 100000)
+		var seed_value := float(chemical_index + 1) * 7919.0
 		for index in range(grain_count):
 			var y := solid_height * (0.08 + _hash01(index, seed_value + 78.233) * 0.78) + 0.8
 			var half_width_at_y := VesselGeometry.half_width_at(_profile, y) * 0.78
