@@ -18,8 +18,9 @@ This is a presentation-only redesign of the 2D glassware. The simulation, chemis
 
 - No new physical refraction shader or real optical simulation is included.
 - No scientific properties, material data, phase changes or chemical rules are changed.
+- Four equipment visual profiles have new shape control points; nominal capacities, heights, openings, pour points and interaction rules are unchanged.
 - No chemistry state is inferred from a visual effect.
-- The equipment profiles themselves are not altered in this pass.
+- The visual profiles are refined only for silhouette: a softly rolled beaker lip/base, a rounder test-tube tip, a smoother Erlenmeyer shoulder and a gentler reagent-bottle shoulder.
 
 ## Manual verification
 
