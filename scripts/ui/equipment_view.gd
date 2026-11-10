@@ -42,10 +42,18 @@ const ELLIPSE_STEPS := 28
 const GLASS_TINT := Color(0.85, 0.93, 0.97)
 const PLATE_GLOW := Color("#F0A04B")
 const KNOB_SWEEP_RAD := 2.3
+const DRAG_LIFT_PX := 22.0
+const DRAG_SCALE_FACTOR := 1.045
+const DRAG_EASE_SPEED := 14.0
+const DROP_PULSE_SPEED := 3.6
 
 var object_id: String = ""
 var is_selected: bool = false
 var is_hovered: bool = false
+var is_being_dragged: bool = false
+var is_drop_target: bool = false
+var drop_target_valid: bool = false
+var drag_tilt_target: float = 0.0
 ## Where the object stands (base point), set by the workspace.
 var anchor: Vector2 = Vector2.ZERO
 ## Temporary displacement and tilt used by pour animations.
@@ -66,6 +74,8 @@ var _shown_reading_c: float = 22.0
 ## Static tick marks [{height, width, major, label}], computed once because the geometry never changes.
 var _graduations: Array = []
 ## Fitted paper-label lines of a bottle, recomputed only when its contents' main chemical changes.
+var _drag_progress: float = 0.0
+var _drag_rotation: float = 0.0
 var _label_key: String = "?"
 var _label_lines: Array = []
 var _plate_style: StyleBoxFlat = _make_plate_style()
@@ -113,6 +123,18 @@ func local_bounds() -> Rect2:
 	return Rect2(-width, -visual_height() - padding, width * 2.0, visual_height() + padding * 2.0)
 
 
+func drag_visual_progress() -> float:
+	return _drag_progress
+
+
+func drag_lift_offset() -> Vector2:
+	return Vector2.UP * DRAG_LIFT_PX * _drag_progress
+
+
+func drag_rotation_offset() -> float:
+	return _drag_rotation
+
+
 ## True when a point in laboratory pixels is on this object. The Views node sits at the
 ## workspace origin, so this view's own transform maps laboratory pixels to local ones even
 ## while the whole workspace is scaled to fit the stage.
@@ -143,6 +165,11 @@ func surface_global_y() -> float:
 # ---------------------------------------------------------------- per-frame state
 
 func _process(delta: float) -> void:
+	var drag_blend := 1.0 - exp(-DRAG_EASE_SPEED * delta)
+	_drag_progress = lerpf(_drag_progress, 1.0 if is_being_dragged else 0.0, drag_blend)
+	var wanted_drag_rotation := drag_tilt_target if is_being_dragged else 0.0
+	_drag_rotation = lerpf(_drag_rotation, wanted_drag_rotation, drag_blend)
+	scale = Vector2.ONE * lerpf(1.0, DRAG_SCALE_FACTOR, _drag_progress)
 	if _sim == null:
 		return
 	var item := _sim.state.get_object(object_id)
@@ -603,6 +630,16 @@ func _draw_hot_label(item: LabObject) -> void:
 
 func _draw_marks() -> void:
 	var bounds := local_bounds()
+	if is_drop_target:
+		var target_color: Color = LabColors.SUCCESS if drop_target_valid else LabColors.DANGER
+		var pulse := 0.5 + 0.5 * sin(_seconds() * DROP_PULSE_SPEED)
+		draw_colored_polygon(_ellipse(Vector2(0.0, 4.0), half_width() + 20.0, SHADOW_HEIGHT + 8.0),
+			Color(target_color, 0.12 + pulse * 0.07))
+		draw_rect(bounds.grow(7.0), Color(target_color, 0.62 + pulse * 0.22), false, 2.5)
+	if _drag_progress > 0.02:
+		var drag_alpha := _drag_progress
+		draw_rect(bounds.grow(7.0), Color(LabColors.CYAN, 0.07 * drag_alpha))
+		draw_rect(bounds.grow(5.0), Color(LabColors.CYAN, 0.72 * drag_alpha), false, 2.0)
 	if is_hovered and not is_selected:
 		draw_rect(bounds, Color(LabColors.ACCENT, 0.12))
 		draw_rect(bounds, Color(LabColors.ACCENT, 0.5), false, 2.0)
