@@ -5,7 +5,7 @@
   "category": "vessel",
   "material": "borosilicate glass",
   "capacity_ml": {
-    "value": 250.0,
+    "value": 250,
     "status": "placeholder",
     "unit": "mL",
     "source": "nominal capacity; graduations are approximate"
@@ -22,10 +22,10 @@
     "mix",
     "heat"
   ],
-  "default_pour_ml": 50.0,
-  "default_solid_g": 5.0,
+  "default_pour_ml": 50,
+  "default_solid_g": 5,
   "glass_mass_g": {
-    "value": 95.0,
+    "value": 95,
     "status": "placeholder",
     "unit": "g",
     "source": "typical mass for glassware of this size"
@@ -55,14 +55,26 @@
     "profile": [
       [
         0,
+        52
+      ],
+      [
+        2,
         54
       ],
       [
-        140,
+        134,
         54
+      ],
+      [
+        138,
+        54.5
+      ],
+      [
+        140,
+        57
       ]
     ],
-    "wall_px": 3.0,
-    "graduation_ml": 50.0
+    "wall_px": 3,
+    "graduation_ml": 50
   }
 }
