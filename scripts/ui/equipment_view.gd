@@ -500,9 +500,10 @@ func _draw_bubbles(level_height: float) -> void:
 	for index in range(BUBBLE_COUNT * 2):
 		var phase := fposmod(time_s * 0.9 + float(index) * 0.31, 1.0)
 		var approximate_width := VesselGeometry.half_width_at(_profile, level_height * 0.5)
-		var radius := minf(2.0 + float(index % 3), maxf(approximate_width - 1.0, 1.0))
-		var usable_height := maxf(level_height - radius * 2.0 - 2.0, 0.0)
-		var bubble_height := radius + 1.0 + phase * usable_height
+		var radius_limit := maxf((level_height - 1.0) * 0.22, 0.45)
+		var radius := minf(2.0 + float(index % 3), minf(maxf(approximate_width - 1.0, 0.45), radius_limit))
+		var usable_height := maxf(level_height - radius * 2.0 - 1.5, 0.0)
+		var bubble_height := radius + 0.75 + phase * usable_height
 		var local_width := VesselGeometry.half_width_at(_profile, bubble_height)
 		var horizontal_limit := maxf(local_width - radius - 1.0, 0.0)
 		var x := sin(float(index) * 2.3 + time_s * 1.3) * horizontal_limit * 0.62
@@ -550,10 +551,15 @@ func _draw_solid(vessel: VesselState) -> void:
 		var grain_count := clampi(int(round(5.0 + 20.0 * share)), 5, 24)
 		var seed_value := float(chemical_index + 1) * 7919.0
 		for index in range(grain_count):
-			var y := solid_height * (0.12 + _hash01(index, seed_value + 78.233) * 0.74) + 0.5
+			var y_guess := solid_height * (0.12 + _hash01(index, seed_value + 78.233) * 0.74)
+			var guess_width := VesselGeometry.half_width_at(_profile, y_guess)
+			var radius := minf(1.0 + _hash01(index, seed_value + 4.17) * 1.35,
+				maxf(minf(solid_height * 0.12, guess_width * 0.30), 0.3))
+			var y_min := radius + 0.4
+			var y_max := maxf(solid_height - radius - 0.4, y_min)
+			var y := lerpf(y_min, y_max, _hash01(index, seed_value + 78.233))
 			var local_half_width := VesselGeometry.half_width_at(_profile, y)
-			var radius := 1.0 + _hash01(index, seed_value + 4.17) * 1.35
-			var horizontal_limit := maxf(local_half_width - radius - 1.2, 0.0)
+			var horizontal_limit := maxf(local_half_width - radius - 0.8, 0.0)
 			var x := (_hash01(index, seed_value + 12.9898) * 2.0 - 1.0) * horizontal_limit
 			var grain := PackedVector2Array([
 				Vector2(x - radius, -y),
