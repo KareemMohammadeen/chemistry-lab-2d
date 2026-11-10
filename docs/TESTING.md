@@ -35,3 +35,16 @@ and conservation of dissolved salt when pouring. Exit code 0 means all checks pa
 - [ ] Ctrl+Z / Ctrl+Y and the buttons; Reset bench; Space pauses; 2x and 4x speed.
 - [ ] Resize the window (16:9 and 4:3): the scene letterboxes and the Inspector stays readable.
 Record results in CHANGELOG.md.
+
+
+## 4. Glassware rendering V2 (new branch)
+- [ ] Open branch `codex/glassware-rendering-v2` in Godot 4.3+ and run the main scene.
+- [ ] Inspect an empty beaker: thin glass edges, double opening rim and base reflection should look restrained, with no detached vertical strokes.
+- [ ] Fill the beaker with water; check the meniscus, depth gradient and side highlights stay inside the beaker.
+- [ ] Inspect the test tube at low and high fill levels; reflections, liquid surface and boiling bubbles must remain inside its narrow profile.
+- [ ] Inspect the Erlenmeyer flask; side highlights must follow the shoulder into the narrow neck without protruding.
+- [ ] Inspect a reagent bottle and dropper; labels, caps and rubber bulb must remain clear and unobstructed.
+- [ ] Add one solid and then multiple solids; grains should remain inside the settled bed and use the corresponding substance colours.
+- [ ] Check all vessels while selected and while being dragged; the new rendering must not interfere with hit testing, pour animation or drag/drop.
+- [ ] Compare the full-size equipment and Library thumbnails; their vessel silhouettes and liquid shapes should agree.
+Record any visual defects and screenshots in the PR before merging.
