@@ -60,7 +60,12 @@ func _process(_delta: float) -> void:
 		view.is_drop_target = str(object_id) == _drop_preview_id
 		view.drop_target_valid = _drop_preview_valid
 		view.drag_tilt_target = _drag_tilt_target if str(object_id) == _drag_id else 0.0
-		view.position = view.anchor + view.visual_offset + view.drag_lift_offset()
+		var inherited_lift := Vector2.ZERO
+		if _drag_id != "" and item.inserted_in == _drag_id:
+			var dragged_view := _views.get(_drag_id) as EquipmentView
+			if dragged_view != null:
+				inherited_lift = dragged_view.drag_lift_offset()
+		view.position = view.anchor + view.visual_offset + view.drag_lift_offset() + inherited_lift
 		view.rotation = view.visual_tilt + view.drag_rotation_offset()
 		view.is_selected = str(object_id) == _selected_id
 		view.is_hovered = str(object_id) == _hovered_id
