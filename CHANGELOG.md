@@ -7,7 +7,8 @@
 - Kept boiling bubbles inside the local vessel cross-section.
 - Rendered settled solids with per-substance grain colours and deterministic grain placement bounded by the vessel profile.
 - Rebuilt Library vessel thumbnails so their sample liquid follows the actual equipment profile rather than a rectangular fill.
-- No changes to simulation state, chemistry, equipment definitions, interactions or drag/drop behaviour.
+- Refined only the visual profile control points for the beaker, test tube, Erlenmeyer flask and reagent bottle; capacities, heights, interaction points and simulation rules remain unchanged.
+- No changes to simulation state, chemistry, commands, interactions or drag/drop behaviour.
 - Not run in Godot yet; follow the Glassware V2 checklist in docs/TESTING.md.
 
 ## Drag & drop visual polish (2026-11-10) - awaiting in-engine verification
