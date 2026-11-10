@@ -71,7 +71,9 @@ func _process(_delta: float) -> void:
 				_finish_drag(pointer)
 			_press_object_id = ""
 		elif _dragging:
-			_workspace.set_drag_position(_drag_object_id, pointer + _grab_offset)
+			var base_point := pointer + _grab_offset
+			_workspace.set_drag_position(_drag_object_id, base_point)
+			_update_drop_preview(pointer, base_point)
 		elif pointer.distance_to(_press_position) > DRAG_THRESHOLD_PX:
 			_begin_drag(pointer)
 	_update_hover(pointer)
@@ -143,6 +145,7 @@ func _begin_drag(pointer: Vector2) -> void:
 	_drag_object_id = _press_object_id
 	_grab_offset = _workspace.get_view_position(_drag_object_id) - pointer
 	_workspace.begin_drag(_drag_object_id)
+	_update_drop_preview(pointer, pointer + _grab_offset)
 
 
 func _finish_drag(pointer: Vector2) -> void:
@@ -167,6 +170,27 @@ func _finish_drag(pointer: Vector2) -> void:
 	if not result.message.is_empty():
 		_say(result.message, &"info")
 	_play_feedback(dragged_id, plan)
+
+
+## Updates the visual target preview without executing or changing the simulation.
+func _update_drop_preview(pointer: Vector2, base_point: Vector2) -> void:
+	if _is_over_interface():
+		_workspace.set_drop_preview("", false)
+		return
+	var target_id := _workspace.support_target_at(_drag_object_id, base_point)
+	if target_id == "":
+		target_id = _workspace.object_id_at(pointer, _drag_object_id)
+	var plan: Dictionary = _plan_drop(_drag_object_id, pointer, base_point)
+	var valid := false
+	var command: LabCommand = plan.get("command") as LabCommand
+	if command != null:
+		var validation: InteractionResult = command.validate(_host.simulation)
+		valid = validation.is_success
+	var surface_id := ""
+	if target_id == "":
+		var resolved: Dictionary = _host.simulation.database.layout.resolve_surface(base_point)
+		surface_id = str(resolved.get("surface_id", ""))
+	_workspace.set_drop_preview(target_id, valid, surface_id)
 
 
 ## Decides what dropping an object here means. Returns {"command": LabCommand or null,

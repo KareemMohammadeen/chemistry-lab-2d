@@ -23,6 +23,8 @@ and conservation of dissolved salt when pouring. Exit code 0 means all checks pa
 - [ ] Project opens with no script errors in Output / Debugger (reload once if class names are unknown).
 - [ ] F5 shows wall, two shelves with 5 bottles and glassware, the bench with the hot plate, top bar and Inspector.
 - [ ] Hover highlights objects; click selects with corner brackets and fills the Inspector.
+- [ ] Drag feedback eases the object upward with a slight scale/lean change and leaves a soft shadow on the surface below.
+- [ ] While dragging, valid drop targets/surfaces glow green and refused targets glow red; the preview changes as the pointer moves.
 - [ ] Drag the beaker to the bench; dropping outside the shelves/bench shows a reason and the beaker returns.
 - [ ] Drag the Water bottle onto the beaker: tilt, stream, level rises smoothly; Inspector shows 50 mL (default amount).
 - [ ] Drag the CuSO4 bottle onto the beaker: grains fall, crystals dissolve, water turns blue, a toast and the Inspector explain it.

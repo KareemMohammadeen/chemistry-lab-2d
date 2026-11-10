@@ -1,5 +1,13 @@
 # Changelog
 
+## Drag & drop visual polish (2026-11-10) - awaiting in-engine verification
+- Dragged equipment now eases upward, scales slightly and leans subtly with horizontal pointer movement.
+- Added a detached, soft contact shadow so the object visibly lifts from the bench or shelf.
+- Drop surfaces show a restrained active-zone treatment; the hovered surface or equipment target previews green when its command validates and red when it is refused.
+- Equipment inserted into a dragged vessel inherits the vessel's lift so it stays visually attached.
+- Preview feedback calls command validation only; it does not execute commands or change simulation state.
+- Not run in Godot yet; verify the visual states and existing drag/drop interactions in-engine.
+
 ## UI redesign, part 1 (2026-11-10) - unreleased
 - Layout: three docked areas - Library (left), laboratory stage (centre), Inspector (right) - under a grouped top bar
   (library toggle, brand and experiment title, lab-time chip, undo/redo group, reset, pause + 1x/2x/4x group). All built with
