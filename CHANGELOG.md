@@ -1,5 +1,15 @@
 # Changelog
 
+## Glassware rendering V2 (2026-11-10) - awaiting in-engine verification
+- Reworked the glass body tint, thin silhouette, layered opening rim and base reflection for a quieter modern laboratory look.
+- Replaced fixed-X glass highlights with profile-sampled ribbons and inset edge lines; narrow tubes and tapered flask necks calculate their own interior offsets.
+- Refined liquid shading and meniscus, and constrained liquid-side reflections to the vessel profile.
+- Kept boiling bubbles inside the local vessel cross-section.
+- Rendered settled solids with per-substance grain colours and deterministic grain placement bounded by the vessel profile.
+- Rebuilt Library vessel thumbnails so their sample liquid follows the actual equipment profile rather than a rectangular fill.
+- No changes to simulation state, chemistry, equipment definitions, interactions or drag/drop behaviour.
+- Not run in Godot yet; follow the Glassware V2 checklist in docs/TESTING.md.
+
 ## Drag & drop visual polish (2026-11-10) - awaiting in-engine verification
 - Dragged equipment now eases upward, scales slightly and leans subtly with horizontal pointer movement.
 - Added a detached, soft contact shadow so the object visibly lifts from the bench or shelf.
