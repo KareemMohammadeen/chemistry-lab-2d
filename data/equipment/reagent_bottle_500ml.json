@@ -5,7 +5,7 @@
   "category": "vessel",
   "material": "glass with plastic cap",
   "capacity_ml": {
-    "value": 500.0,
+    "value": 500,
     "status": "placeholder",
     "unit": "mL",
     "source": "nominal capacity; graduations are approximate"
@@ -20,10 +20,10 @@
     "pour",
     "add_solid"
   ],
-  "default_pour_ml": 50.0,
-  "default_solid_g": 5.0,
+  "default_pour_ml": 50,
+  "default_solid_g": 5,
   "glass_mass_g": {
-    "value": 250.0,
+    "value": 250,
     "status": "placeholder",
     "unit": "g",
     "source": "typical mass for glassware of this size"
@@ -53,26 +53,42 @@
     "profile": [
       [
         0,
+        55
+      ],
+      [
+        3,
         58
       ],
       [
-        100,
+        84,
         58
       ],
       [
-        118,
+        96,
+        56
+      ],
+      [
+        108,
+        50
+      ],
+      [
+        120,
         40
       ],
       [
         132,
-        22
+        29
+      ],
+      [
+        140,
+        23
       ],
       [
         148,
         22
       ]
     ],
-    "wall_px": 3.0,
-    "graduation_ml": 0.0
+    "wall_px": 3,
+    "graduation_ml": 0
   }
 }
