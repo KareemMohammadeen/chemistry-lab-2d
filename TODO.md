@@ -1,6 +1,7 @@
 # TODO
 
 ## Blocking
+- [ ] Verify Glassware Rendering V2 in Godot for the beaker, test tube, Erlenmeyer flask, reagent bottle and dropper; check empty/filled/solid states and confirm no reflection or material grain escapes the glass profile.
 - [ ] Verify drag/drop visual polish in Godot: lift/scale/lean, ground shadow, valid/invalid target colours, surface previews and an inserted thermometer moving with its vessel.
 - [ ] Open in Godot 4.3+, run `scenes/main.tscn`, work through the checklist in `docs/TESTING.md`, fix what it finds.
 - [ ] Run `tests/run_simulation_tests.gd` headless and fix failures.
