@@ -1,6 +1,7 @@
 # TODO
 
 ## Blocking
+- [ ] Verify drag/drop visual polish in Godot: lift/scale/lean, ground shadow, valid/invalid target colours, surface previews and an inserted thermometer moving with its vessel.
 - [ ] Open in Godot 4.3+, run `scenes/main.tscn`, work through the checklist in `docs/TESTING.md`, fix what it finds.
 - [ ] Run `tests/run_simulation_tests.gd` headless and fix failures.
 - [ ] Review every `placeholder` / `unverified_reference` value (CuSO4 solubility conversion, time constants, heater rates, glass mass).
