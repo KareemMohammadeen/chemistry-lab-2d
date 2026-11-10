@@ -301,10 +301,11 @@ func _draw() -> void:
 ## Soft contact shadow: three stacked ellipses fading outward.
 func _draw_shadow() -> void:
 	var width := half_width() + 6.0
+	var shadow_alpha := lerpf(0.07, 0.018, _drag_progress)
 	for layer in range(3):
 		var grow := float(layer) * 5.0
 		draw_colored_polygon(_ellipse(Vector2(0.0, 2.0), width + grow, SHADOW_HEIGHT + grow * 0.35),
-			Color(0.0, 0.0, 0.0, 0.07))
+			Color(0.0, 0.0, 0.0, shadow_alpha))
 
 
 func _draw_vessel_body(vessel: VesselState) -> void:
