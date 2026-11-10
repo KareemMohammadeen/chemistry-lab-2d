@@ -34,6 +34,10 @@ var _selected_id: String = ""
 var _hovered_id: String = ""
 var _drag_id: String = ""
 var _drag_anchor: Vector2 = Vector2.ZERO
+var _drag_tilt_target: float = 0.0
+var _drop_preview_id: String = ""
+var _drop_preview_valid: bool = false
+var _drop_preview_surface_id: String = ""
 
 
 func bind(host: SimulationHost) -> void:
@@ -52,8 +56,12 @@ func _process(_delta: float) -> void:
 		var item := sim.state.get_object(str(object_id))
 		view.anchor = _anchor_for(sim, item)
 		view.z_index = _z_for(sim, item)
-		view.position = view.anchor + view.visual_offset
-		view.rotation = view.visual_tilt
+		view.is_being_dragged = str(object_id) == _drag_id
+		view.is_drop_target = str(object_id) == _drop_preview_id
+		view.drop_target_valid = _drop_preview_valid
+		view.drag_tilt_target = _drag_tilt_target if str(object_id) == _drag_id else 0.0
+		view.position = view.anchor + view.visual_offset + view.drag_lift_offset()
+		view.rotation = view.visual_tilt + view.drag_rotation_offset()
 		view.is_selected = str(object_id) == _selected_id
 		view.is_hovered = str(object_id) == _hovered_id
 
@@ -166,17 +174,34 @@ func set_hovered(object_id: String) -> void:
 func begin_drag(object_id: String) -> void:
 	_drag_id = object_id
 	_drag_anchor = get_view_position(object_id)
+	_drag_tilt_target = 0.0
+	set_drop_preview("", false)
 	queue_redraw()
 
 
 func set_drag_position(object_id: String, base_point: Vector2) -> void:
 	if object_id == _drag_id:
+		var horizontal_motion := base_point.x - _drag_anchor.x
 		_drag_anchor = base_point
+		_drag_tilt_target = clampf(-horizontal_motion * 0.0035, -0.07, 0.07)
+		queue_redraw()
+
+
+func set_drop_preview(target_id: String, target_valid: bool, surface_id: String = "") -> void:
+	if target_id == _drop_preview_id and target_valid == _drop_preview_valid \
+			and surface_id == _drop_preview_surface_id:
+		return
+	_drop_preview_id = target_id
+	_drop_preview_valid = target_valid
+	_drop_preview_surface_id = surface_id
+	queue_redraw()
 
 
 func end_drag(object_id: String) -> void:
 	if object_id == _drag_id:
 		_drag_id = ""
+		_drag_tilt_target = 0.0
+		set_drop_preview("", false)
 		queue_redraw()
 
 
@@ -206,6 +231,7 @@ func _draw() -> void:
 	_draw_bench(layout)
 	if _drag_id != "":
 		_draw_drop_zones(layout)
+		_draw_drag_shadow()
 
 
 static func _ellipse(center: Vector2, radius_x: float, radius_y: float) -> PackedVector2Array:
@@ -304,11 +330,49 @@ func _draw_bench(layout: LabLayout) -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, -1, SHELF_LABEL_SIZE, LabColors.TEXT_MUTED)
 
 
+func _draw_drag_shadow() -> void:
+	var view := _views.get(_drag_id) as EquipmentView
+	if view == null:
+		return
+	var progress := view.drag_visual_progress()
+	if progress <= 0.01:
+		return
+	var width := view.half_width()
+	for layer in range(4):
+		var spread := float(layer) * 4.0 + progress * 5.0
+		var alpha := (0.10 - float(layer) * 0.018) * progress
+		draw_colored_polygon(_ellipse(_drag_anchor + Vector2(0.0, 4.0 + float(layer)), width * 0.82 + spread,
+				4.0 + spread * 0.22), Color(0.0, 0.0, 0.0, alpha))
+
+
 func _draw_drop_zones(layout: LabLayout) -> void:
 	for surface in layout.surfaces:
 		var margin := float(surface["accept_margin"])
 		var rect := Rect2(float(surface["x_min"]) - margin, float(surface["y_min"]) - DROP_BAND_HALF_HEIGHT - margin * 0.5,
 			float(surface["x_max"]) - float(surface["x_min"]) + margin * 2.0,
 			float(surface["y_max"]) - float(surface["y_min"]) + DROP_BAND_HALF_HEIGHT * 2.0 + margin)
-		draw_rect(rect, Color(LabColors.ACCENT, 0.12))
-		draw_rect(rect, Color(LabColors.ACCENT, 0.55), false, 2.0)
+		var surface_id := str(surface.get("id", ""))
+		var is_preview := surface_id != "" and surface_id == _drop_preview_surface_id
+		var zone_color: Color = LabColors.ACCENT
+		if is_preview:
+			zone_color = LabColors.SUCCESS if _drop_preview_valid else LabColors.DANGER
+		var fill_alpha := 0.15 if is_preview else 0.045
+		var border_alpha := 0.82 if is_preview else 0.28
+		draw_rect(rect, Color(zone_color, fill_alpha))
+		draw_rect(rect, Color(zone_color, border_alpha), false, 2.5 if is_preview else 1.0)
+		var corner_length := 20.0 if is_preview else 10.0
+		var corner_alpha := 0.95 if is_preview else 0.32
+		var corners := [rect.position, Vector2(rect.end.x, rect.position.y),
+			Vector2(rect.position.x, rect.end.y), rect.end]
+		for corner in corners:
+			var point: Vector2 = corner
+			var dx := corner_length if point.x == rect.position.x else -corner_length
+			var dy := corner_length if point.y == rect.position.y else -corner_length
+			draw_line(point, point + Vector2(dx, 0.0), Color(zone_color, corner_alpha), 3.0, true)
+			draw_line(point, point + Vector2(0.0, dy), Color(zone_color, corner_alpha), 3.0, true)
+		if is_preview:
+			var hint := "DROP HERE" if _drop_preview_valid else "NOT A VALID SURFACE"
+			var font := ThemeDB.fallback_font
+			var hint_width := font.get_string_size(hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
+			draw_string(font, Vector2(rect.end.x - hint_width - 14.0, rect.position.y + 20.0), hint,
+				HORIZONTAL_ALIGNMENT_LEFT, -1, 12, zone_color)
