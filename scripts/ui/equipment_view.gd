@@ -73,9 +73,9 @@ var _shown_color: Color = Color(1.0, 1.0, 1.0, 0.0)
 var _shown_reading_c: float = 22.0
 ## Static tick marks [{height, width, major, label}], computed once because the geometry never changes.
 var _graduations: Array = []
-## Fitted paper-label lines of a bottle, recomputed only when its contents' main chemical changes.
 var _drag_progress: float = 0.0
 var _drag_rotation: float = 0.0
+## Fitted paper-label lines of a bottle, recomputed only when its contents' main chemical changes.
 var _label_key: String = "?"
 var _label_lines: Array = []
 var _plate_style: StyleBoxFlat = _make_plate_style()
