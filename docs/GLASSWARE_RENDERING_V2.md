@@ -2,7 +2,7 @@
 
 ## Scope
 
-This is a presentation-only redesign of the 2D glassware. The simulation, chemistry engine, vessel ledger, equipment definitions, interaction commands and drag/drop behaviour are intentionally unchanged.
+This is a presentation-only redesign of the 2D glassware. The simulation, chemistry engine, vessel ledger, equipment behaviour, interaction points, commands and drag/drop behaviour are intentionally unchanged. Four equipment visual profiles have refined shape control points only.
 
 ## Rendering approach
 
