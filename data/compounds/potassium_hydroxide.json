@@ -1,0 +1,80 @@
+{
+ "version": 1,
+ "id": "potassium_hydroxide",
+ "name": "Potassium hydroxide",
+ "formula": "KOH",
+ "formula_display": "KOH",
+ "composition": {
+  "K": 1,
+  "O": 1,
+  "H": 1
+ },
+ "molar_mass_g_mol": {
+  "value": 56.105,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "White pellets or flakes that absorb moisture from the air.",
+ "color_hex": {
+  "value": "#F5F5F5",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 2.12,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 406,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": {
+  "value": 1327,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": {
+   "value": 112,
+   "unit": "g/100 mL",
+   "status": "unverified_reference",
+   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+  },
+  "note": "Very soluble; dissolving releases heat."
+ },
+ "hazards": {
+  "classes": [
+   "corrosive"
+  ],
+  "summary": "Corrosive: burns skin and eyes.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Tightly closed container, away from acids.",
+ "reactions": [
+  {
+   "role": "strong base",
+   "note": "Fully ionised in water."
+  },
+  {
+   "role": "neutralisation",
+   "note": "Reacts with acids to give a potassium salt and water."
+  }
+ ],
+ "educational_notes": "Behaves much like sodium hydroxide; it is used to make soft soap.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

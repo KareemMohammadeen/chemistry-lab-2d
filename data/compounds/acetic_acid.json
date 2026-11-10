@@ -1,0 +1,76 @@
+{
+ "version": 1,
+ "id": "acetic_acid",
+ "name": "Acetic acid",
+ "formula": "CH3COOH",
+ "formula_display": "CH₃COOH",
+ "composition": {
+  "C": 2,
+  "H": 4,
+  "O": 2
+ },
+ "molar_mass_g_mol": {
+  "value": 60.052,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "liquid",
+ "appearance": "Clear, colourless liquid with a sharp vinegar smell.",
+ "color_hex": {
+  "value": "#F2F5F5",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 1.05,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 16.6,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": {
+  "value": 118,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": null,
+  "note": "Miscible with water. The values are for pure (glacial) acid; vinegar is about 5 % acetic acid."
+ },
+ "hazards": {
+  "classes": [
+   "corrosive",
+   "flammable"
+  ],
+  "summary": "Glacial acetic acid burns skin and is flammable. Vinegar is safe to handle.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Closed container away from heat and oxidisers.",
+ "reactions": [
+  {
+   "role": "weak acid",
+   "note": "Only a small fraction of molecules ionise in water (pKa about 4.8)."
+  },
+  {
+   "role": "neutralisation",
+   "note": "Reacts with bases and with carbonates, releasing carbon dioxide."
+  }
+ ],
+ "educational_notes": "Because it is a weak acid, 0.1 mol/L acetic acid has a pH of about 2.9, far less acidic than 0.1 mol/L hydrochloric acid.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

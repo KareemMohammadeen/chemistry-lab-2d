@@ -1,0 +1,70 @@
+{
+ "version": 1,
+ "id": "phosphoric_acid",
+ "name": "Phosphoric acid",
+ "formula": "H3PO4",
+ "formula_display": "H₃PO₄",
+ "composition": {
+  "H": 3,
+  "P": 1,
+  "O": 4
+ },
+ "molar_mass_g_mol": {
+  "value": 97.994,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "liquid",
+ "appearance": "Clear, colourless, syrupy solution (pure acid is a white solid).",
+ "color_hex": {
+  "value": "#F4F4F0",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 1.685,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 42.4,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": null,
+  "note": "Miscible with water. The density is for an 85 % solution."
+ },
+ "hazards": {
+  "classes": [
+   "corrosive"
+  ],
+  "summary": "Corrosive to skin and eyes in concentrated form.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Closed, labelled container.",
+ "reactions": [
+  {
+   "role": "weak acid",
+   "note": "Can release three hydrogen ions, one step at a time."
+  },
+  {
+   "role": "neutralisation",
+   "note": "Neutralises bases to give phosphates."
+  }
+ ],
+ "educational_notes": "Used in fertilisers, rust removers and cola drinks.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

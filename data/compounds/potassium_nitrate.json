@@ -1,0 +1,75 @@
+{
+ "version": 1,
+ "id": "potassium_nitrate",
+ "name": "Potassium nitrate",
+ "formula": "KNO3",
+ "formula_display": "KNO₃",
+ "composition": {
+  "K": 1,
+  "N": 1,
+  "O": 3
+ },
+ "molar_mass_g_mol": {
+  "value": 101.102,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "White crystals.",
+ "color_hex": {
+  "value": "#FDFDFD",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 2.11,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 334,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": {
+   "value": 31.6,
+   "unit": "g/100 mL",
+   "status": "unverified_reference",
+   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+  },
+  "note": "Soluble in water; solubility rises steeply with temperature."
+ },
+ "hazards": {
+  "classes": [
+   "oxidiser"
+  ],
+  "summary": "Oxidiser; keep away from combustible materials.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Closed container away from fuels.",
+ "reactions": [
+  {
+   "role": "endothermic dissolution",
+   "note": "The solution gets colder as it dissolves."
+  },
+  {
+   "role": "oxidiser",
+   "note": "Supplies oxygen to burning materials."
+  }
+ ],
+ "educational_notes": "Its strongly temperature-dependent solubility makes it a good salt for crystallisation experiments.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

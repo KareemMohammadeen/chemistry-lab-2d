@@ -1,0 +1,69 @@
+{
+ "version": 1,
+ "id": "sodium_sulfate",
+ "name": "Sodium sulfate",
+ "formula": "Na2SO4",
+ "formula_display": "Na₂SO₄",
+ "composition": {
+  "Na": 2,
+  "S": 1,
+  "O": 4
+ },
+ "molar_mass_g_mol": {
+  "value": 142.036,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "White crystalline powder.",
+ "color_hex": {
+  "value": "#FDFDFD",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 2.66,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 884,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": {
+   "value": 19.5,
+   "unit": "g/100 mL",
+   "status": "unverified_reference",
+   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+  },
+  "note": "Soluble in water."
+ },
+ "hazards": {
+  "classes": [],
+  "summary": "Low hazard.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Dry container.",
+ "reactions": [
+  {
+   "role": "spectator ions",
+   "note": "Often used as a harmless dissolved salt in electrolysis demonstrations."
+  }
+ ],
+ "educational_notes": "Its solubility rises sharply near 32 degC, which is unusual.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

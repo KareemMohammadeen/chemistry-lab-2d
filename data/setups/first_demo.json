@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "id": "first_demo",
+  "title": "Water + Copper Sulfate Mixing",
+  "objects": [
+    {
+      "equipment": "reagent_bottle_500ml",
+      "position": [
+        150,
+        240
+      ],
+      "contents": {
+        "liquids": {
+          "water": 450.0
+        }
+      }
+    },
+    {
+      "equipment": "reagent_bottle_500ml",
+      "position": [
+        310,
+        240
+      ],
+      "contents": {
+        "solids": {
+          "sodium_chloride": 100.0
+        }
+      }
+    },
+    {
+      "equipment": "reagent_bottle_500ml",
+      "position": [
+        470,
+        240
+      ],
+      "contents": {
+        "solids": {
+          "copper_sulfate_pentahydrate": 100.0
+        }
+      }
+    },
+    {
+      "equipment": "reagent_bottle_500ml",
+      "position": [
+        630,
+        240
+      ],
+      "contents": {
+        "liquids": {
+          "hydrochloric_acid_0_1m": 300.0
+        }
+      }
+    },
+    {
+      "equipment": "reagent_bottle_500ml",
+      "position": [
+        790,
+        240
+      ],
+      "contents": {
+        "liquids": {
+          "sodium_hydroxide_0_1m": 300.0
+        }
+      }
+    },
+    {
+      "equipment": "beaker_250ml",
+      "position": [
+        170,
+        460
+      ]
+    },
+    {
+      "equipment": "test_tube_20ml",
+      "position": [
+        310,
+        460
+      ]
+    },
+    {
+      "equipment": "erlenmeyer_flask_250ml",
+      "position": [
+        450,
+        460
+      ]
+    },
+    {
+      "equipment": "thermometer_general",
+      "position": [
+        600,
+        460
+      ]
+    },
+    {
+      "equipment": "dropper_3ml",
+      "position": [
+        700,
+        460
+      ]
+    },
+    {
+      "equipment": "hot_plate_basic",
+      "position": [
+        960,
+        760
+      ]
+    }
+  ]
+}

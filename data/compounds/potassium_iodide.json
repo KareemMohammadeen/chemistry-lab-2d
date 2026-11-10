@@ -1,0 +1,74 @@
+{
+ "version": 1,
+ "id": "potassium_iodide",
+ "name": "Potassium iodide",
+ "formula": "KI",
+ "formula_display": "KI",
+ "composition": {
+  "K": 1,
+  "I": 1
+ },
+ "molar_mass_g_mol": {
+  "value": 165.998,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "White crystals.",
+ "color_hex": {
+  "value": "#FDFDFD",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 3.12,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 681,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": {
+   "value": 144,
+   "unit": "g/100 mL",
+   "status": "unverified_reference",
+   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+  },
+  "note": "Very soluble in water (about 144 g per 100 mL at 20 degC)."
+ },
+ "hazards": {
+  "classes": [
+   "irritant"
+  ],
+  "summary": "May irritate; keep from light and moisture.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Dark closed container.",
+ "reactions": [
+  {
+   "role": "precipitation",
+   "note": "Gives yellow lead(II) iodide with lead ions."
+  },
+  {
+   "role": "iodine solution",
+   "note": "Dissolves iodine to give the brown iodine/starch test solution."
+  }
+ ],
+ "educational_notes": "The yellow 'golden rain' precipitate of lead iodide forms from potassium iodide and lead nitrate.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

@@ -1,0 +1,68 @@
+{
+ "version": 1,
+ "id": "distilled_water",
+ "name": "Distilled water",
+ "formula": "H2O",
+ "formula_display": "H₂O",
+ "composition": {
+  "H": 2,
+  "O": 1
+ },
+ "molar_mass_g_mol": {
+  "value": 18.015,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "liquid",
+ "appearance": "Clear, colourless liquid.",
+ "color_hex": {
+  "value": "#DCEBFA",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 0.998,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 0,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": {
+  "value": 100,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": null,
+  "note": "Same as water; it has had dissolved salts removed by distillation."
+ },
+ "hazards": {
+  "classes": [],
+  "summary": "Not hazardous.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Closed container; it slowly absorbs carbon dioxide from the air.",
+ "reactions": [
+  {
+   "role": "solvent",
+   "note": "Preferred solvent for experiments because it contains almost no dissolved ions."
+  }
+ ],
+ "educational_notes": "Distilled water conducts electricity very poorly. Standing in air, it turns slightly acidic as carbon dioxide dissolves in it.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

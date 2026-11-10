@@ -1,0 +1,70 @@
+{
+ "version": 1,
+ "id": "iron_ii_sulfate",
+ "name": "Iron(II) sulfate heptahydrate",
+ "formula": "FeSO4.7H2O",
+ "formula_display": "FeSO₄·7H₂O",
+ "composition": {
+  "Fe": 1,
+  "S": 1,
+  "O": 11,
+  "H": 14
+ },
+ "molar_mass_g_mol": {
+  "value": 278.006,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "Pale blue-green crystals.",
+ "color_hex": {
+  "value": "#8FC4A6",
+  "status": "display"
+ },
+ "solution_color_hex": {
+  "value": "#B7D9C4",
+  "status": "display"
+ },
+ "density_g_cm3": {
+  "value": 1.895,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": null,
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": null,
+  "note": "Soluble in water; solutions slowly turn yellow-brown as iron(II) is oxidised by air."
+ },
+ "hazards": {
+  "classes": [
+   "harmful",
+   "irritant"
+  ],
+  "summary": "Harmful if swallowed; irritates eyes and skin.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Closed container; it slowly oxidises and turns brown in air.",
+ "reactions": [
+  {
+   "role": "reducing agent",
+   "note": "Reduces permanganate; the purple colour disappears."
+  },
+  {
+   "role": "precipitation",
+   "note": "Gives a green precipitate with sodium hydroxide."
+  }
+ ],
+ "educational_notes": "Iron(II) ions are pale green; in air they gradually change to yellow-brown iron(III).",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

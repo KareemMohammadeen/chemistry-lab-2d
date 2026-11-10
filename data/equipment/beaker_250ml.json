@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "id": "beaker_250ml",
+  "name": "Beaker 250 mL",
+  "category": "vessel",
+  "material": "borosilicate glass",
+  "capacity_ml": {
+    "value": 250.0,
+    "status": "placeholder",
+    "unit": "mL",
+    "source": "nominal capacity; graduations are approximate"
+  },
+  "default_state": "open",
+  "movable": true,
+  "interactions": [
+    "select",
+    "pick_up",
+    "drag",
+    "place",
+    "pour",
+    "add_solid",
+    "mix",
+    "heat"
+  ],
+  "default_pour_ml": 50.0,
+  "default_solid_g": 5.0,
+  "glass_mass_g": {
+    "value": 95.0,
+    "status": "placeholder",
+    "unit": "g",
+    "source": "typical mass for glassware of this size"
+  },
+  "placement": {
+    "surface": true,
+    "support": true,
+    "insert_into_vessel": false
+  },
+  "interaction_points": {
+    "base": [
+      0,
+      0
+    ],
+    "opening": [
+      0,
+      -140
+    ],
+    "pour_lip": [
+      54,
+      -140
+    ]
+  },
+  "visual": {
+    "style": "vessel",
+    "height": 144,
+    "profile": [
+      [
+        0,
+        54
+      ],
+      [
+        140,
+        54
+      ]
+    ],
+    "wall_px": 3.0,
+    "graduation_ml": 50.0
+  }
+}

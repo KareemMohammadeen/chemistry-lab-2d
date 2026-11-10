@@ -1,0 +1,66 @@
+{
+ "version": 1,
+ "id": "nitric_acid",
+ "name": "Nitric acid",
+ "formula": "HNO3",
+ "formula_display": "HNO₃",
+ "composition": {
+  "H": 1,
+  "N": 1,
+  "O": 3
+ },
+ "molar_mass_g_mol": {
+  "value": 63.012,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "liquid",
+ "appearance": "Colourless liquid that turns yellow with age.",
+ "color_hex": {
+  "value": "#F6F3DC",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 1.41,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": null,
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": null,
+  "note": "Miscible with water. The density is for concentrated (about 68 %) acid."
+ },
+ "hazards": {
+  "classes": [
+   "corrosive",
+   "oxidiser"
+  ],
+  "summary": "Corrosive and a strong oxidiser; it stains skin yellow and releases toxic brown fumes with some metals.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Closed, vented, labelled container in a cool place, away from organic material.",
+ "reactions": [
+  {
+   "role": "strong acid",
+   "note": "Fully ionised in water."
+  },
+  {
+   "role": "oxidiser",
+   "note": "Dissolves metals such as copper, releasing nitrogen oxides."
+  }
+ ],
+ "educational_notes": "Light slowly decomposes it to nitrogen dioxide, which is why old bottles look yellow.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

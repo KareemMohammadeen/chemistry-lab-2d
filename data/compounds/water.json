@@ -1,0 +1,72 @@
+{
+ "version": 1,
+ "id": "water",
+ "name": "Water",
+ "formula": "H2O",
+ "formula_display": "H₂O",
+ "composition": {
+  "H": 2,
+  "O": 1
+ },
+ "molar_mass_g_mol": {
+  "value": 18.015,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "liquid",
+ "appearance": "Clear, colourless liquid.",
+ "color_hex": {
+  "value": "#DCEBFA",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 0.998,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 0,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": {
+  "value": 100,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": null,
+  "note": "Miscible with polar liquids; the universal solvent of the school laboratory."
+ },
+ "hazards": {
+  "classes": [],
+  "summary": "Not hazardous. Hot water can scald.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Any clean container.",
+ "reactions": [
+  {
+   "role": "solvent",
+   "note": "Dissolves ionic and polar substances."
+  },
+  {
+   "role": "reactant",
+   "note": "Reacts with very reactive metals such as sodium and potassium, releasing hydrogen."
+  }
+ ],
+ "educational_notes": "Water is made of two hydrogen atoms and one oxygen atom. Its high heat capacity makes it slow to warm and slow to cool.",
+ "simulation": {
+  "supported": true,
+  "chemical_id": "water",
+  "note": "Linked to the playable chemical of this id (the playable version may be a dilute solution)."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

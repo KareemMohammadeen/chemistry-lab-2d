@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "actions": {
+    "undo": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Z",
+          "ctrl": true
+        }
+      ]
+    },
+    "redo": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Y",
+          "ctrl": true
+        }
+      ]
+    },
+    "deselect": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Escape"
+        }
+      ]
+    },
+    "toggle_pause": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Space"
+        }
+      ]
+    }
+  }
+}

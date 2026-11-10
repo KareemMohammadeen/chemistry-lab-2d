@@ -1,0 +1,71 @@
+{
+ "version": 1,
+ "id": "calcium_hydroxide",
+ "name": "Calcium hydroxide",
+ "formula": "Ca(OH)2",
+ "formula_display": "Ca(OH)₂",
+ "composition": {
+  "Ca": 1,
+  "O": 2,
+  "H": 2
+ },
+ "molar_mass_g_mol": {
+  "value": 74.092,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "White powder.",
+ "color_hex": {
+  "value": "#F7F7F5",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 2.21,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": null,
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": {
+   "value": 0.173,
+   "unit": "g/100 mL",
+   "status": "unverified_reference",
+   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+  },
+  "note": "Slightly soluble (about 0.17 g per 100 mL at 20 degC); the solution is called limewater."
+ },
+ "hazards": {
+  "classes": [
+   "irritant",
+   "corrosive"
+  ],
+  "summary": "Irritating to skin and can cause serious eye damage.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Tightly closed container; it absorbs carbon dioxide.",
+ "reactions": [
+  {
+   "role": "test for carbon dioxide",
+   "note": "Limewater turns milky as calcium carbonate forms."
+  },
+  {
+   "role": "weak-solubility base",
+   "note": "Neutralises acids."
+  }
+ ],
+ "educational_notes": "Limewater is the classic test for carbon dioxide.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

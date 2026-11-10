@@ -1,0 +1,68 @@
+{
+ "version": 1,
+ "id": "calcium_carbonate",
+ "name": "Calcium carbonate",
+ "formula": "CaCO3",
+ "formula_display": "CaCO₃",
+ "composition": {
+  "Ca": 1,
+  "C": 1,
+  "O": 3
+ },
+ "molar_mass_g_mol": {
+  "value": 100.086,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "White powder or crystals (chalk, limestone, marble).",
+ "color_hex": {
+  "value": "#F4F2EA",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 2.71,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": null,
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": {
+   "value": 0.0013,
+   "unit": "g/100 mL",
+   "status": "unverified_reference",
+   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+  },
+  "note": "Almost insoluble in water."
+ },
+ "hazards": {
+  "classes": [],
+  "summary": "Low hazard; dust may irritate.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Any dry container.",
+ "reactions": [
+  {
+   "role": "carbonate",
+   "note": "Reacts with acids to give carbon dioxide, water and a calcium salt."
+  },
+  {
+   "role": "thermal decomposition",
+   "note": "Heating strongly gives calcium oxide and carbon dioxide."
+  }
+ ],
+ "educational_notes": "The fizzing when acid meets chalk is carbon dioxide escaping.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

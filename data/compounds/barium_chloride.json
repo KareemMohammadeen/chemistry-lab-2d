@@ -1,0 +1,74 @@
+{
+ "version": 1,
+ "id": "barium_chloride",
+ "name": "Barium chloride",
+ "formula": "BaCl2",
+ "formula_display": "BaCl₂",
+ "composition": {
+  "Ba": 1,
+  "Cl": 2
+ },
+ "molar_mass_g_mol": {
+  "value": 208.23,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "White crystalline solid.",
+ "color_hex": {
+  "value": "#F5F5F5",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 3.86,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 961,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": {
+   "value": 36,
+   "unit": "g/100 mL",
+   "status": "unverified_reference",
+   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+  },
+  "note": "Soluble in water (about 36 g per 100 mL at 20 degC)."
+ },
+ "hazards": {
+  "classes": [
+   "toxic"
+  ],
+  "summary": "Toxic if swallowed. Wash hands after use.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Closed, labelled container in a locked store.",
+ "reactions": [
+  {
+   "role": "precipitation",
+   "note": "Gives white barium sulfate with sulfate ions, a test for sulfate."
+  },
+  {
+   "role": "flame test",
+   "note": "Gives a pale green flame."
+  }
+ ],
+ "educational_notes": "All soluble barium salts are poisonous, although insoluble barium sulfate is used safely in medical imaging.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

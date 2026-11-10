@@ -1,0 +1,74 @@
+{
+ "version": 1,
+ "id": "calcium_chloride",
+ "name": "Calcium chloride",
+ "formula": "CaCl2",
+ "formula_display": "CaCl₂",
+ "composition": {
+  "Ca": 1,
+  "Cl": 2
+ },
+ "molar_mass_g_mol": {
+  "value": 110.978,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "White granules that absorb moisture.",
+ "color_hex": {
+  "value": "#FAFAFA",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 2.15,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 772,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": {
+   "value": 74.5,
+   "unit": "g/100 mL",
+   "status": "unverified_reference",
+   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+  },
+  "note": "Very soluble; dissolving releases heat."
+ },
+ "hazards": {
+  "classes": [
+   "irritant"
+  ],
+  "summary": "Irritating to eyes.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Tightly closed container; it absorbs water from the air.",
+ "reactions": [
+  {
+   "role": "drying agent",
+   "note": "Absorbs water from air and gases."
+  },
+  {
+   "role": "exothermic dissolution",
+   "note": "The solution warms as it dissolves."
+  }
+ ],
+ "educational_notes": "Used to melt ice on roads and to dry gases.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "neutralisation_strong_acid_strong_base",
+  "type": "neutralisation",
+  "name": "Neutralisation of a strong acid by a strong base",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "H⁺(aq) + OH⁻(aq) → H₂O(l)",
+  "enthalpy_kj_per_mol": {
+    "value": -57.62,
+    "status": "reference",
+    "unit": "kJ/mol",
+    "condition": "25 °C",
+    "source": "https://en.wikipedia.org/wiki/Enthalpy_of_neutralization (fetched 2026-11-08)"
+  },
+  "observations": {
+    "heat": "The mixture warms up because neutralisation releases heat.",
+    "neutral": "The acid and base have exactly cancelled: the mixture is neutral (pH 7).",
+    "acidic": "There is more acid than base, so the mixture is still acidic.",
+    "basic": "There is more base than acid, so the mixture is still basic."
+  },
+  "explanation": "Hydrogen ions (H⁺) from the acid and hydroxide ions (OH⁻) from the base combine to form water. Whichever is in excess decides whether the mixture ends up acidic or basic.",
+  "level": "high_school"
+}

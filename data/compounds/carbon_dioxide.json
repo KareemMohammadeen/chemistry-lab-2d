@@ -1,0 +1,65 @@
+{
+ "version": 1,
+ "id": "carbon_dioxide",
+ "name": "Carbon dioxide",
+ "formula": "CO2",
+ "formula_display": "CO₂",
+ "composition": {
+  "C": 1,
+  "O": 2
+ },
+ "molar_mass_g_mol": {
+  "value": 44.009,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "gas",
+ "appearance": "Colourless, odourless gas.",
+ "color_hex": {
+  "value": "#F5F5F5",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 0.00198,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use.",
+  "note": "gases at 0 degC and 1 atm"
+ },
+ "melting_c": null,
+ "boiling_c": null,
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": null,
+  "note": "Slightly soluble in water, giving a weakly acidic solution (carbonic acid)."
+ },
+ "hazards": {
+  "classes": [
+   "asphyxiant"
+  ],
+  "summary": "Not toxic at low levels but displaces oxygen in confined spaces.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Gas cylinder, upright and secured.",
+ "reactions": [
+  {
+   "role": "test",
+   "note": "Turns limewater milky."
+  },
+  {
+   "role": "acid-forming",
+   "note": "Dissolves in water to give a weak acid."
+  }
+ ],
+ "educational_notes": "Solid carbon dioxide (dry ice) turns directly into gas at about -78 degC.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

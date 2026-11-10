@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "id": "dropper_3ml",
+  "name": "Dropper",
+  "category": "vessel",
+  "material": "glass tube with rubber bulb",
+  "capacity_ml": {
+    "value": 3.0,
+    "status": "placeholder",
+    "unit": "mL",
+    "source": "nominal capacity; graduations are approximate"
+  },
+  "default_state": "open",
+  "movable": true,
+  "interactions": [
+    "select",
+    "pick_up",
+    "drag",
+    "place",
+    "pour"
+  ],
+  "default_pour_ml": 1.0,
+  "default_solid_g": 0.0,
+  "glass_mass_g": {
+    "value": 8.0,
+    "status": "placeholder",
+    "unit": "g",
+    "source": "typical mass for glassware of this size"
+  },
+  "placement": {
+    "surface": true,
+    "support": false,
+    "insert_into_vessel": false
+  },
+  "interaction_points": {
+    "base": [
+      0,
+      0
+    ],
+    "opening": [
+      0,
+      -100
+    ],
+    "pour_lip": [
+      7,
+      -100
+    ]
+  },
+  "visual": {
+    "style": "dropper",
+    "height": 146,
+    "profile": [
+      [
+        0,
+        3
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        100,
+        7
+      ]
+    ],
+    "wall_px": 3.0,
+    "graduation_ml": 1.0
+  }
+}

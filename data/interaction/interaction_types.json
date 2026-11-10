@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "interactions": [
+    {
+      "id": "select",
+      "label": "Select",
+      "mode": "instant"
+    },
+    {
+      "id": "pick_up",
+      "label": "Pick up",
+      "mode": "drag"
+    },
+    {
+      "id": "drag",
+      "label": "Drag",
+      "mode": "drag"
+    },
+    {
+      "id": "place",
+      "label": "Place",
+      "mode": "drag"
+    },
+    {
+      "id": "pour",
+      "label": "Pour",
+      "mode": "drag"
+    },
+    {
+      "id": "add_solid",
+      "label": "Add solid",
+      "mode": "drag"
+    },
+    {
+      "id": "insert",
+      "label": "Insert",
+      "mode": "drag"
+    },
+    {
+      "id": "mix",
+      "label": "Mix",
+      "mode": "instant"
+    },
+    {
+      "id": "heat",
+      "label": "Heat",
+      "mode": "toggle"
+    }
+  ]
+}

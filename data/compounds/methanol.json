@@ -1,0 +1,76 @@
+{
+ "version": 1,
+ "id": "methanol",
+ "name": "Methanol",
+ "formula": "CH3OH",
+ "formula_display": "CH₃OH",
+ "composition": {
+  "C": 1,
+  "H": 4,
+  "O": 1
+ },
+ "molar_mass_g_mol": {
+  "value": 32.042,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "liquid",
+ "appearance": "Clear, colourless liquid.",
+ "color_hex": {
+  "value": "#EEF3F6",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 0.792,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": -97.6,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": {
+  "value": 64.7,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": null,
+  "note": "Miscible with water in all proportions."
+ },
+ "hazards": {
+  "classes": [
+   "flammable",
+   "toxic"
+  ],
+  "summary": "Highly flammable and toxic by swallowing, skin contact and inhalation; it can cause blindness.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Closed container in a flammables cabinet, in a locked store.",
+ "reactions": [
+  {
+   "role": "fuel",
+   "note": "Burns with a nearly invisible flame."
+  },
+  {
+   "role": "solvent",
+   "note": "Dissolves many organic compounds."
+  }
+ ],
+ "educational_notes": "Never taste or smell methanol; its flame can be hard to see in daylight.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

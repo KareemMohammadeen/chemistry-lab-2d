@@ -1,0 +1,84 @@
+{
+ "version": 1,
+ "id": "sodium_hydroxide",
+ "name": "Sodium hydroxide",
+ "formula": "NaOH",
+ "formula_display": "NaOH",
+ "composition": {
+  "Na": 1,
+  "O": 1,
+  "H": 1
+ },
+ "molar_mass_g_mol": {
+  "value": 39.997,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "solid",
+ "appearance": "White pellets or flakes that absorb moisture from the air.",
+ "color_hex": {
+  "value": "#F5F5F5",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 2.13,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": 323,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": {
+  "value": 1388,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": {
+   "value": 111,
+   "unit": "g/100 mL",
+   "status": "unverified_reference",
+   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+  },
+  "note": "Very soluble; dissolving releases a lot of heat."
+ },
+ "hazards": {
+  "classes": [
+   "corrosive"
+  ],
+  "summary": "Corrosive: burns skin and can blind. Wear goggles and gloves.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Tightly closed plastic container, away from acids; it absorbs carbon dioxide and water.",
+ "reactions": [
+  {
+   "role": "strong base",
+   "note": "Fully ionised in water."
+  },
+  {
+   "role": "neutralisation",
+   "note": "Reacts with acids to give a salt and water, releasing heat."
+  },
+  {
+   "role": "precipitation",
+   "note": "Gives coloured hydroxide precipitates with many metal ions, for example blue copper(II) hydroxide."
+  }
+ ],
+ "educational_notes": "A 0.1 mol/L solution has a pH of about 13.",
+ "simulation": {
+  "supported": true,
+  "chemical_id": "sodium_hydroxide_0_1m",
+  "note": "Linked to the playable chemical of this id (the playable version may be a dilute solution)."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

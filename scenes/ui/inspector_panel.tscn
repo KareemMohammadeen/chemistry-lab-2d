@@ -1,0 +1,234 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/inspector_panel.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/empty_state_art.gd" id="2"]
+
+[node name="InspectorPanel" type="PanelContainer" node_paths=PackedStringArray("empty_state", "content_root", "title_label", "material_label", "summary_label", "rows_box", "contents_box", "observations_box", "safety_box", "actions_box", "amount_row", "amount_label", "amount_spin", "heater_row", "heater_button", "heater_spin", "controls_card", "observations_card", "safety_card")]
+custom_minimum_size = Vector2(340, 0)
+theme_type_variation = &"SidePanel"
+script = ExtResource("1")
+empty_state = NodePath("Column/EmptyState")
+content_root = NodePath("Column/Scroll")
+title_label = NodePath("Column/Header/HeaderBox/TitleLabel")
+material_label = NodePath("Column/Header/HeaderBox/MaterialLabel")
+summary_label = NodePath("Column/Scroll/Margin/Content/SummaryLabel")
+rows_box = NodePath("Column/Scroll/Margin/Content/PropertiesCard/PropertiesBox/RowsBox")
+contents_box = NodePath("Column/Scroll/Margin/Content/ContentsCard/ContentsBox")
+observations_box = NodePath("Column/Scroll/Margin/Content/ObservationsCard/ObservationsBox")
+safety_box = NodePath("Column/Scroll/Margin/Content/SafetyCard/SafetyBox")
+actions_box = NodePath("Column/Scroll/Margin/Content/ControlsCard/ControlsBox/ActionsBox")
+amount_row = NodePath("Column/Scroll/Margin/Content/ControlsCard/ControlsBox/AmountRow")
+amount_label = NodePath("Column/Scroll/Margin/Content/ControlsCard/ControlsBox/AmountRow/AmountLabel")
+amount_spin = NodePath("Column/Scroll/Margin/Content/ControlsCard/ControlsBox/AmountRow/AmountSpin")
+heater_row = NodePath("Column/Scroll/Margin/Content/ControlsCard/ControlsBox/HeaterRow")
+heater_button = NodePath("Column/Scroll/Margin/Content/ControlsCard/ControlsBox/HeaterRow/HeaterButton")
+heater_spin = NodePath("Column/Scroll/Margin/Content/ControlsCard/ControlsBox/HeaterRow/HeaterSpin")
+controls_card = NodePath("Column/Scroll/Margin/Content/ControlsCard")
+observations_card = NodePath("Column/Scroll/Margin/Content/ObservationsCard")
+safety_card = NodePath("Column/Scroll/Margin/Content/SafetyCard")
+
+[node name="Column" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="Column"]
+layout_mode = 2
+theme_type_variation = &"HeaderPanel"
+
+[node name="HeaderBox" type="VBoxContainer" parent="Column/Header"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Heading" type="Label" parent="Column/Header/HeaderBox"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+text = "INSPECTOR"
+
+[node name="TitleLabel" type="Label" parent="Column/Header/HeaderBox"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Nothing selected"
+autowrap_mode = 3
+
+[node name="MaterialLabel" type="Label" parent="Column/Header/HeaderBox"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+autowrap_mode = 3
+
+[node name="EmptyState" type="MarginContainer" parent="Column"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="EmptyBox" type="VBoxContainer" parent="Column/EmptyState"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="Art" type="Control" parent="Column/EmptyState/EmptyBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("2")
+
+[node name="EmptyTitle" type="Label" parent="Column/EmptyState/EmptyBox"]
+layout_mode = 2
+theme_type_variation = &"StrongLabel"
+text = "Select an object to inspect it"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="EmptyHint" type="Label" parent="Column/EmptyState/EmptyBox"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+text = "See what it is, what is inside it, its temperature and what you can do with it."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TipsCard" type="PanelContainer" parent="Column/EmptyState/EmptyBox"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Tips" type="VBoxContainer" parent="Column/EmptyState/EmptyBox/TipsCard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TipsHeading" type="Label" parent="Column/EmptyState/EmptyBox/TipsCard/Tips"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+text = "QUICK TIPS"
+
+[node name="Tip1" type="Label" parent="Column/EmptyState/EmptyBox/TipsCard/Tips"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+text = "Click an object on the shelves or bench"
+autowrap_mode = 3
+
+[node name="Tip2" type="Label" parent="Column/EmptyState/EmptyBox/TipsCard/Tips"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+text = "Drag a bottle onto a beaker to pour"
+autowrap_mode = 3
+
+[node name="Tip3" type="Label" parent="Column/EmptyState/EmptyBox/TipsCard/Tips"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+text = "Drag a beaker onto the hot plate to heat it"
+autowrap_mode = 3
+
+[node name="Tip4" type="Label" parent="Column/EmptyState/EmptyBox/TipsCard/Tips"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+text = "Right-click or Esc to deselect"
+autowrap_mode = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Column"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Margin" type="MarginContainer" parent="Column/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="Content" type="VBoxContainer" parent="Column/Scroll/Margin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="SummaryLabel" type="Label" parent="Column/Scroll/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+autowrap_mode = 3
+
+[node name="ControlsCard" type="PanelContainer" parent="Column/Scroll/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="ControlsBox" type="VBoxContainer" parent="Column/Scroll/Margin/Content/ControlsCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ControlsHeading" type="Label" parent="Column/Scroll/Margin/Content/ControlsCard/ControlsBox"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+text = "ACTIONS"
+
+[node name="ActionsBox" type="HFlowContainer" parent="Column/Scroll/Margin/Content/ControlsCard/ControlsBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="AmountRow" type="HBoxContainer" parent="Column/Scroll/Margin/Content/ControlsCard/ControlsBox"]
+visible = false
+layout_mode = 2
+
+[node name="AmountLabel" type="Label" parent="Column/Scroll/Margin/Content/ControlsCard/ControlsBox/AmountRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Amount to pour"
+autowrap_mode = 3
+
+[node name="AmountSpin" type="SpinBox" parent="Column/Scroll/Margin/Content/ControlsCard/ControlsBox/AmountRow"]
+layout_mode = 2
+
+[node name="HeaterRow" type="HBoxContainer" parent="Column/Scroll/Margin/Content/ControlsCard/ControlsBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaterButton" type="Button" parent="Column/Scroll/Margin/Content/ControlsCard/ControlsBox/HeaterRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"AccentButton"
+text = "Switch on"
+
+[node name="HeaterSpin" type="SpinBox" parent="Column/Scroll/Margin/Content/ControlsCard/ControlsBox/HeaterRow"]
+layout_mode = 2
+
+[node name="PropertiesCard" type="PanelContainer" parent="Column/Scroll/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="PropertiesBox" type="VBoxContainer" parent="Column/Scroll/Margin/Content/PropertiesCard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PropertiesHeading" type="Label" parent="Column/Scroll/Margin/Content/PropertiesCard/PropertiesBox"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+text = "PROPERTIES"
+
+[node name="RowsBox" type="VBoxContainer" parent="Column/Scroll/Margin/Content/PropertiesCard/PropertiesBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ContentsCard" type="PanelContainer" parent="Column/Scroll/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="ContentsBox" type="VBoxContainer" parent="Column/Scroll/Margin/Content/ContentsCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ObservationsCard" type="PanelContainer" parent="Column/Scroll/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="ObservationsBox" type="VBoxContainer" parent="Column/Scroll/Margin/Content/ObservationsCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="SafetyCard" type="PanelContainer" parent="Column/Scroll/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="SafetyBox" type="VBoxContainer" parent="Column/Scroll/Margin/Content/SafetyCard"]
+layout_mode = 2
+theme_override_constants/separation = 4

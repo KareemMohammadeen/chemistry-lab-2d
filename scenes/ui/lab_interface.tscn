@@ -1,0 +1,226 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/lab_interface.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/ui/inspector_panel.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/ui/library_panel.tscn" id="3"]
+
+[node name="LabInterface" type="Control" node_paths=PackedStringArray("top_bar", "title_label", "time_label", "undo_button", "redo_button", "reset_button", "pause_button", "speed_box", "library_toggle", "logo", "library", "inspector", "stage_slot", "toast_label", "hint_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+top_bar = NodePath("Root/TopBar")
+title_label = NodePath("Root/TopBar/Margin/Row/Brand/TitleBox/TitleLabel")
+time_label = NodePath("Root/TopBar/Margin/Row/TimeChip/TimeBox/TimeLabel")
+undo_button = NodePath("Root/TopBar/Margin/Row/HistoryGroup/Buttons/UndoButton")
+redo_button = NodePath("Root/TopBar/Margin/Row/HistoryGroup/Buttons/RedoButton")
+reset_button = NodePath("Root/TopBar/Margin/Row/ResetButton")
+pause_button = NodePath("Root/TopBar/Margin/Row/SimGroup/Buttons/PauseButton")
+speed_box = NodePath("Root/TopBar/Margin/Row/SimGroup/Buttons/SpeedBox")
+library_toggle = NodePath("Root/TopBar/Margin/Row/LibraryToggle")
+logo = NodePath("Root/TopBar/Margin/Row/Brand/Logo")
+library = NodePath("Root/Body/LibraryPanel")
+inspector = NodePath("Root/Body/InspectorPanel")
+stage_slot = NodePath("Root/Body/StageSlot")
+toast_label = NodePath("Root/Body/StageSlot/ToastLabel")
+hint_label = NodePath("Root/Body/StageSlot/HintPanel/HintLabel")
+
+[node name="Root" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="TopBar" type="PanelContainer" parent="Root"]
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+theme_type_variation = &"TopBarPanel"
+
+[node name="Margin" type="MarginContainer" parent="Root/TopBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 8
+
+[node name="Row" type="HBoxContainer" parent="Root/TopBar/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LibraryToggle" type="Button" parent="Root/TopBar/Margin/Row"]
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
+tooltip_text = "Show or hide the materials and equipment library"
+toggle_mode = true
+button_pressed = true
+icon_alignment = 1
+
+[node name="Brand" type="HBoxContainer" parent="Root/TopBar/Margin/Row"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Logo" type="TextureRect" parent="Root/TopBar/Margin/Row/Brand"]
+custom_minimum_size = Vector2(38, 38)
+layout_mode = 2
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleBox" type="VBoxContainer" parent="Root/TopBar/Margin/Row/Brand"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="AppLabel" type="Label" parent="Root/TopBar/Margin/Row/Brand/TitleBox"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+text = "CHEMISTRY LAB"
+
+[node name="TitleLabel" type="Label" parent="Root/TopBar/Margin/Row/Brand/TitleBox"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_type_variation = &"StrongLabel"
+text = "Experiment"
+text_overrun_behavior = 3
+
+[node name="TimeChip" type="PanelContainer" parent="Root/TopBar/Margin/Row"]
+layout_mode = 2
+theme_type_variation = &"ChipPanel"
+
+[node name="TimeBox" type="VBoxContainer" parent="Root/TopBar/Margin/Row/TimeChip"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TimeCaption" type="Label" parent="Root/TopBar/Margin/Row/TimeChip/TimeBox"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+text = "LAB TIME"
+
+[node name="TimeLabel" type="Label" parent="Root/TopBar/Margin/Row/TimeChip/TimeBox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_type_variation = &"StrongLabel"
+text = "00:00"
+
+[node name="Spacer" type="Control" parent="Root/TopBar/Margin/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HistoryGroup" type="PanelContainer" parent="Root/TopBar/Margin/Row"]
+layout_mode = 2
+theme_type_variation = &"GroupPill"
+
+[node name="Buttons" type="HBoxContainer" parent="Root/TopBar/Margin/Row/HistoryGroup"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="UndoButton" type="Button" parent="Root/TopBar/Margin/Row/HistoryGroup/Buttons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+tooltip_text = "Undo the last action (Ctrl+Z)"
+theme_type_variation = &"ToolButton"
+text = "Undo"
+
+[node name="RedoButton" type="Button" parent="Root/TopBar/Margin/Row/HistoryGroup/Buttons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+tooltip_text = "Redo (Ctrl+Y)"
+theme_type_variation = &"ToolButton"
+text = "Redo"
+
+[node name="ResetButton" type="Button" parent="Root/TopBar/Margin/Row"]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+tooltip_text = "Put everything back on the starting shelves"
+text = "Reset bench"
+
+[node name="SimGroup" type="PanelContainer" parent="Root/TopBar/Margin/Row"]
+layout_mode = 2
+theme_type_variation = &"GroupPill"
+
+[node name="Buttons" type="HBoxContainer" parent="Root/TopBar/Margin/Row/SimGroup"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PauseButton" type="Button" parent="Root/TopBar/Margin/Row/SimGroup/Buttons"]
+custom_minimum_size = Vector2(112, 40)
+layout_mode = 2
+tooltip_text = "Pause or resume simulated time (Space)"
+theme_type_variation = &"ToolButton"
+toggle_mode = true
+text = "Pause"
+
+[node name="Separator" type="VSeparator" parent="Root/TopBar/Margin/Row/SimGroup/Buttons"]
+layout_mode = 2
+
+[node name="SpeedBox" type="HBoxContainer" parent="Root/TopBar/Margin/Row/SimGroup/Buttons"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Body" type="HBoxContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="LibraryPanel" parent="Root/Body" instance=ExtResource("3")]
+layout_mode = 2
+
+[node name="StageSlot" type="Control" parent="Root/Body"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="ToastLabel" type="Label" parent="Root/Body/StageSlot"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.1
+anchor_top = 1.0
+anchor_right = 0.9
+anchor_bottom = 1.0
+offset_top = -128.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HintPanel" type="PanelContainer" parent="Root/Body/StageSlot"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.03
+anchor_top = 1.0
+anchor_right = 0.97
+anchor_bottom = 1.0
+offset_top = -52.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"HintPanel"
+
+[node name="HintLabel" type="Label" parent="Root/Body/StageSlot/HintPanel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.78, 0.84, 0.89, 1)
+theme_override_font_sizes/font_size = 14
+text = "Click to inspect  •  Drag a bottle onto a beaker to pour  •  Drag a beaker onto the hot plate  •  Ctrl+Z undo  •  Space pause"
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="InspectorPanel" parent="Root/Body" instance=ExtResource("2")]
+layout_mode = 2

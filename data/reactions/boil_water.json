@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "id": "boil_water",
+  "type": "boiling",
+  "name": "Boiling of water",
+  "substance": "water",
+  "tier": "qualitative",
+  "observations": {
+    "boiling": "The liquid is boiling: bubbles of water vapour form throughout it."
+  },
+  "explanation": "Water boils at 100 °C at normal atmospheric pressure. Boiling is only partly simulated in this version: the temperature is held at the boiling point and evaporation is not yet modelled.",
+  "level": "middle_school"
+}

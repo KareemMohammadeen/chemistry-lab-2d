@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/main.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/lab/lab_workspace.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/ui/lab_interface.tscn" id="3"]
+
+[node name="Main" type="Node" node_paths=PackedStringArray("workspace", "lab_interface")]
+script = ExtResource("1")
+workspace = NodePath("LabWorkspace")
+lab_interface = NodePath("UiLayer/LabInterface")
+
+[node name="LabWorkspace" parent="." instance=ExtResource("2")]
+
+[node name="UiLayer" type="CanvasLayer" parent="."]
+
+[node name="LabInterface" parent="UiLayer" instance=ExtResource("3")]

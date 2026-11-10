@@ -1,0 +1,72 @@
+{
+ "version": 1,
+ "id": "acetone",
+ "name": "Propanone (acetone)",
+ "formula": "C3H6O",
+ "formula_display": "C₃H₆O",
+ "composition": {
+  "C": 3,
+  "H": 6,
+  "O": 1
+ },
+ "molar_mass_g_mol": {
+  "value": 58.08,
+  "unit": "g/mol",
+  "status": "derived",
+  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
+ },
+ "state_at_20c": "liquid",
+ "appearance": "Clear, colourless, volatile liquid.",
+ "color_hex": {
+  "value": "#EEF3F6",
+  "status": "display"
+ },
+ "solution_color_hex": null,
+ "density_g_cm3": {
+  "value": 0.785,
+  "unit": "g/cm3",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "melting_c": {
+  "value": -94.7,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "boiling_c": {
+  "value": 56.1,
+  "unit": "degC",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "solubility_in_water": {
+  "g_per_100ml_at_20c": null,
+  "note": "Miscible with water in all proportions."
+ },
+ "hazards": {
+  "classes": [
+   "flammable",
+   "irritant"
+  ],
+  "summary": "Highly flammable; vapour irritates eyes and causes drowsiness.",
+  "status": "unverified_reference",
+  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ },
+ "storage": "Closed container in a flammables cabinet.",
+ "reactions": [
+  {
+   "role": "solvent",
+   "note": "Dissolves many plastics and organic compounds."
+  }
+ ],
+ "educational_notes": "Evaporates quickly; used as a solvent and nail-polish remover.",
+ "simulation": {
+  "supported": false,
+  "chemical_id": null,
+  "note": "Reference data only; not yet playable in the simulation."
+ },
+ "references": [
+  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
+ ]
+}

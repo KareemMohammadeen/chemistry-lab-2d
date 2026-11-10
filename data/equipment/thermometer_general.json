@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "id": "thermometer_general",
+  "name": "Thermometer",
+  "category": "tool",
+  "material": "glass",
+  "capacity_ml": null,
+  "default_state": "open",
+  "movable": true,
+  "interactions": [
+    "select",
+    "pick_up",
+    "drag",
+    "place",
+    "insert"
+  ],
+  "default_pour_ml": 0.0,
+  "default_solid_g": 0.0,
+  "glass_mass_g": null,
+  "placement": {
+    "surface": true,
+    "support": false,
+    "insert_into_vessel": true
+  },
+  "interaction_points": {
+    "base": [
+      0,
+      0
+    ],
+    "opening": [
+      0,
+      -0.0
+    ],
+    "pour_lip": [
+      0.0,
+      -0.0
+    ]
+  },
+  "visual": {
+    "style": "thermometer",
+    "height": 190,
+    "profile": [],
+    "wall_px": 3.0,
+    "graduation_ml": 0.0
+  },
+  "thermometer": {
+    "min_c": -10.0,
+    "max_c": 110.0,
+    "insert_offset": [
+      14,
+      2
+    ],
+    "status": "placeholder"
+  }
+}
