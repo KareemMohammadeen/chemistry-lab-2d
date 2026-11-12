@@ -4,7 +4,7 @@ extends Node
 
 ## Smallest window that still shows the whole laboratory legibly.
 const MIN_WINDOW_SIZE := Vector2i(960, 540)
-const SETUP_PATH := "res://data/setups/first_demo.json"
+const SETUP_PATH := "res://data/setups/classroom_demo.json"
 ## Window size the interface is designed at (project stretch base) and the smallest effective
 ## scale text may shrink to: below it the interface is enlarged so fonts stay readable.
 const DESIGN_SIZE := Vector2(1920.0, 1080.0)
