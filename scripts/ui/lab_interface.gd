@@ -83,8 +83,9 @@ func _ready() -> void:
 	grade_selector.item_selected.connect(_on_grade_selected)
 	resized.connect(_apply_responsive_layout)
 	# Space must pause the simulation, not re-press whichever button was clicked last.
-	for button in [undo_button, redo_button, reset_button, pause_button, library_toggle, grade_selector]:
+	for button in [undo_button, redo_button, reset_button, pause_button, library_toggle]:
 		(button as Button).focus_mode = Control.FOCUS_NONE
+	grade_selector.focus_mode = Control.FOCUS_NONE
 	_apply_responsive_layout()
 
 
