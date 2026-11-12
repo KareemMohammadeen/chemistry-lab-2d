@@ -7,7 +7,8 @@
   "notes": [
     "This file records only grade/subject facts that can be supported by the linked Ministry sources.",
     "Exact unit-by-unit mappings are deliberately left pending until the matching official textbook edition and pathway have been reviewed.",
-    "The periodic-table entries are reference cards only; they are not laboratory reagents."
+    "The periodic-table entries are reference cards only; they are not laboratory reagents.",
+    "Senior 2 chemistry is not universal across pathways; see Ministerial Decree 213/2025 and confirm the student's exact pathway."
   ],
   "sources": [
     {
@@ -38,6 +39,14 @@
       "url": "https://ellibrary.moe.gov.eg/EgyptianBaccalaureate/",
       "accessed": "2026-11-12",
       "supports": "Official portal for Egyptian Baccalaureate subject books; Senior 2 must be mapped to the student's actual pathway."
+    },
+    {
+      "id": "ministerial_decree_213_2025",
+      "title": "Official Gazette — Ministry of Education Decree 213/2025 on the Egyptian Baccalaureate",
+      "url": "https://mediadr.sis.gov.eg/bitstream/handle/123456789/108533/WQ202_20250911_1658.pdf?isAllowed=y&sequence=2",
+      "published": "2025-09-11",
+      "accessed": "2026-11-12",
+      "supports": "The second-secondary Egyptian Baccalaureate has pathway-specific subject choices; Chemistry is one option in the Engineering and Computer Science pathway, not a universal subject for every Senior 2 student."
     }
   ],
   "profiles": [
@@ -94,14 +103,15 @@
       "id": "senior2",
       "label": "Senior 2",
       "stage": "secondary",
-      "subject": "Pathway-dependent — confirm the school system",
+      "subject": "Pathway-dependent — confirm General Secondary or Egyptian Baccalaureate",
       "subject_status": "requires_pathway_confirmation",
       "topic_mapping_status": "pending_official_textbook_review",
       "source_ids": [
         "official_secondary_books",
-        "egyptian_baccalaureate_books"
+        "egyptian_baccalaureate_books",
+        "ministerial_decree_213_2025"
       ],
-      "note": "Senior 2 may follow different subject structures depending on General Secondary or the Egyptian Baccalaureate pathway. Do not assign a Chemistry syllabus until the pathway and official book are selected."
+      "note": "Do not assign one Chemistry syllabus to every Senior 2 student. Under the Egyptian Baccalaureate, the Engineering and Computer Science pathway includes a choice between Chemistry and Programming/AI; confirm the student's system and actual pathway before mapping lessons. General Secondary must be matched to its exact official 2026–2027 book."
     }
   ]
 }
