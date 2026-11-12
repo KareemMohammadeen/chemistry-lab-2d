@@ -28,6 +28,7 @@ var _selected_id: String = ""
 var _refresh_left_s: float = 0.0
 ## Section headings ("REAGENTS", "EQUIPMENT") are written once, above their first group.
 var _section_written: Dictionary = {}
+var _curriculum_profile: Dictionary = {}
 
 
 func bind(host: SimulationHost) -> void:
@@ -35,6 +36,14 @@ func bind(host: SimulationHost) -> void:
 	EventBus.object_selected.connect(_on_object_selected)
 	_build()
 	_refresh()
+
+
+## Updates the curriculum label without changing which reagents the simulation can use.
+func set_curriculum_profile(profile: Dictionary) -> void:
+	_curriculum_profile = profile.duplicate(true)
+	if _host != null:
+		_build()
+		_refresh()
 
 
 func _process(delta: float) -> void:
@@ -71,7 +80,11 @@ func _build() -> void:
 		for equipment in equipment_groups[group]:
 			_add_equipment_card(equipment as EquipmentDefinition)
 			equipment_count += 1
-	subtitle_label.text = "%d playable reagents  •  %d instruments. Click an item to find it on the bench." % [reagent_count, equipment_count]
+	_add_element_reference_section(database)
+	var profile_label := str(_curriculum_profile.get("label", "No grade selected"))
+	var subject_label := str(_curriculum_profile.get("subject", "Select a grade"))
+	var mapping_note := str(_curriculum_profile.get("note", "Choose a grade to view its curriculum context."))
+	subtitle_label.text = "%d playable reagents  •  %d instruments\n%s — %s\n%s" % [reagent_count, equipment_count, profile_label, subject_label, mapping_note]
 
 
 func _add_heading(group_title: String, section: String) -> void:
@@ -215,3 +228,31 @@ func _on_card_activated(card: LibraryCard) -> void:
 func _on_object_selected(object_id: String) -> void:
 	_selected_id = object_id
 	_refresh()
+
+
+
+## All 118 entries are shown as read-only reference cards; they are not spawnable reagents.
+func _add_element_reference_section(database: ContentDatabase) -> void:
+	_add_heading("Periodic table · 118 reference elements", "ELEMENTS")
+	var grid := GridContainer.new()
+	grid.columns = 4
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.add_theme_constant_override("h_separation", 5)
+	grid.add_theme_constant_override("v_separation", 5)
+	content_box.add_child(grid)
+	for atomic_number in range(1, 119):
+		var element := database.get_element_by_number(atomic_number)
+		if element == null:
+			continue
+		var card := ElementReferenceCard.new()
+		grid.add_child(card)
+		card.setup(element)
+		card.activated.connect(_on_element_reference_activated)
+
+
+func _on_element_reference_activated(element: ElementDefinition) -> void:
+	var group_label := "f-block" if element.group <= 0 else str(element.group)
+	var config := element.electron_configuration if element.electron_configuration != "" else "Not listed"
+	var message := "%s (%s), atomic number %d. %s; period %d, group %s, block %s. Electron configuration: %s. Reference-only entry." % [
+		element.display_name, element.id, element.atomic_number, element.category, element.period, group_label, element.block, config]
+	EventBus.feedback_message_requested.emit(message, &"info")
