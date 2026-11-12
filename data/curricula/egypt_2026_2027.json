@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "display_language": "en",
+  "curriculum_name": "Egyptian Ministry of Education — school-year reference",
+  "notes": [
+    "This file records only grade/subject facts that can be supported by the linked Ministry sources.",
+    "Exact unit-by-unit mappings are deliberately left pending until the matching official textbook edition and pathway have been reviewed.",
+    "The periodic-table entries are reference cards only; they are not laboratory reagents."
+  ],
+  "sources": [
+    {
+      "id": "official_student_books",
+      "title": "Ministry of Education — Student Books",
+      "url": "https://studentbooks.moe.gov.eg/Books",
+      "accessed": "2026-11-12",
+      "supports": "Official textbook portal for school stages. Use the selected academic year and grade before importing unit-level mappings."
+    },
+    {
+      "id": "official_secondary_books",
+      "title": "Ministry of Education — Secondary Books",
+      "url": "https://ellibrary.moe.gov.eg/Books-sec/",
+      "accessed": "2026-11-12",
+      "supports": "Official secondary-stage book portal."
+    },
+    {
+      "id": "senior1_integrated_science_statement",
+      "title": "State Information Service — Ministry statement on first-secondary subject map",
+      "url": "https://sis.gov.eg/ar/المركز-الإعلامي/الأخبار/توضيح-هام-من-وزارة-التربية-والتعليم-حول-منشورات-متداولة-تدعي-إلغاء-مادة-العلوم-المتكاملة/",
+      "published": "2026-09-01",
+      "accessed": "2026-11-12",
+      "supports": "The Ministry stated that the first-secondary subject map remained unchanged, including Integrated Science."
+    },
+    {
+      "id": "egyptian_baccalaureate_books",
+      "title": "Ministry of Education — Egyptian Baccalaureate books",
+      "url": "https://ellibrary.moe.gov.eg/EgyptianBaccalaureate/",
+      "accessed": "2026-11-12",
+      "supports": "Official portal for Egyptian Baccalaureate subject books; Senior 2 must be mapped to the student's actual pathway."
+    }
+  ],
+  "profiles": [
+    {
+      "id": "prep1",
+      "label": "Prep 1",
+      "stage": "preparatory",
+      "subject": "Science",
+      "subject_status": "official_grade_book_portal",
+      "topic_mapping_status": "pending_official_textbook_review",
+      "source_ids": [
+        "official_student_books"
+      ],
+      "note": "Use the official 2026–2027 Prep 1 science book for lesson-level mapping. No unit list is guessed here."
+    },
+    {
+      "id": "prep2",
+      "label": "Prep 2",
+      "stage": "preparatory",
+      "subject": "Science",
+      "subject_status": "official_grade_book_portal",
+      "topic_mapping_status": "pending_official_textbook_review",
+      "source_ids": [
+        "official_student_books"
+      ],
+      "note": "Use the official 2026–2027 Prep 2 science book for lesson-level mapping. No unit list is guessed here."
+    },
+    {
+      "id": "prep3",
+      "label": "Prep 3",
+      "stage": "preparatory",
+      "subject": "Science",
+      "subject_status": "official_grade_book_portal",
+      "topic_mapping_status": "pending_official_textbook_review",
+      "source_ids": [
+        "official_student_books"
+      ],
+      "note": "Use the official 2026–2027 Prep 3 science book for lesson-level mapping. No unit list is guessed here."
+    },
+    {
+      "id": "senior1",
+      "label": "Senior 1",
+      "stage": "secondary",
+      "subject": "Integrated Science",
+      "subject_status": "confirmed_by_ministry_statement",
+      "topic_mapping_status": "pending_official_textbook_review",
+      "source_ids": [
+        "official_secondary_books",
+        "senior1_integrated_science_statement"
+      ],
+      "note": "The Ministry's 2026-09-01 statement confirms Integrated Science remains in the first-secondary subject map for 2026–2027."
+    },
+    {
+      "id": "senior2",
+      "label": "Senior 2",
+      "stage": "secondary",
+      "subject": "Pathway-dependent — confirm the school system",
+      "subject_status": "requires_pathway_confirmation",
+      "topic_mapping_status": "pending_official_textbook_review",
+      "source_ids": [
+        "official_secondary_books",
+        "egyptian_baccalaureate_books"
+      ],
+      "note": "Senior 2 may follow different subject structures depending on General Secondary or the Egyptian Baccalaureate pathway. Do not assign a Chemistry syllabus until the pathway and official book are selected."
+    }
+  ]
+}
