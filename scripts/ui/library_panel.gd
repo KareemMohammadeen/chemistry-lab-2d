@@ -86,7 +86,7 @@ func _build() -> void:
 	var mapping_note := str(_curriculum_profile.get("note", "Choose a grade to view its curriculum context."))
 	if str(_curriculum_profile.get("topic_mapping_status", "")) == "pending_official_textbook_review":
 		mapping_note = "Lesson-by-lesson mapping pending review of the matching official textbook. " + mapping_note
-	subtitle_label.text = "%d playable reagents  •  %d instruments\n%s — %s\n%s" % [reagent_count, equipment_count, profile_label, subject_label, mapping_note]
+	subtitle_label.text = "%d playable reagents  •  %d instruments  •  118 references\n%s — %s\n%s" % [reagent_count, equipment_count, profile_label, subject_label, mapping_note]
 
 
 func _add_heading(group_title: String, section: String) -> void:
@@ -237,7 +237,7 @@ func _on_object_selected(object_id: String) -> void:
 func _add_element_reference_section(database: ContentDatabase) -> void:
 	_add_heading("Periodic table · 118 reference elements", "ELEMENTS")
 	var grid := GridContainer.new()
-	grid.columns = 4
+	grid.columns = 3
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.add_theme_constant_override("h_separation", 5)
 	grid.add_theme_constant_override("v_separation", 5)
