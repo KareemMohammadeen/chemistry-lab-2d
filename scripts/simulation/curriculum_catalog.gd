@@ -43,7 +43,7 @@ func load_profiles() -> void:
 			if not sources_by_id.has(source_id):
 				missing_sources.append(source_id)
 		if not missing_sources.is_empty():
-			errors.append("Curriculum profile '%s' references unknown sources: %s" % [profile_id, ", ".join(missing_sources)])
+			errors.append("Curriculum profile '%s' references unknown sources: %s" % [profile_id, str(missing_sources)])
 			continue
 		profiles.append(profile.duplicate(true))
 		profiles_by_id[profile_id] = profile.duplicate(true)
@@ -54,10 +54,12 @@ func load_profiles() -> void:
 func get_profile(profile_id: String) -> Dictionary:
 	if not profiles_by_id.has(profile_id):
 		return {}
-	return (profiles_by_id[profile_id] as Dictionary).duplicate(true)
+	var profile: Dictionary = profiles_by_id[profile_id]
+	return profile.duplicate(true)
 
 
 func get_source(source_id: String) -> Dictionary:
 	if not sources_by_id.has(source_id):
 		return {}
-	return (sources_by_id[source_id] as Dictionary).duplicate(true)
+	var source: Dictionary = sources_by_id[source_id]
+	return source.duplicate(true)
