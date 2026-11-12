@@ -18,6 +18,11 @@ const EQUIPMENT_GROUP_TITLES := {"vessel": "Glassware", "appliance": "Heating", 
 const EQUIPMENT_GROUP_ORDER: Array = ["vessel", "appliance", "tool"]
 ## Equipment whose style is listed here is a container for reagents, shown through the reagent cards.
 const HIDDEN_EQUIPMENT_STYLES: Array = ["bottle"]
+## The classroom-facing Library deliberately exposes only this safe teaching subset.
+const CLASSROOM_CHEMICAL_IDS: Array[String] = ["water", "sodium_chloride"]
+const CLASSROOM_EQUIPMENT_IDS: Array[String] = ["beaker_250ml", "test_tube_20ml", "thermometer_general", "dropper_3ml", "hot_plate_basic"]
+const SAFE_REFERENCE_COMPOUND_IDS: Array[String] = ["glucose", "sucrose", "starch"]
+const LEARNING_GUIDE_PATH := "res://data/learning/learning_guide.json"
 
 @export var subtitle_label: Label
 @export var content_box: VBoxContainer
@@ -29,6 +34,7 @@ var _refresh_left_s: float = 0.0
 ## Section headings ("REAGENTS", "EQUIPMENT") are written once, above their first group.
 var _section_written: Dictionary = {}
 var _curriculum_profile: Dictionary = {}
+var _guide_window: Window
 
 
 func bind(host: SimulationHost) -> void:
@@ -62,17 +68,34 @@ func _build() -> void:
 	_cards.clear()
 	_section_written.clear()
 	var database := _host.database
+
+	var guide_button := Button.new()
+	guide_button.text = "Learning guide & sources"
+	guide_button.tooltip_text = "Open explanations for classroom materials, safe concepts and curriculum sources."
+	guide_button.theme_type_variation = &"ToolButton"
+	guide_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	guide_button.focus_mode = Control.FOCUS_NONE
+	guide_button.pressed.connect(open_learning_guide)
+	content_box.add_child(guide_button)
+
+	var classroom_chemicals: Array = []
+	for chemical_id in CLASSROOM_CHEMICAL_IDS:
+		var chemical: ChemicalDefinition = database.get_chemical(chemical_id)
+		if chemical != null:
+			classroom_chemicals.append(chemical)
+	var by_group := _group_by(classroom_chemicals, func(item: Variant) -> String: return (item as ChemicalDefinition).category)
 	var reagent_count := 0
-	var by_group := _group_by(database.chemicals.values(), func(item: Variant) -> String: return (item as ChemicalDefinition).category)
 	for group in _ordered_groups(by_group, CHEMICAL_GROUP_ORDER):
 		_add_heading(str(CHEMICAL_GROUP_TITLES.get(group, str(group).capitalize())), "REAGENTS")
 		for chemical in by_group[group]:
 			_add_reagent_card(chemical as ChemicalDefinition)
 			reagent_count += 1
+
 	var equipment_items: Array = []
-	for item in database.equipment.values():
-		if not HIDDEN_EQUIPMENT_STYLES.has((item as EquipmentDefinition).style()):
-			equipment_items.append(item)
+	for equipment_id in CLASSROOM_EQUIPMENT_IDS:
+		var equipment: EquipmentDefinition = database.get_equipment(equipment_id)
+		if equipment != null and not HIDDEN_EQUIPMENT_STYLES.has(equipment.style()):
+			equipment_items.append(equipment)
 	var equipment_groups := _group_by(equipment_items, func(item: Variant) -> String: return (item as EquipmentDefinition).category)
 	var equipment_count := 0
 	for group in _ordered_groups(equipment_groups, EQUIPMENT_GROUP_ORDER):
@@ -80,13 +103,118 @@ func _build() -> void:
 		for equipment in equipment_groups[group]:
 			_add_equipment_card(equipment as EquipmentDefinition)
 			equipment_count += 1
+
+	_add_safe_reference_materials_section(database)
 	_add_element_reference_section(database)
+
 	var profile_label := str(_curriculum_profile.get("label", "No grade selected"))
 	var subject_label := str(_curriculum_profile.get("subject", "Select a grade"))
 	var mapping_note := str(_curriculum_profile.get("note", "Choose a grade to view its curriculum context."))
 	if str(_curriculum_profile.get("topic_mapping_status", "")) == "pending_official_textbook_review":
-		mapping_note = "Lesson-by-lesson mapping pending review of the matching official textbook. " + mapping_note
-	subtitle_label.text = "%d playable reagents  •  %d instruments  •  118 references\n%s — %s\n%s" % [reagent_count, equipment_count, profile_label, subject_label, mapping_note]
+		mapping_note = "Lesson-by-lesson mapping is pending direct review of the matching official textbook. " + mapping_note
+	subtitle_label.text = "%d classroom reagents  •  %d instruments  •  118 read-only elements\\n%s — %s\\n%s" % [reagent_count, equipment_count, profile_label, subject_label, mapping_note]
+
+
+func _add_safe_reference_materials_section(database: ContentDatabase) -> void:
+	_add_heading("Safe reference compounds · not playable", "REFERENCE")
+	for compound_id in SAFE_REFERENCE_COMPOUND_IDS:
+		var compound: CompoundDefinition = database.get_compound(compound_id)
+		if compound == null:
+			continue
+		var label := Label.new()
+		label.text = "%s  •  %s  •  reference only" % [compound.display_name, compound.formula_display]
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		label.add_theme_color_override("font_color", LabColors.TEXT_SECONDARY)
+		content_box.add_child(label)
+
+
+func open_learning_guide(_profile: Dictionary = {}) -> void:
+	if is_instance_valid(_guide_window):
+		_guide_window.popup_centered(Vector2i(780, 680))
+		return
+	var data := JsonDataLoader.load_dictionary(LEARNING_GUIDE_PATH)
+	if data.is_empty():
+		EventBus.feedback_message_requested.emit("The learning guide could not be loaded.", &"warning")
+		return
+
+	_guide_window = Window.new()
+	_guide_window.title = "Teacher Mode · Learning Guide & Sources"
+	_guide_window.size = Vector2i(780, 680)
+	_guide_window.transient = true
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 18)
+	margin.add_theme_constant_override("margin_top", 16)
+	margin.add_theme_constant_override("margin_right", 18)
+	margin.add_theme_constant_override("margin_bottom", 16)
+	_guide_window.add_child(margin)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	margin.add_child(scroll)
+
+	var rich := RichTextLabel.new()
+	rich.bbcode_enabled = true
+	rich.custom_minimum_size = Vector2(710, 980)
+	rich.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rich.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	rich.meta_clicked.connect(_open_guide_link)
+	rich.text = _build_learning_guide_text(data)
+	scroll.add_child(rich)
+
+	add_child(_guide_window)
+	_guide_window.close_requested.connect(_close_learning_guide)
+	_guide_window.popup_centered(Vector2i(780, 680))
+
+
+func _build_learning_guide_text(data: Dictionary) -> String:
+	var output := "[b]CLASSROOM LEARNING GUIDE[/b]\\n"
+	output += "This guide describes the virtual model only. It is not a set of instructions for real-world experiments.\\n\\n"
+	output += "[b]Selected grade[/b]\\n"
+	output += "%s — %s\\n" % [str(_curriculum_profile.get("label", "Not selected")), str(_curriculum_profile.get("subject", "Select a grade"))]
+	output += "%s\\n\\n" % str(_curriculum_profile.get("note", "Choose a grade in the top bar."))
+	output += "[b]Materials available in this classroom demo[/b]\\n"
+	for material_value in data.get("materials", []):
+		var material: Dictionary = material_value
+		if not CLASSROOM_CHEMICAL_IDS.has(str(material.get("id", ""))) and not SAFE_REFERENCE_COMPOUND_IDS.has(str(material.get("id", ""))):
+			continue
+		output += "[b]%s (%s)[/b] — %s\\n" % [str(material.get("name", "")), str(material.get("formula", "")), str(material.get("concept", ""))]
+		output += "%s\\n" % str(material.get("explanation", ""))
+		for goal in material.get("learning_goals", []):
+			output += "• %s\\n" % str(goal)
+		output += "Status: %s\\n\\n" % ("playable in the virtual demo" if str(material.get("status", "")) == "playable_classroom_demo" else "reference only")
+	output += "[b]Processes and reactions explained[/b]\\n"
+	for process_value in data.get("processes", []):
+		var process_entry: Dictionary = process_value
+		output += "[b]%s[/b] (%s)\\n" % [str(process_entry.get("name", "")), str(process_entry.get("mode", ""))]
+		output += "%s\\n" % str(process_entry.get("explanation", process_entry.get("summary", "")))
+		for limitation in process_entry.get("model_limitations", []):
+			output += "Model note: %s\\n" % str(limitation)
+		output += "\\n"
+	var data_quality: Dictionary = data.get("data_quality", {})
+	output += "[b]Data quality[/b]\\n%s\\n\\n" % str(data_quality.get("summary", ""))
+	output += "[b]Curriculum status[/b]\\nPrep 1–3: exact units remain pending direct review of the official 2026–2027 student books. Senior 1: Integrated Science. Senior 2: pathway-dependent; do not assume one Chemistry syllabus for all students.\\n\\n"
+	output += "[b]Trusted learning and safety sources[/b]\\n"
+	for source_value in data.get("sources", []):
+		var source: Dictionary = source_value
+		var source_url := str(source.get("url", ""))
+		if source_url.begins_with("https://"):
+			output += "[url=%s]%s[/url] — %s\\n" % [source_url, str(source.get("title", "Source")), str(source.get("supports", ""))]
+	output += "\\n[b]Reference boundary[/b]\\nAll 118 elements remain read-only periodic-table references. Other advanced catalogue records are intentionally not exposed as classroom reagents or given operational descriptions."
+	return output
+
+
+func _open_guide_link(meta: Variant) -> void:
+	var url := str(meta)
+	if url.begins_with("https://"):
+		OS.shell_open(url)
+
+
+func _close_learning_guide() -> void:
+	if is_instance_valid(_guide_window):
+		_guide_window.queue_free()
+	_guide_window = null
 
 
 func _add_heading(group_title: String, section: String) -> void:
