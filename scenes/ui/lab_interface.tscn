@@ -103,7 +103,7 @@ theme_override_constants/separation = 0
 [node name="GradeCaption" type="Label" parent="Root/TopBar/Margin/Row/GradeChip/GradeBox"]
 layout_mode = 2
 theme_type_variation = &"CaptionLabel"
-text = "CURRICULUM"
+text = "TEACHER MODE"
 
 [node name="GradeSelector" type="OptionButton" parent="Root/TopBar/Margin/Row/GradeChip/GradeBox"]
 custom_minimum_size = Vector2(138, 34)
