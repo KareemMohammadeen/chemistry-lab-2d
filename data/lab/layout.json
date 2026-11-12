@@ -1,7 +1,7 @@
 {
   "version": 1,
   "canvas": [
-    1240,
+    1600,
     900
   ],
   "wall": {
@@ -16,31 +16,31 @@
       "id": "upper_shelf",
       "kind": "shelf",
       "label": "REAGENT RACK",
-      "x_min": 70,
-      "x_max": 1170,
+      "x_min": 50,
+      "x_max": 1550,
       "y_min": 240,
       "y_max": 240,
-      "accept_margin": 70
+      "accept_margin": 80
     },
     {
       "id": "lower_shelf",
       "kind": "shelf",
       "label": "GLASSWARE AND TOOLS",
-      "x_min": 70,
-      "x_max": 1170,
+      "x_min": 50,
+      "x_max": 1550,
       "y_min": 460,
       "y_max": 460,
-      "accept_margin": 70
+      "accept_margin": 80
     },
     {
       "id": "bench",
       "kind": "bench",
       "label": "EXPERIMENT BENCH",
-      "x_min": 60,
-      "x_max": 1180,
+      "x_min": 40,
+      "x_max": 1560,
       "y_min": 600,
       "y_max": 830,
-      "accept_margin": 40
+      "accept_margin": 50
     }
   ]
 }
