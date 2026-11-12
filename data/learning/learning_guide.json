@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "language": "en",
+  "scope": "Classroom-facing learning content for a safe virtual demo. It intentionally explains only the approved classroom materials and concepts. Other reference records are not teaching reagents and do not receive operational descriptions.",
+  "classroom_material_ids": [
+    "water",
+    "sodium_chloride"
+  ],
+  "safe_reference_material_ids": [
+    "glucose",
+    "sucrose",
+    "starch"
+  ],
+  "materials": [
+    {
+      "id": "water",
+      "name": "Water",
+      "formula": "H2O",
+      "status": "playable_classroom_demo",
+      "concept": "A polar molecular compound and a common solvent.",
+      "explanation": "A water molecule contains two hydrogen atoms bonded to one oxygen atom. The uneven distribution of electrical charge makes water molecules polar, which helps explain why water can surround and disperse many ionic and polar particles.",
+      "learning_goals": [
+        "Distinguish a compound from an element.",
+        "Identify solvent and solute in a solution.",
+        "Connect molecular polarity to the formation of solutions."
+      ],
+      "observations": [
+        "In the virtual model, water is the solvent phase.",
+        "The model can display water temperature, but it does not yet provide a complete evaporation and condensation cycle."
+      ],
+      "source_ids": [
+        "openstax_dissolution",
+        "openstax_phase_transitions",
+        "nist_water"
+      ]
+    },
+    {
+      "id": "sodium_chloride",
+      "name": "Sodium chloride (table salt)",
+      "formula": "NaCl",
+      "status": "playable_classroom_demo",
+      "concept": "An ionic compound made of sodium and chloride ions in a repeating crystal lattice.",
+      "explanation": "When sodium chloride dissolves, water molecules interact with the ions and disperse them through the liquid. The result is a homogeneous solution; the dissolved particles are too small to see individually.",
+      "learning_goals": [
+        "Recognize an ionic compound.",
+        "Explain dissolution as particle separation and solvation.",
+        "Distinguish a solution from a visible solid mixture."
+      ],
+      "observations": [
+        "The virtual model shows the solid gradually becoming distributed through the water.",
+        "The solution remains visually clear in this model."
+      ],
+      "source_ids": [
+        "openstax_dissolution"
+      ]
+    },
+    {
+      "id": "glucose",
+      "name": "Glucose",
+      "formula": "C6H12O6",
+      "status": "safe_reference_only",
+      "concept": "A simple sugar and an important biological energy molecule.",
+      "explanation": "Glucose is a molecular compound containing carbon, hydrogen and oxygen. Its formula represents the atom count in one molecule; this reference card is for composition and classification only.",
+      "learning_goals": [
+        "Read a molecular formula.",
+        "Distinguish molecular compounds from ionic compounds."
+      ],
+      "observations": [
+        "Reference entry only; it is not part of the classroom demonstration setup."
+      ],
+      "source_ids": [
+        "openstax_dissolution"
+      ]
+    },
+    {
+      "id": "sucrose",
+      "name": "Sucrose",
+      "formula": "C12H22O11",
+      "status": "safe_reference_only",
+      "concept": "A molecular carbohydrate commonly known as table sugar.",
+      "explanation": "Sucrose is a molecular compound. In a solution, its molecules can become dispersed among water molecules without changing into different substances.",
+      "learning_goals": [
+        "Compare molecular and ionic solutes.",
+        "Understand a homogeneous solution at the particle level."
+      ],
+      "observations": [
+        "Reference entry only; it is not part of the classroom demonstration setup."
+      ],
+      "source_ids": [
+        "openstax_dissolution"
+      ]
+    },
+    {
+      "id": "starch",
+      "name": "Starch",
+      "formula": "(C6H10O5)n",
+      "status": "safe_reference_only",
+      "concept": "A large carbohydrate made from repeating glucose units.",
+      "explanation": "Starch is a polymeric carbohydrate. The n in its formula indicates that the number of repeating units can vary. This entry is a reference concept, not an executable experiment.",
+      "learning_goals": [
+        "Interpret a repeating-unit formula.",
+        "Recognize polymers as large molecules built from repeating units."
+      ],
+      "observations": [
+        "Reference entry only; it is not part of the classroom demonstration setup."
+      ],
+      "source_ids": [
+        "openstax_dissolution"
+      ]
+    }
+  ],
+  "processes": [
+    {
+      "id": "sodium_chloride_dissolution",
+      "name": "Dissolution and solution formation",
+      "mode": "simulated_classroom_demo",
+      "summary": "The model illustrates how an ionic solid becomes distributed through a solvent.",
+      "explanation": "Water molecules surround the ions at the crystal surface. The ions become dispersed through the liquid, producing a homogeneous solution. Dissolving is a physical process in this example: the substance's identity is not changed into a new compound.",
+      "student_observations": [
+        "The visible solid amount decreases in the model.",
+        "The liquid becomes a uniform solution.",
+        "The dissolved particles are not individually visible."
+      ],
+      "model_limitations": [
+        "The simulation is a simplified teaching model; its configured numerical solubility data must be reviewed before quantitative assessment."
+      ],
+      "source_ids": [
+        "openstax_dissolution"
+      ]
+    },
+    {
+      "id": "saturation_concept",
+      "name": "Saturation",
+      "mode": "concept_explanation",
+      "summary": "A solution has a limit to how much solute it can contain under a specified set of conditions.",
+      "explanation": "A saturated solution is at the solubility limit for the chosen temperature and solvent. Adding more solute does not increase the dissolved concentration under those same conditions; extra solid can remain as a separate phase.",
+      "student_observations": [
+        "Compare the meaning of dissolved material and undissolved solid.",
+        "Explain why a solution may stop becoming more concentrated."
+      ],
+      "model_limitations": [
+        "The current numerical solubility curves are not approved as authoritative measured data; use this entry for the concept only."
+      ],
+      "source_ids": [
+        "openstax_dissolution"
+      ]
+    },
+    {
+      "id": "water_phase_changes",
+      "name": "Changes of state: evaporation, boiling and condensation",
+      "mode": "theory_only",
+      "summary": "Heating and cooling can change the physical state of a substance without changing its chemical identity.",
+      "explanation": "Evaporation occurs at a liquid surface; boiling occurs throughout a liquid when its vapour pressure reaches the surrounding pressure. Cooling water vapour can produce liquid water by condensation. These are physical changes, not chemical reactions.",
+      "student_observations": [
+        "Identify the difference between evaporation and boiling.",
+        "Describe condensation as the reverse gas-to-liquid change."
+      ],
+      "model_limitations": [
+        "The current app only has a partial boiling treatment. It does not yet simulate a complete liquid-volume loss, vapour transport and condensation cycle."
+      ],
+      "source_ids": [
+        "openstax_phase_transitions"
+      ]
+    }
+  ],
+  "classroom_demo": {
+    "id": "water_salt_dissolution",
+    "title": "Water and table salt: understanding a solution",
+    "purpose": "Show the difference between a solid crystal and a homogeneous solution in the virtual laboratory.",
+    "app_flow": [
+      "Open the project and use the default Classroom Demo setup.",
+      "Move the virtual beaker to the central work area.",
+      "Use the in-app pour/add controls to combine the two classroom-demo materials.",
+      "Select the beaker and read the Inspector observations.",
+      "Ask students to explain the roles of solvent, solute and dissolved particles."
+    ],
+    "expected_learning": "Students can explain that dissolving disperses particles through a solvent; the material is not simply disappearing.",
+    "assessment_prompts": [
+      "Which substance is the solvent in this model?",
+      "What does a homogeneous solution mean?",
+      "How is a dissolved particle different from a visible crystal?"
+    ],
+    "boundary": "These directions describe interaction with the virtual software only. They are not instructions for conducting a real laboratory experiment."
+  },
+  "data_quality": {
+    "summary": "The current element and compound reference datasets contain fields marked unverified_reference or derived. The app must display them as reference data only and must not present them as authoritative measured values.",
+    "element_table": "All 118 elements are read-only periodic-table references. The current data source and derived electron configurations still need a complete IUPAC/NIST audit before quantitative teaching use.",
+    "chemical_properties": "Numerical properties in the chemical and compound catalogue have mixed provenance. Values marked unverified_reference must not be used for numerical assessment or as real-world specifications."
+  },
+  "sources": [
+    {
+      "id": "iupac_periodic_table",
+      "title": "IUPAC — Periodic Table of Elements",
+      "url": "https://iupac.org/what-we-do/periodic-table-of-elements/",
+      "supports": "Official element identities and standard atomic-weight presentation."
+    },
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_phase_transitions",
+      "title": "OpenStax Chemistry 2e — 10.3 Phase Transitions",
+      "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
+      "supports": "Melting, boiling, evaporation, condensation and heating curves."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework: recognize hazards, assess risks, minimize risks and prepare for emergencies."
+    },
+    {
+      "id": "moe_prep_books",
+      "title": "Egyptian Ministry of Education — Student Books",
+      "url": "https://studentbooks.moe.gov.eg/Books",
+      "supports": "Official preparatory-stage books; unit mappings remain pending direct review of the selected academic-year editions."
+    },
+    {
+      "id": "moe_secondary_books",
+      "title": "Egyptian Ministry of Education — Secondary Books",
+      "url": "https://ellibrary.moe.gov.eg/Books-sec/",
+      "supports": "Official secondary-stage books; confirm the exact pathway before mapping."
+    },
+    {
+      "id": "sis_senior1",
+      "title": "State Information Service — Ministry clarification on first-secondary subjects (2026-09-01)",
+      "url": "https://sis.gov.eg/ar/المركز-الإعلامي/الأخبار/توضيح-هام-من-وزارة-التربية-والتعليم-حول-منشورات-متداولة-تدعي-إلغاء-مادة-العلوم-المتكاملة/",
+      "supports": "The Ministry confirmed Integrated Science remains in the first-secondary subject map."
+    },
+    {
+      "id": "gazette_baccalaureate_213_2025",
+      "title": "Official Gazette — Decree 213/2025 on the Egyptian Baccalaureate",
+      "url": "https://mediadr.sis.gov.eg/bitstream/handle/123456789/108533/WQ202_20250911_1658.pdf?isAllowed=y&sequence=2",
+      "supports": "Second-secondary Egyptian Baccalaureate pathway-specific subject options; Chemistry is an option in Engineering and Computer Science, not a universal Senior 2 subject."
+    },
+    {
+      "id": "nist_water",
+      "title": "NIST Chemistry WebBook — Water",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185",
+      "supports": "A primary scientific reference record for water; numerical properties in the project's existing database are not automatically validated by this link."
+    }
+  ]
+}
