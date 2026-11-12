@@ -84,6 +84,8 @@ func _build() -> void:
 	var profile_label := str(_curriculum_profile.get("label", "No grade selected"))
 	var subject_label := str(_curriculum_profile.get("subject", "Select a grade"))
 	var mapping_note := str(_curriculum_profile.get("note", "Choose a grade to view its curriculum context."))
+	if str(_curriculum_profile.get("topic_mapping_status", "")) == "pending_official_textbook_review":
+		mapping_note = "Lesson-by-lesson mapping pending review of the matching official textbook. " + mapping_note
 	subtitle_label.text = "%d playable reagents  •  %d instruments\n%s — %s\n%s" % [reagent_count, equipment_count, profile_label, subject_label, mapping_note]
 
 
