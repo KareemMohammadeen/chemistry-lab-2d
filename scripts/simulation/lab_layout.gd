@@ -3,7 +3,7 @@ extends RefCounted
 ## Where objects may stand in the laboratory: shelves and the bench (data/lab/layout.json).
 ## The simulation owns these rules; the workspace view draws them.
 
-var canvas_size: Vector2 = Vector2(1920.0, 1080.0)
+var canvas_size: Vector2 = Vector2(1600.0, 900.0)
 var wall_bottom_y: float = 640.0
 var bench_top_y: float = 640.0
 var bench_front_y: float = 820.0
@@ -13,7 +13,7 @@ var surfaces: Array = []
 
 static func from_dictionary(data: Dictionary) -> LabLayout:
 	var layout := LabLayout.new()
-	var canvas: Array = data.get("canvas", [1920, 1080])
+	var canvas: Array = data.get("canvas", [1600, 900])
 	layout.canvas_size = Vector2(float(canvas[0]), float(canvas[1]))
 	var wall: Dictionary = data.get("wall", {})
 	layout.wall_bottom_y = float(wall.get("bottom_y", layout.wall_bottom_y))
