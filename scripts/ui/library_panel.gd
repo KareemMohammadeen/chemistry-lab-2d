@@ -75,7 +75,7 @@ func _build() -> void:
 	guide_button.theme_type_variation = &"ToolButton"
 	guide_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	guide_button.focus_mode = Control.FOCUS_NONE
-	guide_button.pressed.connect(open_learning_guide)
+	guide_button.pressed.connect(_on_guide_button_pressed)
 	content_box.add_child(guide_button)
 
 	var classroom_chemicals: Array = []
@@ -112,7 +112,7 @@ func _build() -> void:
 	var mapping_note := str(_curriculum_profile.get("note", "Choose a grade to view its curriculum context."))
 	if str(_curriculum_profile.get("topic_mapping_status", "")) == "pending_official_textbook_review":
 		mapping_note = "Lesson-by-lesson mapping is pending direct review of the matching official textbook. " + mapping_note
-	subtitle_label.text = "%d classroom reagents  •  %d instruments  •  118 read-only elements\\n%s — %s\\n%s" % [reagent_count, equipment_count, profile_label, subject_label, mapping_note]
+	subtitle_label.text = "%d classroom reagents  •  %d instruments  •  118 read-only elements\n%s — %s\n%s" % [reagent_count, equipment_count, profile_label, subject_label, mapping_note]
 
 
 func _add_safe_reference_materials_section(database: ContentDatabase) -> void:
@@ -126,6 +126,10 @@ func _add_safe_reference_materials_section(database: ContentDatabase) -> void:
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		label.add_theme_color_override("font_color", LabColors.TEXT_SECONDARY)
 		content_box.add_child(label)
+
+
+func _on_guide_button_pressed() -> void:
+	open_learning_guide(_curriculum_profile)
 
 
 func open_learning_guide(_profile: Dictionary = {}) -> void:
@@ -169,39 +173,39 @@ func open_learning_guide(_profile: Dictionary = {}) -> void:
 
 
 func _build_learning_guide_text(data: Dictionary) -> String:
-	var output := "[b]CLASSROOM LEARNING GUIDE[/b]\\n"
-	output += "This guide describes the virtual model only. It is not a set of instructions for real-world experiments.\\n\\n"
-	output += "[b]Selected grade[/b]\\n"
-	output += "%s — %s\\n" % [str(_curriculum_profile.get("label", "Not selected")), str(_curriculum_profile.get("subject", "Select a grade"))]
-	output += "%s\\n\\n" % str(_curriculum_profile.get("note", "Choose a grade in the top bar."))
-	output += "[b]Materials available in this classroom demo[/b]\\n"
+	var output := "[b]CLASSROOM LEARNING GUIDE[/b]\n"
+	output += "This guide describes the virtual model only. It is not a set of instructions for real-world experiments.\n\n"
+	output += "[b]Selected grade[/b]\n"
+	output += "%s — %s\n" % [str(_curriculum_profile.get("label", "Not selected")), str(_curriculum_profile.get("subject", "Select a grade"))]
+	output += "%s\n\n" % str(_curriculum_profile.get("note", "Choose a grade in the top bar."))
+	output += "[b]Materials available in this classroom demo[/b]\n"
 	for material_value in data.get("materials", []):
 		var material: Dictionary = material_value
 		if not CLASSROOM_CHEMICAL_IDS.has(str(material.get("id", ""))) and not SAFE_REFERENCE_COMPOUND_IDS.has(str(material.get("id", ""))):
 			continue
-		output += "[b]%s (%s)[/b] — %s\\n" % [str(material.get("name", "")), str(material.get("formula", "")), str(material.get("concept", ""))]
-		output += "%s\\n" % str(material.get("explanation", ""))
+		output += "[b]%s (%s)[/b] — %s\n" % [str(material.get("name", "")), str(material.get("formula", "")), str(material.get("concept", ""))]
+		output += "%s\n" % str(material.get("explanation", ""))
 		for goal in material.get("learning_goals", []):
-			output += "• %s\\n" % str(goal)
-		output += "Status: %s\\n\\n" % ("playable in the virtual demo" if str(material.get("status", "")) == "playable_classroom_demo" else "reference only")
-	output += "[b]Processes and reactions explained[/b]\\n"
+			output += "• %s\n" % str(goal)
+		output += "Status: %s\n\n" % ("playable in the virtual demo" if str(material.get("status", "")) == "playable_classroom_demo" else "reference only")
+	output += "[b]Processes and reactions explained[/b]\n"
 	for process_value in data.get("processes", []):
 		var process_entry: Dictionary = process_value
-		output += "[b]%s[/b] (%s)\\n" % [str(process_entry.get("name", "")), str(process_entry.get("mode", ""))]
-		output += "%s\\n" % str(process_entry.get("explanation", process_entry.get("summary", "")))
+		output += "[b]%s[/b] (%s)\n" % [str(process_entry.get("name", "")), str(process_entry.get("mode", ""))]
+		output += "%s\n" % str(process_entry.get("explanation", process_entry.get("summary", "")))
 		for limitation in process_entry.get("model_limitations", []):
-			output += "Model note: %s\\n" % str(limitation)
-		output += "\\n"
+			output += "Model note: %s\n" % str(limitation)
+		output += "\n"
 	var data_quality: Dictionary = data.get("data_quality", {})
-	output += "[b]Data quality[/b]\\n%s\\n\\n" % str(data_quality.get("summary", ""))
-	output += "[b]Curriculum status[/b]\\nPrep 1–3: exact units remain pending direct review of the official 2026–2027 student books. Senior 1: Integrated Science. Senior 2: pathway-dependent; do not assume one Chemistry syllabus for all students.\\n\\n"
-	output += "[b]Trusted learning and safety sources[/b]\\n"
+	output += "[b]Data quality[/b]\n%s\n\n" % str(data_quality.get("summary", ""))
+	output += "[b]Curriculum status[/b]\nPrep 1–3: exact units remain pending direct review of the official 2026–2027 student books. Senior 1: Integrated Science. Senior 2: pathway-dependent; do not assume one Chemistry syllabus for all students.\n\n"
+	output += "[b]Trusted learning and safety sources[/b]\n"
 	for source_value in data.get("sources", []):
 		var source: Dictionary = source_value
 		var source_url := str(source.get("url", ""))
 		if source_url.begins_with("https://"):
-			output += "[url=%s]%s[/url] — %s\\n" % [source_url, str(source.get("title", "Source")), str(source.get("supports", ""))]
-	output += "\\n[b]Reference boundary[/b]\\nAll 118 elements remain read-only periodic-table references. Other advanced catalogue records are intentionally not exposed as classroom reagents or given operational descriptions."
+			output += "[url=%s]%s[/url] — %s\n" % [source_url, str(source.get("title", "Source")), str(source.get("supports", ""))]
+	output += "\n[b]Reference boundary[/b]\nAll 118 elements remain read-only periodic-table references. Other advanced catalogue records are intentionally not exposed as classroom reagents or given operational descriptions."
 	return output
 
 
