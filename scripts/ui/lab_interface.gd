@@ -22,14 +22,14 @@ const TOAST_PADDING_PX := 14
 const FALLBACK_SPEEDS: Array = [1.0]
 const ICON_PATH := "res://assets/icons/%s.svg"
 ## Panel widths follow the window width (in interface pixels) between these limits.
-const LIBRARY_WIDTH_FRACTION := 0.17
-const LIBRARY_WIDTH_MIN := 240.0
-const LIBRARY_WIDTH_MAX := 330.0
-const INSPECTOR_WIDTH_FRACTION := 0.22
-const INSPECTOR_WIDTH_MIN := 310.0
-const INSPECTOR_WIDTH_MAX := 430.0
+const LIBRARY_WIDTH_FRACTION := 0.14
+const LIBRARY_WIDTH_MIN := 210.0
+const LIBRARY_WIDTH_MAX := 280.0
+const INSPECTOR_WIDTH_FRACTION := 0.19
+const INSPECTOR_WIDTH_MIN := 270.0
+const INSPECTOR_WIDTH_MAX := 390.0
 ## Below this width the Library starts hidden so the laboratory keeps a usable size.
-const LIBRARY_OPEN_MIN_WIDTH := 1500.0
+const LIBRARY_OPEN_MIN_WIDTH := 1600.0
 const SPEED_BUTTON_WIDTH := 52.0
 
 @export var top_bar: Control
@@ -57,6 +57,8 @@ var _pause_icon: Texture2D
 var _play_icon: Texture2D
 var _library_user_choice: bool = false
 var _curriculum_catalog: CurriculumCatalog
+var _selected_curriculum_profile: Dictionary = {}
+var _teacher_guide_button: Button
 
 
 func _ready() -> void:
@@ -86,6 +88,7 @@ func _ready() -> void:
 	for button in [undo_button, redo_button, reset_button, pause_button, library_toggle]:
 		(button as Button).focus_mode = Control.FOCUS_NONE
 	grade_selector.focus_mode = Control.FOCUS_NONE
+	_add_teacher_guide_button()
 	_apply_responsive_layout()
 
 
@@ -230,5 +233,26 @@ func _on_grade_selected(index: int) -> void:
 	var profile := _curriculum_catalog.get_profile(profile_id)
 	if profile.is_empty():
 		return
+	_selected_curriculum_profile = profile.duplicate(true)
 	library.set_curriculum_profile(profile)
 	_show_toast("%s selected — %s" % [str(profile.get("label", "")), str(profile.get("subject", ""))], &"info")
+
+# ---------------------------------------------------------------- teacher guide
+
+func _add_teacher_guide_button() -> void:
+	var grade_chip := grade_selector.get_parent().get_parent()
+	var top_row := grade_chip.get_parent()
+	_teacher_guide_button = Button.new()
+	_teacher_guide_button.text = "Guide"
+	_teacher_guide_button.tooltip_text = "Open Teacher Mode guidance, material explanations and trusted sources."
+	_teacher_guide_button.theme_type_variation = &"ToolButton"
+	_teacher_guide_button.custom_minimum_size = Vector2(78.0, 40.0)
+	_teacher_guide_button.focus_mode = Control.FOCUS_NONE
+	_teacher_guide_button.pressed.connect(_open_teacher_guide)
+	top_row.add_child(_teacher_guide_button)
+	top_row.move_child(_teacher_guide_button, grade_chip.get_index() + 1)
+
+
+func _open_teacher_guide() -> void:
+	if library != null:
+		library.open_learning_guide(_selected_curriculum_profile)
