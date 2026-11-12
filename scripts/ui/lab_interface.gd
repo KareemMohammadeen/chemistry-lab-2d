@@ -22,14 +22,14 @@ const TOAST_PADDING_PX := 14
 const FALLBACK_SPEEDS: Array = [1.0]
 const ICON_PATH := "res://assets/icons/%s.svg"
 ## Panel widths follow the window width (in interface pixels) between these limits.
-const LIBRARY_WIDTH_FRACTION := 0.17
-const LIBRARY_WIDTH_MIN := 240.0
-const LIBRARY_WIDTH_MAX := 330.0
-const INSPECTOR_WIDTH_FRACTION := 0.22
-const INSPECTOR_WIDTH_MIN := 310.0
-const INSPECTOR_WIDTH_MAX := 430.0
+const LIBRARY_WIDTH_FRACTION := 0.14
+const LIBRARY_WIDTH_MIN := 210.0
+const LIBRARY_WIDTH_MAX := 280.0
+const INSPECTOR_WIDTH_FRACTION := 0.19
+const INSPECTOR_WIDTH_MIN := 270.0
+const INSPECTOR_WIDTH_MAX := 390.0
 ## Below this width the Library starts hidden so the laboratory keeps a usable size.
-const LIBRARY_OPEN_MIN_WIDTH := 1500.0
+const LIBRARY_OPEN_MIN_WIDTH := 1600.0
 const SPEED_BUTTON_WIDTH := 52.0
 
 @export var top_bar: Control
