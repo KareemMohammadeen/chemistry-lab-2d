@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/inspector_panel.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/ui/library_panel.tscn" id="3"]
 
-[node name="LabInterface" type="Control" node_paths=PackedStringArray("top_bar", "title_label", "time_label", "undo_button", "redo_button", "reset_button", "pause_button", "speed_box", "library_toggle", "logo", "library", "inspector", "stage_slot", "toast_label", "hint_label")]
+[node name="LabInterface" type="Control" node_paths=PackedStringArray("top_bar", "title_label", "time_label", "undo_button", "redo_button", "reset_button", "pause_button", "speed_box", "library_toggle", "grade_selector", "logo", "library", "inspector", "stage_slot", "toast_label", "hint_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,6 +22,7 @@ reset_button = NodePath("Root/TopBar/Margin/Row/ResetButton")
 pause_button = NodePath("Root/TopBar/Margin/Row/SimGroup/Buttons/PauseButton")
 speed_box = NodePath("Root/TopBar/Margin/Row/SimGroup/Buttons/SpeedBox")
 library_toggle = NodePath("Root/TopBar/Margin/Row/LibraryToggle")
+grade_selector = NodePath("Root/TopBar/Margin/Row/GradeChip/GradeBox/GradeSelector")
 logo = NodePath("Root/TopBar/Margin/Row/Brand/Logo")
 library = NodePath("Root/Body/LibraryPanel")
 inspector = NodePath("Root/Body/InspectorPanel")
@@ -89,6 +90,26 @@ layout_mode = 2
 theme_type_variation = &"StrongLabel"
 text = "Experiment"
 text_overrun_behavior = 3
+
+
+[node name="GradeChip" type="PanelContainer" parent="Root/TopBar/Margin/Row"]
+layout_mode = 2
+theme_type_variation = &"ChipPanel"
+
+[node name="GradeBox" type="VBoxContainer" parent="Root/TopBar/Margin/Row/GradeChip"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="GradeCaption" type="Label" parent="Root/TopBar/Margin/Row/GradeChip/GradeBox"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+text = "CURRICULUM"
+
+[node name="GradeSelector" type="OptionButton" parent="Root/TopBar/Margin/Row/GradeChip/GradeBox"]
+custom_minimum_size = Vector2(138, 34)
+layout_mode = 2
+theme_type_variation = &"ToolButton"
+tooltip_text = "Select the school year. The current curriculum mapping status is shown in the Library."
 
 [node name="TimeChip" type="PanelContainer" parent="Root/TopBar/Margin/Row"]
 layout_mode = 2

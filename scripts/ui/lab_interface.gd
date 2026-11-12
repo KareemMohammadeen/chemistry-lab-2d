@@ -41,6 +41,7 @@ const SPEED_BUTTON_WIDTH := 52.0
 @export var pause_button: Button
 @export var speed_box: HBoxContainer
 @export var library_toggle: Button
+@export var grade_selector: OptionButton
 @export var logo: TextureRect
 @export var library: LibraryPanel
 @export var inspector: InspectorPanel
@@ -55,6 +56,7 @@ var _warning_style: StyleBoxFlat
 var _pause_icon: Texture2D
 var _play_icon: Texture2D
 var _library_user_choice: bool = false
+var _curriculum_catalog: CurriculumCatalog
 
 
 func _ready() -> void:
@@ -78,10 +80,12 @@ func _ready() -> void:
 	inspector.action_requested.connect(action_requested.emit)
 	library.object_focus_requested.connect(object_focus_requested.emit)
 	library_toggle.toggled.connect(_on_library_toggled)
+	grade_selector.item_selected.connect(_on_grade_selected)
 	resized.connect(_apply_responsive_layout)
 	# Space must pause the simulation, not re-press whichever button was clicked last.
 	for button in [undo_button, redo_button, reset_button, pause_button, library_toggle]:
 		(button as Button).focus_mode = Control.FOCUS_NONE
+	grade_selector.focus_mode = Control.FOCUS_NONE
 	_apply_responsive_layout()
 
 
@@ -90,6 +94,11 @@ func bind(host: SimulationHost) -> void:
 	title_label.text = host.simulation.setup_title
 	inspector.bind(host)
 	library.bind(host)
+	_curriculum_catalog = CurriculumCatalog.new()
+	_curriculum_catalog.load_profiles()
+	for message in _curriculum_catalog.errors:
+		push_error("Curriculum: %s" % message)
+	_populate_grade_selector()
 	_build_speed_buttons(host.database.constants.get("speeds", FALLBACK_SPEEDS))
 	EventBus.feedback_message_requested.connect(_show_toast)
 	EventBus.observation_added.connect(_on_observation_added)
@@ -192,3 +201,34 @@ func _load_icon(icon_name: String) -> Texture2D:
 	if ResourceLoader.exists(path):
 		return load(path) as Texture2D
 	return null
+
+
+
+# ---------------------------------------------------------------- curriculum selector
+
+func _populate_grade_selector() -> void:
+	grade_selector.clear()
+	if _curriculum_catalog == null:
+		return
+	var selected_index := -1
+	for profile in _curriculum_catalog.profiles:
+		var entry: Dictionary = profile
+		grade_selector.add_item(str(entry.get("label", entry.get("id", "Grade"))))
+		var index := grade_selector.item_count - 1
+		grade_selector.set_item_metadata(index, str(entry.get("id", "")))
+		if str(entry.get("id", "")) == "prep1":
+			selected_index = index
+	if selected_index >= 0:
+		grade_selector.select(selected_index)
+		_on_grade_selected(selected_index)
+
+
+func _on_grade_selected(index: int) -> void:
+	if _curriculum_catalog == null or index < 0 or index >= grade_selector.item_count:
+		return
+	var profile_id := str(grade_selector.get_item_metadata(index))
+	var profile := _curriculum_catalog.get_profile(profile_id)
+	if profile.is_empty():
+		return
+	library.set_curriculum_profile(profile)
+	_show_toast("%s selected — %s" % [str(profile.get("label", "")), str(profile.get("subject", ""))], &"info")
