@@ -99,7 +99,7 @@ func matches_query(query: String) -> bool:
 	return element.id.to_lower().contains(needle) \
 		or element.display_name.to_lower().contains(needle) \
 		or str(element.atomic_number).contains(needle) \
-		element.category.to_lower().contains(needle)
+		or element.category.to_lower().contains(needle)
 
 
 func set_search_match(matches: bool) -> void:
