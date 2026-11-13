@@ -92,7 +92,7 @@ func _ready() -> void:
 	pause_button.toggled.connect(pause_toggled.emit)
 	inspector.action_requested.connect(action_requested.emit)
 	library.object_focus_requested.connect(object_focus_requested.emit)
-	library.reference_pin_requested.connect(_on_reference_pin_requested)
+	EventBus.reference_pin_requested.connect(_on_reference_pin_requested)
 	library_toggle.toggled.connect(_on_library_toggled)
 	grade_selector.item_selected.connect(_on_grade_selected)
 	resized.connect(_apply_responsive_layout)
