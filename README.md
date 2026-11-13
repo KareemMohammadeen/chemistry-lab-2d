@@ -12,17 +12,17 @@ Godot 4.3+, GDScript, Compatibility renderer. **Milestone 1: functional 2D labor
 ## First demo: water + table salt (classroom-safe virtual scenario)
 1. Choose **Start Classroom Demo** on the welcome screen.
 2. Select the beaker on the lower shelf and move it onto the bench.
-3. Select the **Water** and **Sodium chloride** materials in the Library to see their reference cards in the Teacher Guide.
-4. Use the virtual demo controls to combine the two classroom materials.
+3. Drag the **Water** bottle onto the beaker to add the virtual solvent.
+4. Drag the **Sodium chloride** bottle onto the beaker to observe the model's dissolution behaviour.
 5. Select the beaker and read the Inspector observations and explanations.
 6. Open **Teacher Guide** to see learning goals, suggested grade preview, model limitations and sources.
 
 The application demo is a software-only educational model. It is not a set of instructions for real laboratory work.
 
 ## Screen layout
-Top bar (library toggle, title, lab time, undo/redo, reset, pause and speed) over three areas: **Library** on the left (the five
-playable reagents and the equipment; click a card to select it), the **laboratory** in the centre (scaled to fit) and the
-**Inspector** on the right. The Library hides itself on narrow windows; use the first toolbar button to show it.
+Top bar (library toggle, title, lab time, undo/redo, reset, pause and speed) over three areas: **Library** on the left (the two
+classroom demo materials and approved equipment; click a card to select it), the **laboratory** in the centre (scaled to fit) and the
+**Inspector** on the right. The guided classroom mode exposes two classroom reagents; other catalog entries are references only. The Library hides itself on narrow windows; use the first toolbar button to show it.
 
 ## Controls
 | Action | Input |
