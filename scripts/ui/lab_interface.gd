@@ -263,4 +263,7 @@ func open_teacher_mode() -> void:
 	_library_user_choice = true
 	library.visible = true
 	library_toggle.set_pressed_no_signal(true)
+	var caption := grade_selector.get_parent().get_node_or_null("GradeCaption") as Label
+	if caption != null:
+		caption.text = "TEACHER MODE"
 	_open_teacher_guide()
