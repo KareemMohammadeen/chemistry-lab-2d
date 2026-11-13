@@ -27,7 +27,7 @@ const INSPECTOR_WIDTH_MAX := 370.0
 const LIBRARY_OPEN_MIN_WIDTH := 1120.0
 const SPEED_BUTTON_WIDTH := 48.0
 const SPECIMEN_MARGIN := 18.0
-const SPECIMEN_CELL := Vector2(252.0, 110.0)
+const SPECIMEN_CELL := Vector2(342.0, 154.0)
 
 @export var top_bar: Control
 @export var title_label: Label
@@ -181,7 +181,8 @@ func _on_periodic_element_dropped(element_data: Dictionary, drop_position: Vecto
 		return
 	var specimen := ElementSpecimen.new()
 	specimen.setup(element_data)
-	specimen.position = drop_position - SPECIMEN_CELL * 0.5
+	var stagger := Vector2(float(_specimen_count % 5) * 14.0, float(_specimen_count % 4) * 10.0)
+	specimen.position = drop_position - SPECIMEN_CELL * 0.5 + stagger
 	var maximum := Vector2(maxf(stage_slot.size.x - SPECIMEN_CELL.x, 0.0), maxf(stage_slot.size.y - SPECIMEN_CELL.y, 0.0))
 	specimen.position = specimen.position.clamp(Vector2(SPECIMEN_MARGIN, SPECIMEN_MARGIN), Vector2(
 		maxf(SPECIMEN_MARGIN, maximum.x - SPECIMEN_MARGIN), maxf(SPECIMEN_MARGIN, maximum.y - SPECIMEN_MARGIN)))
