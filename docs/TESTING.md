@@ -46,7 +46,16 @@ Checks the five requested grade profiles, source references, Senior 1 Integrated
 Senior 2 pathway uncertainty, and all 118 element reference records. This does not validate
 chemical reactions or imply that periodic-table entries are usable reagents.
 
-## 5. Curriculum source review status
+## 5. Teacher demo data validation
+Run:
+```
+python3 tests/validate_teacher_demo.py
+```
+Checks that all five grade profiles have an evidence-labelled preview, that teacher preview materials and equipment IDs
+are known, that the classroom demo setup only contains water and sodium chloride, and that the learning guide references
+the expected scientific/safety and Ministry source catalogue.
+
+## 6. Curriculum source review status
 - Prep 1–3: current grade books must be checked individually before importing unit-level topics.
 - Senior 1: Integrated Science is confirmed by the Ministry statement dated 2026-09-01.
 - Senior 2: do not infer one chemistry map without selecting General Secondary or the Egyptian Baccalaureate pathway.
