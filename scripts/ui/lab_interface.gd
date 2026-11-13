@@ -88,6 +88,7 @@ func _ready() -> void:
 	for button in [undo_button, redo_button, reset_button, pause_button, library_toggle]:
 		(button as Button).focus_mode = Control.FOCUS_NONE
 	grade_selector.focus_mode = Control.FOCUS_NONE
+	_add_teacher_guide_button()
 	if stage_slot is LabDropZone:
 		(stage_slot as LabDropZone).element_dropped.connect(_on_periodic_element_dropped)
 	_apply_responsive_layout()
