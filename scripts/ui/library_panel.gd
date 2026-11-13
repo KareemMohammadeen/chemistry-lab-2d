@@ -38,7 +38,7 @@ var _section_written: Dictionary = {}
 var _curriculum_profile: Dictionary = {}
 var _guide_window: Window
 var _guide_rich_text: RichTextLabel
-var _reference_window: Window
+var _reference_window: ReferenceExplorer
 
 
 func bind(host: SimulationHost) -> void:
@@ -154,7 +154,7 @@ func _on_reference_explorer_pressed() -> void:
 	if is_instance_valid(_reference_window):
 		_reference_window.popup_centered(Vector2i(1120, 780))
 		return
-	_reference_window = REFERENCE_EXPLORER_SCRIPT.new() as Window
+	_reference_window = REFERENCE_EXPLORER_SCRIPT.new() as ReferenceExplorer
 	_reference_window.close_requested.connect(_on_reference_explorer_closed)
 	add_child(_reference_window)
 	_reference_window.bind(_host.database)
