@@ -1,14 +1,18 @@
 {
-  "version": 1,
+  "version": 2,
   "country": "EG",
   "academic_year": "2026-2027",
   "language": "en",
-  "scope": "Classroom-facing learning content for a safe virtual demo. It intentionally explains only the approved classroom materials and concepts. Other reference records are not teaching reagents and do not receive operational descriptions.",
+  "scope": "Classroom-facing learning content for a safe virtual demo. It explains classroom-relevant materials, concepts and reference entries only. The software does not provide procedures for unsafe real-world chemistry.",
   "classroom_material_ids": [
     "water",
     "sodium_chloride"
   ],
   "safe_reference_material_ids": [
+    "ice",
+    "sand",
+    "air",
+    "carbon_dioxide",
     "glucose",
     "sucrose",
     "starch"
@@ -19,16 +23,16 @@
       "name": "Water",
       "formula": "H2O",
       "status": "playable_classroom_demo",
-      "concept": "A polar molecular compound and a common solvent.",
-      "explanation": "A water molecule contains two hydrogen atoms bonded to one oxygen atom. The uneven distribution of electrical charge makes water molecules polar, which helps explain why water can surround and disperse many ionic and polar particles.",
+      "concept": "A polar molecular compound and the most common classroom solvent.",
+      "explanation": "Water molecules are polar, which helps explain why water can surround and disperse many ionic and polar particles.",
       "learning_goals": [
         "Distinguish a compound from an element.",
         "Identify solvent and solute in a solution.",
-        "Connect molecular polarity to the formation of solutions."
+        "Connect molecular polarity to solution formation."
       ],
       "observations": [
-        "In the virtual model, water is the solvent phase.",
-        "The model can display water temperature, but it does not yet provide a complete evaporation and condensation cycle."
+        "Water is the solvent phase in the model.",
+        "The model can show water temperature, but it does not yet provide a complete evaporation and condensation cycle."
       ],
       "source_ids": [
         "openstax_dissolution",
@@ -42,7 +46,7 @@
       "formula": "NaCl",
       "status": "playable_classroom_demo",
       "concept": "An ionic compound made of sodium and chloride ions in a repeating crystal lattice.",
-      "explanation": "When sodium chloride dissolves, water molecules interact with the ions and disperse them through the liquid. The result is a homogeneous solution; the dissolved particles are too small to see individually.",
+      "explanation": "When sodium chloride dissolves, water molecules interact with the ions and disperse them through the liquid.",
       "learning_goals": [
         "Recognize an ionic compound.",
         "Explain dissolution as particle separation and solvation.",
@@ -57,21 +61,100 @@
       ]
     },
     {
+      "id": "ice",
+      "name": "Ice",
+      "formula": "H2O",
+      "status": "safe_reference_only",
+      "concept": "The solid state of water.",
+      "explanation": "Ice is useful for teaching state changes because it can melt back into liquid water when energy is added.",
+      "learning_goals": [
+        "Identify the solid state of a familiar substance.",
+        "Describe melting as a physical change.",
+        "Relate state changes to energy transfer."
+      ],
+      "observations": [
+        "Reference entry only; not part of the classroom demo setup by default."
+      ],
+      "source_ids": [
+        "openstax_phase_transitions"
+      ]
+    },
+    {
+      "id": "sand",
+      "name": "Sand",
+      "formula": "SiO2 (classroom shorthand)",
+      "status": "safe_reference_only",
+      "concept": "An insoluble granular material used for mixture and separation lessons.",
+      "explanation": "Sand does not dissolve in water, so it is useful for discussing heterogeneous mixtures and separation ideas.",
+      "learning_goals": [
+        "Distinguish soluble and insoluble materials.",
+        "Recognize a heterogeneous mixture.",
+        "Explain why filtration can separate suspended solids from liquids."
+      ],
+      "observations": [
+        "Reference entry only; it is not a teaching reagent in the default classroom demo."
+      ],
+      "source_ids": [
+        "openstax_dissolution"
+      ]
+    },
+    {
+      "id": "air",
+      "name": "Air",
+      "formula": "Mixture",
+      "status": "safe_reference_only",
+      "concept": "A mixture of gases used to discuss the gaseous state and gas exchange.",
+      "explanation": "Air is not a single compound. It is a mixture mainly containing nitrogen and oxygen.",
+      "learning_goals": [
+        "Recognize that some everyday substances are mixtures rather than compounds.",
+        "Describe the gaseous state as a particle-level model.",
+        "Discuss why gases fill the available space."
+      ],
+      "observations": [
+        "Reference entry only; it is used for conceptual discussion rather than as a playable reagent."
+      ],
+      "source_ids": [
+        "openstax_phase_transitions"
+      ]
+    },
+    {
+      "id": "carbon_dioxide",
+      "name": "Carbon dioxide",
+      "formula": "CO2",
+      "status": "safe_reference_only",
+      "concept": "A gaseous molecular compound produced and used in many biological and Earth-system processes.",
+      "explanation": "Carbon dioxide is useful for teaching because it appears in biology, respiration, photosynthesis and Earth science.",
+      "learning_goals": [
+        "Read a molecular formula.",
+        "Connect chemistry ideas to life science and Earth science.",
+        "Describe a gas at the particle level."
+      ],
+      "observations": [
+        "Reference entry only; it is not a default playable reagent."
+      ],
+      "source_ids": [
+        "openstax_photosynthesis",
+        "openstax_cellular_respiration"
+      ]
+    },
+    {
       "id": "glucose",
       "name": "Glucose",
       "formula": "C6H12O6",
       "status": "safe_reference_only",
       "concept": "A simple sugar and an important biological energy molecule.",
-      "explanation": "Glucose is a molecular compound containing carbon, hydrogen and oxygen. Its formula represents the atom count in one molecule; this reference card is for composition and classification only.",
+      "explanation": "Glucose is a molecular compound containing carbon, hydrogen and oxygen.",
       "learning_goals": [
         "Read a molecular formula.",
-        "Distinguish molecular compounds from ionic compounds."
+        "Distinguish molecular compounds from ionic compounds.",
+        "Recognize glucose as a biologically important fuel molecule."
       ],
       "observations": [
         "Reference entry only; it is not part of the classroom demonstration setup."
       ],
       "source_ids": [
-        "openstax_dissolution"
+        "openstax_photosynthesis",
+        "openstax_cellular_respiration"
       ]
     },
     {
@@ -80,7 +163,7 @@
       "formula": "C12H22O11",
       "status": "safe_reference_only",
       "concept": "A molecular carbohydrate commonly known as table sugar.",
-      "explanation": "Sucrose is a molecular compound. In a solution, its molecules can become dispersed among water molecules without changing into different substances.",
+      "explanation": "Sucrose molecules can become dispersed among water molecules without changing into different substances.",
       "learning_goals": [
         "Compare molecular and ionic solutes.",
         "Understand a homogeneous solution at the particle level."
@@ -98,7 +181,7 @@
       "formula": "(C6H10O5)n",
       "status": "safe_reference_only",
       "concept": "A large carbohydrate made from repeating glucose units.",
-      "explanation": "Starch is a polymeric carbohydrate. The n in its formula indicates that the number of repeating units can vary. This entry is a reference concept, not an executable experiment.",
+      "explanation": "The n in the formula indicates that the number of repeating units can vary.",
       "learning_goals": [
         "Interpret a repeating-unit formula.",
         "Recognize polymers as large molecules built from repeating units."
@@ -107,17 +190,69 @@
         "Reference entry only; it is not part of the classroom demonstration setup."
       ],
       "source_ids": [
-        "openstax_dissolution"
+        "openstax_photosynthesis",
+        "openstax_cellular_respiration"
       ]
     }
   ],
   "processes": [
     {
-      "id": "sodium_chloride_dissolution",
+      "id": "states_of_matter",
+      "name": "States of matter",
+      "mode": "concept_explanation",
+      "summary": "A simple particle model for solids, liquids and gases.",
+      "explanation": "Solids keep shape, liquids flow, gases spread out to fill the available space.",
+      "student_observations": [
+        "Compare how a solid, liquid and gas are represented in the virtual classroom.",
+        "Identify which state keeps its shape and which takes the shape of its container."
+      ],
+      "model_limitations": [
+        "This is a conceptual model rather than a molecular dynamics simulation."
+      ],
+      "source_ids": [
+        "openstax_phase_transitions"
+      ]
+    },
+    {
+      "id": "phase_changes",
+      "name": "Melting, freezing, boiling and condensation",
+      "mode": "simulated_classroom_demo",
+      "summary": "Heating and cooling can change the physical state of a substance without changing its identity.",
+      "explanation": "Melting turns a solid into a liquid. Freezing is the reverse. Boiling and evaporation move a substance from liquid to gas, while condensation moves a gas back to liquid.",
+      "student_observations": [
+        "Identify the difference between melting and boiling.",
+        "Describe condensation as the reverse gas-to-liquid change."
+      ],
+      "model_limitations": [
+        "The current app still treats this as a simplified demonstration rather than a full thermodynamic model."
+      ],
+      "source_ids": [
+        "openstax_phase_transitions"
+      ]
+    },
+    {
+      "id": "mixture_separation",
+      "name": "Mixtures and separation",
+      "mode": "simulated_classroom_demo",
+      "summary": "Use the virtual model to discuss filtration, settling and dissolving as different classroom ideas.",
+      "explanation": "A mixture keeps its components in the same sample. Some mixtures can be separated physically because the components do not change into new substances.",
+      "student_observations": [
+        "Compare a dissolved solution with a visible mixture.",
+        "Discuss why some materials can be separated by filtration while others cannot."
+      ],
+      "model_limitations": [
+        "This entry is a teaching model, not a recipe for real laboratory work."
+      ],
+      "source_ids": [
+        "openstax_dissolution"
+      ]
+    },
+    {
+      "id": "dissolution_and_solution_formation",
       "name": "Dissolution and solution formation",
       "mode": "simulated_classroom_demo",
       "summary": "The model illustrates how an ionic solid becomes distributed through a solvent.",
-      "explanation": "Water molecules surround the ions at the crystal surface. The ions become dispersed through the liquid, producing a homogeneous solution. Dissolving is a physical process in this example: the substance's identity is not changed into a new compound.",
+      "explanation": "Water molecules surround the ions at the crystal surface. The ions become dispersed through the liquid, producing a homogeneous solution.",
       "student_observations": [
         "The visible solid amount decreases in the model.",
         "The liquid becomes a uniform solution.",
@@ -148,21 +283,231 @@
       ]
     },
     {
-      "id": "water_phase_changes",
-      "name": "Changes of state: evaporation, boiling and condensation",
-      "mode": "theory_only",
-      "summary": "Heating and cooling can change the physical state of a substance without changing its chemical identity.",
-      "explanation": "Evaporation occurs at a liquid surface; boiling occurs throughout a liquid when its vapour pressure reaches the surrounding pressure. Cooling water vapour can produce liquid water by condensation. These are physical changes, not chemical reactions.",
+      "id": "conservation_of_mass_closed_system",
+      "name": "Conservation of mass in a closed system",
+      "mode": "concept_explanation",
+      "summary": "Use a closed-container idea to show that matter is not lost when a process is only rearranging particles.",
+      "explanation": "In a closed system, matter is not created or destroyed during an ordinary physical change.",
       "student_observations": [
-        "Identify the difference between evaporation and boiling.",
-        "Describe condensation as the reverse gas-to-liquid change."
+        "Explain why a closed model is useful for classroom reasoning.",
+        "Compare a visible change with conservation of total matter."
       ],
       "model_limitations": [
-        "The current app only has a partial boiling treatment. It does not yet simulate a complete liquid-volume loss, vapour transport and condensation cycle."
+        "This is a reasoning model only; it is not a measurement protocol."
       ],
       "source_ids": [
+        "openstax_dissolution"
+      ]
+    },
+    {
+      "id": "nutrition_chemistry_overview",
+      "name": "Food molecules and energy",
+      "mode": "theory_only",
+      "summary": "Introduce glucose and starch as important classroom examples of biological molecules.",
+      "explanation": "Glucose is a small molecule that cells can use quickly. Starch is a much larger carbohydrate built from repeating units.",
+      "student_observations": [
+        "Compare a small molecular formula with a repeating-unit polymer formula.",
+        "Discuss why some molecules are used by living systems as energy sources or storage molecules."
+      ],
+      "model_limitations": [
+        "The app uses these only as educational examples, not as laboratory reagents."
+      ],
+      "source_ids": [
+        "openstax_photosynthesis",
+        "openstax_cellular_respiration"
+      ]
+    },
+    {
+      "id": "photosynthesis_overview",
+      "name": "Photosynthesis overview",
+      "mode": "theory_only",
+      "summary": "A safe, high-level teaching explanation of how plants use light energy to build sugar.",
+      "explanation": "Photosynthesis is the process by which light energy is captured and used to build carbohydrates from carbon dioxide and water.",
+      "student_observations": [
+        "Identify carbon dioxide and water as inputs in the overall model.",
+        "Recognize glucose as one of the products described at a high level."
+      ],
+      "model_limitations": [
+        "This project does not simulate the full biochemistry or a real biological experiment."
+      ],
+      "source_ids": [
+        "openstax_photosynthesis"
+      ]
+    },
+    {
+      "id": "cellular_respiration_overview",
+      "name": "Cellular respiration overview",
+      "mode": "theory_only",
+      "summary": "A safe, high-level explanation of how organisms release usable energy from food molecules.",
+      "explanation": "Cellular respiration is the process by which organisms extract energy from food molecules such as glucose.",
+      "student_observations": [
+        "Describe glucose as an energy source in a simplified model.",
+        "Compare energy transfer with a substance-level change."
+      ],
+      "model_limitations": [
+        "This is a conceptual overview only."
+      ],
+      "source_ids": [
+        "openstax_cellular_respiration"
+      ]
+    },
+    {
+      "id": "earth_surface_changes",
+      "name": "Earth surface changes and carbon cycling",
+      "mode": "theory_only",
+      "summary": "A cross-curricular concept that links gases, water and living systems.",
+      "explanation": "Air, carbon dioxide and water are useful reference entries when discussing the Earth system, the water cycle and carbon cycling.",
+      "student_observations": [
+        "Explain why air is a mixture rather than a single pure substance.",
+        "Connect carbon dioxide to both biology and Earth science ideas."
+      ],
+      "model_limitations": [
+        "The app presents this as a classroom concept only."
+      ],
+      "source_ids": [
+        "openstax_photosynthesis",
+        "openstax_cellular_respiration",
         "openstax_phase_transitions"
       ]
+    },
+    {
+      "id": "model_evaluation_and_pathways",
+      "name": "Evaluate the model and choose the correct curriculum pathway",
+      "mode": "concept_explanation",
+      "summary": "Treat the virtual laboratory as a scientific model and confirm the student’s official grade pathway first.",
+      "explanation": "A scientific model can teach ideas well while still simplifying reality. Teachers should identify what the model shows, what it leaves out and which official grade pathway the student follows before using it for planning.",
+      "student_observations": [
+        "Separate a model's output from a measured result.",
+        "Identify assumptions and limitations.",
+        "Explain why the exact Senior 2 pathway is required before official Chemistry mapping."
+      ],
+      "model_limitations": [
+        "The app intentionally keeps pathway selection separate from the classroom demo."
+      ],
+      "source_ids": [
+        "acs_secondary_safety"
+      ]
+    }
+  ],
+  "grade_experiments": [
+    {
+      "grade_id": "prep1",
+      "title": "Observing matter with a classroom solution",
+      "focus": "Distinguish a solid, a liquid and a simple solution using the virtual model.",
+      "materials": [
+        "water",
+        "sodium_chloride",
+        "ice",
+        "sand"
+      ],
+      "equipment": [
+        "beaker_250ml",
+        "test_tube_20ml",
+        "dropper_3ml",
+        "thermometer_general"
+      ],
+      "student_tasks": [
+        "Identify the visible state of each material.",
+        "Describe what changes when a solid becomes part of a solution.",
+        "Tell whether a sample is a pure substance or a mixture at a conceptual level."
+      ],
+      "teacher_notes": "Keep the activity descriptive and visual."
+    },
+    {
+      "grade_id": "prep2",
+      "title": "Solutions, insoluble mixtures and separation ideas",
+      "focus": "Compare a solution with an insoluble mixture and discuss how separation ideas differ.",
+      "materials": [
+        "water",
+        "sodium_chloride",
+        "sand",
+        "air"
+      ],
+      "equipment": [
+        "beaker_250ml",
+        "erlenmeyer_flask_250ml",
+        "dropper_3ml",
+        "thermometer_general"
+      ],
+      "student_tasks": [
+        "Describe the solvent and solute in the virtual model.",
+        "Explain why some materials dissolve and others do not.",
+        "Predict whether a mixture looks uniform or non-uniform."
+      ],
+      "teacher_notes": "Use the software to discuss concepts only."
+    },
+    {
+      "grade_id": "prep3",
+      "title": "Saturation and closed-system reasoning",
+      "focus": "Introduce the idea of a solubility limit and the use of a closed-system model.",
+      "materials": [
+        "water",
+        "sodium_chloride",
+        "ice",
+        "carbon_dioxide"
+      ],
+      "equipment": [
+        "beaker_250ml",
+        "erlenmeyer_flask_250ml",
+        "thermometer_general",
+        "hot_plate_basic"
+      ],
+      "student_tasks": [
+        "Explain what it means for a solution to become saturated.",
+        "Compare a visible solid with dissolved material.",
+        "Discuss why the model treats the system as simplified."
+      ],
+      "teacher_notes": "Let students reason from observations to ideas before giving the explanation."
+    },
+    {
+      "grade_id": "senior1",
+      "title": "Integrated Science: matter, energy and life systems",
+      "focus": "Connect the classroom chemistry model to biology and Earth-system ideas.",
+      "materials": [
+        "water",
+        "sodium_chloride",
+        "glucose",
+        "starch",
+        "air",
+        "carbon_dioxide"
+      ],
+      "equipment": [
+        "beaker_250ml",
+        "erlenmeyer_flask_250ml",
+        "thermometer_general",
+        "hot_plate_basic"
+      ],
+      "student_tasks": [
+        "Relate glucose and starch to biological energy ideas.",
+        "Describe photosynthesis and cellular respiration at a high level.",
+        "Explain why air and carbon dioxide matter in science beyond chemistry."
+      ],
+      "teacher_notes": "Keep the discussion conceptual and cross-curricular."
+    },
+    {
+      "grade_id": "senior2",
+      "title": "Scientific models and pathway confirmation",
+      "focus": "Evaluate model limits and confirm the student’s official Senior 2 pathway before planning lessons.",
+      "materials": [
+        "water",
+        "sodium_chloride",
+        "air",
+        "carbon_dioxide",
+        "glucose",
+        "starch"
+      ],
+      "equipment": [
+        "beaker_250ml",
+        "erlenmeyer_flask_250ml",
+        "thermometer_general",
+        "hot_plate_basic"
+      ],
+      "student_tasks": [
+        "Separate a model's output from a measured result.",
+        "Identify assumptions and limitations.",
+        "Explain why the exact Senior 2 pathway is required before official Chemistry mapping."
+      ],
+      "teacher_notes": "Use this as a planning and evaluation lesson rather than as a promise of one fixed Senior 2 syllabus for all students."
     }
   ],
   "classroom_demo": {
@@ -207,6 +552,18 @@
       "title": "OpenStax Chemistry 2e — 10.3 Phase Transitions",
       "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
       "supports": "Melting, boiling, evaporation, condensation and heating curves."
+    },
+    {
+      "id": "openstax_photosynthesis",
+      "title": "OpenStax Biology 2e — 8.1 Overview of Photosynthesis",
+      "url": "https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis",
+      "supports": "High-level biology overview connecting carbon dioxide, water and sugar formation."
+    },
+    {
+      "id": "openstax_cellular_respiration",
+      "title": "OpenStax Biology 2e — Cellular Respiration",
+      "url": "https://openstax.org/books/biology-2e",
+      "supports": "High-level biology overview connecting glucose and energy release."
     },
     {
       "id": "acs_secondary_safety",
