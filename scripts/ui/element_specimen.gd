@@ -76,11 +76,11 @@ func setup(data: Dictionary) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	var parent_control := get_parent() as Control
 	if event is InputEventMouseButton:
 		var mouse_event := event as InputEventMouseButton
 		if mouse_event.button_index != MOUSE_BUTTON_LEFT:
 			return
-		var parent_control := get_parent() as Control
 		if mouse_event.pressed and parent_control != null:
 			_drag_offset = parent_control.get_local_mouse_position() - position
 			_dragging = true
@@ -91,7 +91,6 @@ func _gui_input(event: InputEvent) -> void:
 			z_index = 10
 			accept_event()
 	elif event is InputEventMouseMotion and _dragging:
-		var parent_control := get_parent() as Control
 		if parent_control == null:
 			return
 		var maximum := Vector2(maxf(parent_control.size.x - size.x, 0.0), maxf(parent_control.size.y - size.y, 0.0))
