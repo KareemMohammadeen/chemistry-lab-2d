@@ -21,13 +21,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 ROOT_DOC_FILES = {"README.md", "PROJECT_CONTEXT.md", "TODO.md", "CHANGELOG.md", "NEXT_SESSION.md"}
-SKIP_DIRS = {".godot", ".git"}
+SKIP_DIRS = {".godot", ".git", ".github"}
 SNAKE = re.compile(r"^[a-z0-9_]+(\.[a-z0-9_]+)*$")
-ENGINE_NAMES = {"FontVariation", 
-    "Array", "Button", "ButtonGroup", "CanvasLayer", "Color", "Container", "Control", "Dictionary", "FileAccess",
-    "HBoxContainer", "Input", "InputEvent", "InputEventKey", "InputEventJoypadButton", "InputEventJoypadMotion",
-    "InputEventMouseButton", "InputMap", "JSON", "Label", "MarginContainer", "Node", "Node2D", "Object",
+ENGINE_NAMES = {"FontVariation",
+    "Array", "Button", "ButtonGroup", "CanvasLayer", "CenterContainer", "Color", "ColorRect", "Container", "Control",
+    "Dictionary", "FileAccess", "GridContainer", "HSeparator", "HBoxContainer", "HSplitContainer", "Input", "InputEvent",
+    "InputEventKey", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventMouseButton", "InputMap", "ItemList",
+    "JSON", "Label", "MarginContainer", "Node", "Node2D", "Object",
     "OS", "PackedColorArray", "PackedScene", "PackedStringArray", "PackedVector2Array", "PanelContainer", "Rect2",
+    "RichTextLabel", "TabContainer",
     "RefCounted", "ScrollContainer", "SceneTree", "SpinBox", "StringName", "StyleBoxFlat", "TextServer", "ThemeDB",
     "Time", "ResourceLoader", "StyleBoxEmpty", "Texture2D", "Theme", "StyleBox", "VBoxContainer", "Vector2", "Viewport", "Key", "MouseButton", "JoyButton", "JoyAxis", "String", "Variant",
     "Callable", "NodePath", "DirAccess", "ProjectSettings", "Engine", "Tween", "Timer", "Window", "Font",
