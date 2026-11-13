@@ -63,7 +63,8 @@ func _gui_input(event: InputEvent) -> void:
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if element == null:
 		return null
-		var payload := {
+
+	var payload: Dictionary = {
 		"kind": "periodic_element",
 		"symbol": element.id,
 		"name": element.display_name,
@@ -79,12 +80,18 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		"display_only_sample": true,
 		"simulation_reagent": false
 	}
+
 	var preview := PanelContainer.new()
 	preview.custom_minimum_size = Vector2(104.0, 68.0)
-	preview.add_theme_stylebox_override("panel", LabTheme.box(Color("#132635"), _accent_for(element.block), 2, 12, 10, 8))
+	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	preview.add_theme_stylebox_override(
+		"panel",
+		LabTheme.box(Color("#132635"), _accent_for(element.block), 2, 12, 10, 8)
+	)
 	var label := Label.new()
 	label.text = "%s  ·  %s" % [element.id, element.display_name]
 	label.add_theme_color_override("font_color", LabColors.TEXT_PRIMARY)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	preview.add_child(label)
 	set_drag_preview(preview)
 	return payload
