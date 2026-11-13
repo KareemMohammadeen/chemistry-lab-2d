@@ -1,5 +1,26 @@
 # Changelog
 
+## Teacher presentation flow and classroom previews (2026-11-13) - awaiting Godot verification
+- Added a polished welcome screen with separate Classroom Demo and Teacher Mode entry actions.
+- Added grade-specific teacher preview cards for Prep 1, Prep 2, Prep 3, Senior 1 and Senior 2; each preview is explicitly labelled as suggested rather than verified against exact official unit order.
+- Connected Teacher Mode to the selected grade, guide window, learning goals, virtual lesson flow and teacher discussion prompt.
+- Added collapsible Inspector sections for properties, contents, observations and safety without changing simulation state or chemistry rules.
+- Updated README to use the water + table-salt classroom scenario and point to the teacher presentation.
+- Added a static teacher-demo validator and GitHub Actions static validation workflow.
+- Added docs/TEACHER_PRESENTATION.md; final in-app screenshots still need to be captured after running the project in Godot.
+- Godot runtime and visual checks have not been performed in this environment.
+
+
+## Periodic table reference and curriculum selector (2026-11-12) - awaiting in-engine verification
+- Exposed all 118 already-loaded elements in a read-only periodic-table reference grid.
+- Element cards show only basic reference facts (atomic number, category, position, block and electron configuration); they do not create reagents or enable reactions.
+- Added a data-driven Egyptian 2026-2027 grade selector for Prep 1, Prep 2, Prep 3, Senior 1 and Senior 2.
+- Senior 1 is labelled Integrated Science based on the Ministry statement dated 2026-09-01.
+- Senior 2 remains pathway-dependent until the applicable General Secondary or Egyptian Baccalaureate pathway is confirmed.
+- Unit-level curriculum mapping remains explicitly pending review of each matching official textbook.
+- Added a standalone validator for the five profiles and the 118-element reference records.
+- Not run in Godot yet.
+
 ## Drag & drop visual polish (2026-11-10) - awaiting in-engine verification
 - Dragged equipment now eases upward, scales slightly and leans subtly with horizontal pointer movement.
 - Added a detached, soft contact shadow so the object visibly lifts from the bench or shelf.

@@ -35,3 +35,28 @@ and conservation of dissolved salt when pouring. Exit code 0 means all checks pa
 - [ ] Ctrl+Z / Ctrl+Y and the buttons; Reset bench; Space pauses; 2x and 4x speed.
 - [ ] Resize the window (16:9 and 4:3): the scene letterboxes and the Inspector stays readable.
 Record results in CHANGELOG.md.
+
+
+## 4. Curriculum and element reference data
+Run:
+```
+python3 tests/validate_curriculum.py
+```
+Checks the five requested grade profiles, source references, Senior 1 Integrated Science status,
+Senior 2 pathway uncertainty, and all 118 element reference records. This does not validate
+chemical reactions or imply that periodic-table entries are usable reagents.
+
+## 5. Teacher demo data validation
+Run:
+```
+python3 tests/validate_teacher_demo.py
+```
+Checks that all five grade profiles have an evidence-labelled preview, that teacher preview materials and equipment IDs
+are known, that the classroom demo setup only contains water and sodium chloride, and that the learning guide references
+the expected scientific/safety and Ministry source catalogue.
+
+## 6. Curriculum source review status
+- Prep 1–3: current grade books must be checked individually before importing unit-level topics.
+- Senior 1: Integrated Science is confirmed by the Ministry statement dated 2026-09-01.
+- Senior 2: do not infer one chemistry map without selecting General Secondary or the Egyptian Baccalaureate pathway.
+- The application currently labels the selected grade and evidence status; lesson-level mapping remains pending until the exact official books are reviewed.

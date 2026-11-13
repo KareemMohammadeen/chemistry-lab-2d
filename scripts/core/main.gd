@@ -1,10 +1,12 @@
 extends Node
+
+const WELCOME_OVERLAY_SCRIPT := preload("res://scripts/ui/welcome_overlay.gd")
 ## Composition root. Builds the content database, the simulation host and the interaction
 ## controller and hands them to the views. It contains no laboratory logic of its own.
 
 ## Smallest window that still shows the whole laboratory legibly.
 const MIN_WINDOW_SIZE := Vector2i(960, 540)
-const SETUP_PATH := "res://data/setups/first_demo.json"
+const SETUP_PATH := "res://data/setups/classroom_demo.json"
 ## Window size the interface is designed at (project stretch base) and the smallest effective
 ## scale text may shrink to: below it the interface is enlarged so fonts stay readable.
 const DESIGN_SIZE := Vector2(1920.0, 1080.0)
@@ -16,6 +18,7 @@ const MIN_UI_SCALE := 0.75
 var _host: SimulationHost
 var _controller: InteractionController
 var _last_stage_rect: Rect2 = Rect2()
+var _welcome_overlay: WelcomeOverlay
 
 
 func _ready() -> void:
@@ -38,6 +41,22 @@ func _ready() -> void:
 	_controller.name = "InteractionController"
 	add_child(_controller)
 	_controller.setup(_host, workspace, lab_interface)
+	_show_welcome_overlay()
+
+
+func _show_welcome_overlay() -> void:
+	_welcome_overlay = WELCOME_OVERLAY_SCRIPT.new() as WelcomeOverlay
+	_welcome_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_welcome_overlay.mode_selected.connect(_on_welcome_mode_selected)
+	lab_interface.add_child(_welcome_overlay)
+
+
+func _on_welcome_mode_selected(mode: String) -> void:
+	if is_instance_valid(_welcome_overlay):
+		_welcome_overlay.queue_free()
+	_welcome_overlay = null
+	if mode == "teacher":
+		lab_interface.open_teacher_mode()
 
 
 ## The laboratory is scaled and centred inside the stage slot between the side panels. Done

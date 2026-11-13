@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "id": "classroom_demo",
+  "title": "Classroom Demo — Water and Table Salt",
+  "description": "A classroom-facing virtual demonstration using only water and table salt. Reference elements remain read-only.",
+  "objects": [
+    {
+      "equipment": "reagent_bottle_500ml",
+      "position": [
+        240,
+        240
+      ],
+      "contents": {
+        "liquids": {
+          "water": 450
+        }
+      }
+    },
+    {
+      "equipment": "reagent_bottle_500ml",
+      "position": [
+        440,
+        240
+      ],
+      "contents": {
+        "solids": {
+          "sodium_chloride": 80
+        }
+      }
+    },
+    {
+      "equipment": "beaker_250ml",
+      "position": [
+        300,
+        460
+      ]
+    },
+    {
+      "equipment": "test_tube_20ml",
+      "position": [
+        520,
+        460
+      ]
+    },
+    {
+      "equipment": "thermometer_general",
+      "position": [
+        700,
+        460
+      ]
+    },
+    {
+      "equipment": "dropper_3ml",
+      "position": [
+        860,
+        460
+      ]
+    },
+    {
+      "equipment": "hot_plate_basic",
+      "position": [
+        1050,
+        760
+      ]
+    }
+  ]
+}
