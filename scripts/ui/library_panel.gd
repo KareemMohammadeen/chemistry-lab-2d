@@ -54,6 +54,9 @@ func set_curriculum_profile(profile: Dictionary) -> void:
 	if _host != null:
 		_build()
 		_refresh()
+		if is_instance_valid(_guide_window) and is_instance_valid(_guide_rich_text):
+			var guide_data := JsonDataLoader.load_dictionary(LEARNING_GUIDE_PATH)
+			_guide_rich_text.text = _build_learning_guide_text(guide_data)
 
 
 func _process(delta: float) -> void:
@@ -263,8 +266,8 @@ func _build_grade_preview_text(profile_id: String) -> String:
 		for goal in preview.get("learning_goals", []):
 			output += "• %s\n" % str(goal)
 		output += "\n[b]Materials and equipment[/b]\nMaterials: %s\nEquipment: %s\n\n" % [
-			", ".join(PackedStringArray(preview.get("material_ids", []))),
-			", ".join(PackedStringArray(preview.get("equipment_ids", [])))]
+			_format_preview_names(preview.get("material_ids", []), false),
+			_format_preview_names(preview.get("equipment_ids", []), true)]
 		output += "[b]Suggested virtual lesson flow[/b]\n"
 		for step in preview.get("virtual_flow", []):
 			output += "• %s\n" % str(step)
@@ -272,6 +275,28 @@ func _build_grade_preview_text(profile_id: String) -> String:
 		output += "This is a suggested software activity, not a claim about the official textbook's exact lesson order.\n\n"
 		return output
 	return "[b]Teacher preview[/b]\nNo preview is mapped to this profile yet.\n\n"
+
+
+func _format_preview_names(ids: Array, equipment_items: bool) -> String:
+	var names: Array[String] = []
+	for raw_id in ids:
+		var item_id := str(raw_id)
+		var display := item_id.replace("_", " ").capitalize()
+		if _host != null:
+			if equipment_items:
+				var equipment := _host.database.get_equipment(item_id)
+				if equipment != null:
+					display = equipment.display_name
+			else:
+				var chemical := _host.database.get_chemical(item_id)
+				if chemical != null:
+					display = chemical.display_name
+				else:
+					var compound := _host.database.get_compound(item_id)
+					if compound != null:
+						display = compound.display_name
+		names.append(display)
+	return ", ".join(PackedStringArray(names))
 
 
 func _open_guide_link(meta: Variant) -> void:
