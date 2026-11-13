@@ -9,14 +9,17 @@ var _current_entry: Variant = null
 var _current_formatter: Callable
 var _current_pin_button: Button
 var _current_detail: RichTextLabel
+var _periodic_selected: ElementDefinition
+var _periodic_detail: RichTextLabel
+var _periodic_pin_button: Button
 
 
 func bind(database: ContentDatabase) -> void:
 	_database = database
 	title = "Materials & Reactions Reference Explorer"
 	transient = true
-	size = Vector2i(1160, 820)
-	min_size = Vector2i(860, 580)
+	size = Vector2i(1480, 900)
+	min_size = Vector2i(1180, 720)
 	theme = LabTheme.build()
 	_build()
 
@@ -63,7 +66,7 @@ func _build() -> void:
 	for value in element_entries:
 		var item := value as ElementDefinition
 		element_labels.append("%03d  %s  %s" % [item.atomic_number, item.id, item.display_name])
-	_add_tab(tabs, "Elements · 118", "element", element_labels, element_entries, _format_element)
+	_add_element_table_tab(tabs, element_entries)
 
 	var compound_entries: Array = _database.compounds.values()
 	compound_entries.sort_custom(func(left: Variant, right: Variant) -> bool:
@@ -99,6 +102,140 @@ func _build() -> void:
 	sources.meta_clicked.connect(_open_reference_link)
 	sources.text = "[b]Reference sources[/b]  [url=https://iupac.org/what-we-do/periodic-table-of-elements/]IUPAC[/url]  ·  [url=https://pubchem.ncbi.nlm.nih.gov/ptable/]PubChem[/url]  ·  [url=https://www.nist.gov/pml/periodic-table-elements]NIST[/url]  ·  [url=https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process]OpenStax: dissolution[/url]  ·  [url=https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions]OpenStax: phase transitions[/url]  ·  [url=https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html]ACS laboratory safety[/url]\nProperty records in this project include unverified and derived fields; do not treat every numeric entry as an authoritative measured value."
 	shell.add_child(sources)
+
+
+
+func _add_element_table_tab(tabs: TabContainer, entries: Array) -> void:
+	var split := HSplitContainer.new()
+	split.name = "Periodic Table · 118"
+	split.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	split.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	tabs.add_child(split)
+
+	var left := VBoxContainer.new()
+	left.custom_minimum_size.x = 1000.0
+	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	left.add_theme_constant_override("separation", 8)
+	split.add_child(left)
+
+	var search := LineEdit.new()
+	search.placeholder_text = "Search by symbol, element name, atomic number or category…"
+	search.clear_button_enabled = true
+	left.add_child(search)
+
+	var instructions := Label.new()
+	instructions.text = "Drag any tile onto the workbench. Every element is draggable as a learning token; only designated display samples receive the sample label."
+	instructions.theme_type_variation = &"MutedLabel"
+	instructions.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	left.add_child(instructions)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	left.add_child(scroll)
+
+	var grid := GridContainer.new()
+	grid.columns = 18
+	grid.add_theme_constant_override("h_separation", 4)
+	grid.add_theme_constant_override("v_separation", 4)
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(grid)
+
+	var positions: Dictionary = {}
+	for raw_entry in entries:
+		var element := raw_entry as ElementDefinition
+		var cell := Vector2i(-1, -1)
+		if element.atomic_number >= 57 and element.atomic_number <= 71:
+			cell = Vector2i(2 + element.atomic_number - 57, 7)
+		elif element.atomic_number >= 89 and element.atomic_number <= 103:
+			cell = Vector2i(2 + element.atomic_number - 89, 8)
+		elif element.group > 0 and element.period > 0:
+			cell = Vector2i(element.group - 1, element.period - 1)
+		if cell.x >= 0 and cell.x < 18 and cell.y >= 0 and cell.y < 9:
+			positions[cell] = element
+
+	var element_cards: Array[ElementReferenceCard] = []
+	var first_element: ElementDefinition = null
+	for row_index in range(9):
+		for column_index in range(18):
+			var cell := Vector2i(column_index, row_index)
+			if positions.has(cell):
+				var element := positions[cell] as ElementDefinition
+				var card := ElementReferenceCard.new()
+				card.custom_minimum_size = Vector2(54.0, 64.0)
+				grid.add_child(card)
+				card.setup(element)
+				card.activated.connect(_on_periodic_element_selected)
+				element_cards.append(card)
+				if first_element == null or element.atomic_number < first_element.atomic_number:
+					first_element = element
+			else:
+				var spacer := Control.new()
+				spacer.custom_minimum_size = Vector2(54.0, 64.0)
+				spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				grid.add_child(spacer)
+
+	var right_panel := PanelContainer.new()
+	right_panel.custom_minimum_size.x = 330.0
+	right_panel.theme_type_variation = &"DisplayPanel"
+	split.add_child(right_panel)
+
+	var detail_column := VBoxContainer.new()
+	detail_column.add_theme_constant_override("separation", 10)
+	right_panel.add_child(detail_column)
+
+	var detail_heading := Label.new()
+	detail_heading.text = "ELEMENT INSPECTOR"
+	detail_heading.theme_type_variation = &"HeadingLabel"
+	detail_column.add_child(detail_heading)
+
+	var detail := RichTextLabel.new()
+	detail.bbcode_enabled = true
+	detail.fit_content = true
+	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	detail.custom_minimum_size = Vector2(300.0, 400.0)
+	detail_column.add_child(detail)
+
+	var pin_button := Button.new()
+	pin_button.text = "Pin reference to workbench"
+	pin_button.theme_type_variation = &"ToolButton"
+	pin_button.focus_mode = Control.FOCUS_NONE
+	pin_button.disabled = true
+	detail_column.add_child(pin_button)
+
+	_periodic_detail = detail
+	_periodic_pin_button = pin_button
+	pin_button.pressed.connect(_pin_periodic_element)
+
+	search.text_changed.connect(func(query: String) -> void:
+		for card in element_cards:
+			card.set_search_match(card.matches_query(query))
+	)
+
+	if first_element != null:
+		_on_periodic_element_selected(first_element)
+	else:
+		detail.text = "No element data is available."
+
+
+func _on_periodic_element_selected(element: ElementDefinition) -> void:
+	if element == null:
+		return
+	_periodic_selected = element
+	if _periodic_detail != null:
+		_periodic_detail.text = _format_element(element)
+	if _periodic_pin_button != null:
+		_periodic_pin_button.disabled = false
+
+
+func _pin_periodic_element() -> void:
+	if _periodic_selected == null:
+		return
+	var reference := _reference_from_current_entry("element", _periodic_selected, _format_element)
+	EventBus.reference_pin_requested.emit(reference)
 
 
 func _add_tab(tabs: TabContainer, tab_title: String, kind: String, labels: Array[String], entries: Array, formatter: Callable) -> void:
@@ -150,20 +287,21 @@ func _add_tab(tabs: TabContainer, tab_title: String, kind: String, labels: Array
 	for label in labels:
 		list.add_item(label)
 
-	var current_index := -1
+	var selected_entry: Variant = null
+	pin_button.pressed.connect(func() -> void:
+		if selected_entry == null:
+			return
+		var reference := _reference_from_current_entry(kind, selected_entry, formatter)
+		if not reference.is_empty():
+			EventBus.reference_pin_requested.emit(reference)
+	)
 	var select_entry := func(index: int) -> void:
 		if index < 0 or index >= entries.size():
 			return
-		current_index = index
-		_current_kind = kind
-		_current_entry = entries[index]
-		_current_formatter = formatter
-		detail.text = str(formatter.call(entries[index]))
+		selected_entry = entries[index]
+		detail.text = str(formatter.call(selected_entry))
 		pin_button.disabled = false
-		_current_detail = detail
-		_current_pin_button = pin_button
-		pin_button.tooltip_text = "Pin this %s into the classroom dashboard as a draggable reference badge." % kind
-		pin_button.pressed.connect(_pin_current_entry, CONNECT_ONE_SHOT)
+		pin_button.tooltip_text = "Pin this %s to the workbench as a draggable reference badge." % kind
 	
 	list.item_selected.connect(select_entry)
 	if not entries.is_empty():

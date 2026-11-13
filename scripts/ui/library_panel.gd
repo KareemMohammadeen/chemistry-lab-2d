@@ -77,8 +77,8 @@ func _build() -> void:
 	var database := _host.database
 
 	var explorer_button := Button.new()
-	explorer_button.text = "Materials & reactions encyclopedia"
-	explorer_button.tooltip_text = "Browse all 118 elements, compounds, simulation materials and model reactions as read-only educational references."
+	explorer_button.text = "Open periodic table & encyclopedia"
+	explorer_button.tooltip_text = "Open the full periodic table. Drag any element tile onto the workbench as a visual learning token."
 	explorer_button.theme_type_variation = &"ToolButton"
 	explorer_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	explorer_button.focus_mode = Control.FOCUS_NONE
@@ -169,7 +169,7 @@ func _on_reference_explorer_pressed() -> void:
 	if _host == null:
 		return
 	if is_instance_valid(_reference_window):
-		_reference_window.popup_centered(Vector2i(1120, 780))
+		_reference_window.popup_centered(Vector2i(1480, 900))
 		return
 	_reference_window = REFERENCE_EXPLORER_SCRIPT.new() as ReferenceExplorer
 	_reference_window.close_requested.connect(_on_reference_explorer_closed)

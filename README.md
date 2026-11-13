@@ -20,9 +20,7 @@ Godot 4.3+, GDScript, Compatibility renderer. **Milestone 1: functional 2D labor
 The application demo is a software-only educational model. It is not a set of instructions for real laboratory work.
 
 ## Screen layout
-Top bar (library toggle, title, lab time, undo/redo, reset, pause and speed) over three areas: **Library** on the left (the two
-classroom demo materials and approved equipment; click a card to select it), the **laboratory** in the centre (scaled to fit) and the
-**Inspector** on the right. The guided classroom mode exposes two classroom reagents; other catalog entries are references only. The Library hides itself on narrow windows; use the first toolbar button to show it.
+The rebuilt **Studio Workbench** uses a compact command header, a left materials dock, a large framed live workbench in the centre, and a contextual Inspector on the right. The header keeps grade selection, simulation time, undo/redo, reset, pause/speed and the Teacher Guide together. The Library can be collapsed on smaller windows.
 
 ## Controls
 | Action | Input |
@@ -51,12 +49,9 @@ Prep 2, Prep 3, Senior 1 and Senior 2. Prep 1–3 unit-level alignment is still 
 2026–2027 textbooks. Senior 1 is represented as Integrated Science; Senior 2 remains pathway-dependent. Preview activities
 are suggestions for using the software, not claims about official lesson order.
 
-The periodic-table browser shows all 118 elements as read-only reference entries. Only water and table salt are available in
-the guided classroom setup. Other catalogue records are not unlocked as classroom reagents.
+The Periodic Table now displays all 118 elements in an 18-column layout with search and a detail inspector. Every tile supports drag-and-drop onto the central workbench, where it creates a movable visual element token. A small, explicitly marked subset is labelled as a visual display sample; all remaining elements are marked reference-only. **These tokens are not chemical reagents and cannot be mixed, heated or reacted.** Only water and table salt are available in the guided classroom simulation.
 
-The redesigned dashboard now supports pinned reference badges: teachers can pin elements, compounds and other reference entries
-from the Reference Explorer into the classroom overlay as draggable study notes. Those badges are visual references only and do
-not mutate the simulation.
+Teachers can also pin elements, compounds and other catalogue entries from the Reference Explorer onto the workbench as movable study notes. Those badges are visual references only and do not mutate the simulation.
 
 A separate safe experiment pack lives in `data/learning/expanded_safe_experiments.json` with grade mappings in
 `data/curricula/egypt_2026_2027_safe_experiments.json`. These files collect classroom-safe experiment concepts for Prep 1,
