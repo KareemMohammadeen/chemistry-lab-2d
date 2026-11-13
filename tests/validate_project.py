@@ -320,6 +320,58 @@ def check_json():
     warnings.append(f"data: {count} placeholder value(s) still need a reviewed source (see docs/CHEMISTRY_REQUIREMENTS.md)")
 
 
+def check_element_visual_coverage():
+    """Ensure all 118 catalogue elements receive a safe visual representation."""
+    visual_path = ROOT / "scripts/ui/element_visual.gd"
+    specimen_path = ROOT / "scripts/ui/element_specimen.gd"
+    card_path = ROOT / "scripts/ui/element_reference_card.gd"
+    for path in (visual_path, specimen_path, card_path):
+        if not path.exists():
+            errors.append(f"element visuals: required file {path.relative_to(ROOT)} is missing")
+    if not visual_path.exists() or not specimen_path.exists() or not card_path.exists():
+        return
+
+    visual = visual_path.read_text(encoding="utf-8")
+    specimen = specimen_path.read_text(encoding="utf-8")
+    card = card_path.read_text(encoding="utf-8")
+    required_modes = {"solid_metal", "solid_crystal", "liquid", "gas_molecule", "gas_atom", "unknown_atom"}
+    for mode in required_modes:
+        if f'"{mode}"' not in visual:
+            errors.append(f"element visuals: missing renderer for {mode}")
+    for marker in ("static func profile_for", "state_at_stp", "radioactive", "hazards", "_draw_sealed_display_frame"):
+        if marker not in visual:
+            errors.append(f"element visuals: missing coverage/safety marker {marker}")
+    if "ElementVisual.new()" not in specimen:
+        errors.append("element visuals: dropped specimen does not instantiate ElementVisual")
+    if '"simulation_reagent": false' not in card:
+        errors.append("element visuals: periodic-table payload must remain non-reactive")
+
+    elements = _load("data/elements/elements.json")["elements"]
+    if len(elements) != 118:
+        errors.append(f"element visuals: expected 118 element entries, got {len(elements)}")
+        return
+    covered = set()
+    for element in elements:
+        symbol = element.get("symbol", "")
+        state_entry = element.get("state_at_stp")
+        state = state_entry.get("value", "") if isinstance(state_entry, dict) else ""
+        category = str(element.get("category", "")).lower()
+        if state == "gas":
+            covered.add("gas_atom" if category == "noble gas" or symbol in {"He", "Ne", "Ar", "Kr", "Xe", "Rn"} else "gas_molecule")
+        elif state == "liquid":
+            covered.add("liquid")
+        elif state == "solid":
+            is_metal = ("metal" in category and category not in {"nonmetal", "metalloid"}) or category in {"lanthanoid", "actinoid"}
+            covered.add("solid_metal" if is_metal else "solid_crystal")
+        else:
+            covered.add("unknown_atom")
+    missing = covered - required_modes
+    if missing:
+        errors.append(f"element visuals: catalogue states have no renderer: {sorted(missing)}")
+    if "SEALED VIRTUAL SPECIMEN" not in specimen or "NOT A REAGENT" not in specimen:
+        errors.append("element visuals: specimen UI must clearly state virtual-only/non-reagent status")
+
+
 def main():
     check_res_paths()
     check_names()
@@ -329,6 +381,7 @@ def main():
     check_variant_inference()
     check_scene_exports()
     check_json()
+    check_element_visual_coverage()
     for w in warnings:
         print("WARN ", w)
     for e in errors:

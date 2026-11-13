@@ -5,7 +5,6 @@ extends PanelContainer
 
 signal activated(element: ElementDefinition)
 
-const DISPLAY_SAMPLE_SYMBOLS: Array[String] = ["C", "Al", "Si", "Fe", "Cu", "Ag", "Au", "Sn", "W"]
 const TILE_SIZE := Vector2(58.0, 64.0)
 
 var element: ElementDefinition
@@ -51,7 +50,7 @@ func setup(value: ElementDefinition) -> void:
 	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(name_label)
-	tooltip_text = _tooltip_text(element) + "\nDrag this tile onto the workbench to add a visual element token."
+	tooltip_text = _tooltip_text(element) + "\nDrag this tile onto the workbench to create a stylized 2D specimen. It is a visual model, not a reagent."
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -64,8 +63,7 @@ func _gui_input(event: InputEvent) -> void:
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if element == null:
 		return null
-	var is_display_sample := DISPLAY_SAMPLE_SYMBOLS.has(element.id)
-	var payload := {
+		var payload := {
 		"kind": "periodic_element",
 		"symbol": element.id,
 		"name": element.display_name,
@@ -78,7 +76,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		"appearance": element.appearance,
 		"hazards": element.hazards,
 		"radioactive": element.radioactive,
-		"display_only_sample": is_display_sample,
+		"display_only_sample": true,
 		"simulation_reagent": false
 	}
 	var preview := PanelContainer.new()
@@ -126,4 +124,4 @@ static func _tooltip_text(value: ElementDefinition) -> String:
 	var config := value.electron_configuration if value.electron_configuration != "" else "Not listed"
 	return "%s (%s)\nAtomic number: %d\nCategory: %s\nPeriod: %d  •  Group: %s\nBlock: %s\nElectron configuration: %s\n%s" % [
 		value.display_name, value.id, value.atomic_number, value.category, value.period, group_label, value.block, config,
-		("Visual sample token only; not a reactive material." if DISPLAY_SAMPLE_SYMBOLS.has(value.id) else "Reference token only; not a classroom reagent.")]
+		"Every dropped element is a 2D educational visual model only; it is not a classroom reagent."]
