@@ -112,7 +112,7 @@ func _add_tab(tabs: TabContainer, tab_title: String, labels: Array[String], entr
 		list.add_item(label)
 	list.item_selected.connect(func(index: int) -> void:
 		if index >= 0 and index < entries.size():
-			detail.text = str(formatter.call(entries[index])))
+			detail.text = str(formatter.call(entries[index]))
 		)
 	if not entries.is_empty():
 		list.select(0)
