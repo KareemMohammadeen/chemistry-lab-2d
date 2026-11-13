@@ -1,4 +1,6 @@
 extends Node
+
+const WELCOME_OVERLAY_SCRIPT := preload("res://scripts/ui/welcome_overlay.gd")
 ## Composition root. Builds the content database, the simulation host and the interaction
 ## controller and hands them to the views. It contains no laboratory logic of its own.
 
@@ -16,6 +18,7 @@ const MIN_UI_SCALE := 0.75
 var _host: SimulationHost
 var _controller: InteractionController
 var _last_stage_rect: Rect2 = Rect2()
+var _welcome_overlay: Control
 
 
 func _ready() -> void:
@@ -38,6 +41,22 @@ func _ready() -> void:
 	_controller.name = "InteractionController"
 	add_child(_controller)
 	_controller.setup(_host, workspace, lab_interface)
+	_show_welcome_overlay()
+
+
+func _show_welcome_overlay() -> void:
+	_welcome_overlay = WELCOME_OVERLAY_SCRIPT.new() as Control
+	_welcome_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_welcome_overlay.mode_selected.connect(_on_welcome_mode_selected)
+	lab_interface.add_child(_welcome_overlay)
+
+
+func _on_welcome_mode_selected(mode: String) -> void:
+	if is_instance_valid(_welcome_overlay):
+		_welcome_overlay.queue_free()
+	_welcome_overlay = null
+	if mode == "teacher":
+		lab_interface.open_teacher_mode()
 
 
 ## The laboratory is scaled and centred inside the stage slot between the side panels. Done
