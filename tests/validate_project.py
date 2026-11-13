@@ -361,7 +361,7 @@ def check_element_visual_coverage():
         elif state == "liquid":
             covered.add("liquid")
         elif state == "solid":
-            is_metal = "metal" in category and category not in {"nonmetal", "metalloid"}
+            is_metal = ("metal" in category and category not in {"nonmetal", "metalloid"}) or category in {"lanthanoid", "actinoid"}
             covered.add("solid_metal" if is_metal else "solid_crystal")
         else:
             covered.add("unknown_atom")
