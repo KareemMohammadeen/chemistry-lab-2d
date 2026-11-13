@@ -24,6 +24,7 @@ const CLASSROOM_EQUIPMENT_IDS: Array[String] = ["beaker_250ml", "test_tube_20ml"
 const SAFE_REFERENCE_COMPOUND_IDS: Array[String] = ["glucose", "sucrose", "starch"]
 const LEARNING_GUIDE_PATH := "res://data/learning/learning_guide.json"
 const TEACHER_PREVIEWS_PATH := "res://data/learning/teacher_previews.json"
+const REFERENCE_EXPLORER_SCRIPT := preload("res://scripts/ui/reference_explorer.gd")
 
 @export var subtitle_label: Label
 @export var content_box: VBoxContainer
@@ -37,6 +38,7 @@ var _section_written: Dictionary = {}
 var _curriculum_profile: Dictionary = {}
 var _guide_window: Window
 var _guide_rich_text: RichTextLabel
+var _reference_window: Window
 
 
 func bind(host: SimulationHost) -> void:
@@ -70,6 +72,15 @@ func _build() -> void:
 	_cards.clear()
 	_section_written.clear()
 	var database := _host.database
+
+	var explorer_button := Button.new()
+	explorer_button.text = "Materials & reactions encyclopedia"
+	explorer_button.tooltip_text = "Browse all 118 elements, compounds, simulation materials and model reactions as read-only educational references."
+	explorer_button.theme_type_variation = &"ToolButton"
+	explorer_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	explorer_button.focus_mode = Control.FOCUS_NONE
+	explorer_button.pressed.connect(_on_reference_explorer_pressed)
+	content_box.add_child(explorer_button)
 
 	var guide_button := Button.new()
 	guide_button.text = "Learning guide & sources"
@@ -132,6 +143,25 @@ func _add_safe_reference_materials_section(database: ContentDatabase) -> void:
 
 func _on_guide_button_pressed() -> void:
 	open_learning_guide(_curriculum_profile)
+
+
+func _on_reference_explorer_pressed() -> void:
+	if _host == null:
+		return
+	if is_instance_valid(_reference_window):
+		_reference_window.popup_centered(Vector2i(1120, 780))
+		return
+	_reference_window = REFERENCE_EXPLORER_SCRIPT.new() as Window
+	_reference_window.close_requested.connect(_on_reference_explorer_closed)
+	add_child(_reference_window)
+	_reference_window.bind(_host.database)
+	_reference_window.popup_centered(Vector2i(1120, 780))
+
+
+func _on_reference_explorer_closed() -> void:
+	if is_instance_valid(_reference_window):
+		_reference_window.queue_free()
+	_reference_window = null
 
 
 func open_learning_guide(profile: Dictionary = {}) -> void:
