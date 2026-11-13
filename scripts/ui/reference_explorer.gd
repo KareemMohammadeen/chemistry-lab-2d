@@ -87,7 +87,7 @@ func _add_tab(tabs: TabContainer, tab_title: String, labels: Array[String], entr
 	tabs.add_child(split)
 
 	var list := ItemList.new()
-	list.custom_minimum_size.x = 290.0
+	list.custom_minimum_size.x = 230.0
 	list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	list.select_mode = ItemList.SELECT_SINGLE
 	split.add_child(list)
@@ -101,7 +101,7 @@ func _add_tab(tabs: TabContainer, tab_title: String, labels: Array[String], entr
 	detail.bbcode_enabled = true
 	detail.fit_content = true
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	detail.custom_minimum_size = Vector2(620.0, 580.0)
+	detail.custom_minimum_size = Vector2(500.0, 480.0)
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail.meta_clicked.connect(_open_reference_link)
 	scroll.add_child(detail)
@@ -130,8 +130,9 @@ func _format_element(item: Variant) -> String:
 		output += "Appearance: %s\n" % element.appearance
 	if not element.state_at_stp.is_empty():
 		output += "State at STP: %s\n" % element.state_at_stp
+	output += "\n[b]How to read this element[/b]\nThe atomic number identifies the element by its number of protons. The period is its row in the periodic table; the group and block describe its position in the table's organisation.\n"
 	if not element.description.is_empty():
-		output += "\n[b]Educational overview[/b]\n%s\n" % element.description
+		output += "\n[b]Additional reference note[/b]\n%s\n" % element.description
 	if element.radioactive:
 		output += "\n[b]Safety classification[/b]\nRadioactive element. This is a read-only reference entry, not a classroom reagent.\n"
 	elif not element.hazards.is_empty():
@@ -150,6 +151,7 @@ func _format_compound(item: Variant) -> String:
 	output += "Composition: %s\n" % ", ".join(PackedStringArray(atoms))
 	if not compound.solubility_note.is_empty():
 		output += "Solubility overview: %s\n" % compound.solubility_note
+	output += "\n[b]Educational overview[/b]\nA chemical formula identifies the elements that make up a compound and the relative count of each element in the formula. The composition above is shown as a reference, not as a recipe.\n"
 	if not compound.hazard_classes.is_empty():
 		var classes: Array[String] = []
 		for hazard in compound.hazard_classes:
@@ -163,8 +165,9 @@ func _format_compound(item: Variant) -> String:
 
 func _format_chemical(item: Variant) -> String:
 	var chemical := item as ChemicalDefinition
+ 	var summary_text := chemical.summary if not chemical.summary.is_empty() else "This entry is a substance record in the simulation catalogue."
 	var output := "[b]%s (%s)[/b]\nState: %s\nCategory: %s\n%s\n" % [
-		chemical.display_name, chemical.formula_display, chemical.state, chemical.category, chemical.summary]
+		chemical.display_name, chemical.formula_display, chemical.state, chemical.category, summary_text]
 	if chemical.id == "water" or chemical.id == "sodium_chloride":
 		output += "\n[b]Classroom demo status[/b]\nAvailable in the guided virtual classroom demonstration.\n"
 	else:
