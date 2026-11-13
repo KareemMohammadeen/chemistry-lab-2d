@@ -169,7 +169,7 @@ func _on_reference_explorer_pressed() -> void:
 	if _host == null:
 		return
 	if is_instance_valid(_reference_window):
-		_reference_window.popup_centered(Vector2i(1120, 780))
+		_reference_window.popup_centered(Vector2i(1480, 900))
 		return
 	_reference_window = REFERENCE_EXPLORER_SCRIPT.new() as ReferenceExplorer
 	_reference_window.close_requested.connect(_on_reference_explorer_closed)
