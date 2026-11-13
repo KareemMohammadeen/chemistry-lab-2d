@@ -62,7 +62,7 @@ static func profile_for(data: Dictionary) -> Dictionary:
 
 
 static func _is_metal_category(category: String) -> bool:
-	return category.contains("metal") and category != "nonmetal" and category != "metalloid"
+	return (category.contains("metal") and category != "nonmetal" and category != "metalloid") or category in ["lanthanoid", "actinoid"]
 
 
 static func _element_color(symbol: String, atomic_number: int, category: String) -> Color:
