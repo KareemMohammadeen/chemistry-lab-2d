@@ -167,7 +167,7 @@ func _format_compound(item: Variant) -> String:
 
 func _format_chemical(item: Variant) -> String:
 	var chemical := item as ChemicalDefinition
- 	var summary_text := chemical.summary if not chemical.summary.is_empty() else "This entry is a substance record in the simulation catalogue."
+	var summary_text := chemical.summary if not chemical.summary.is_empty() else "This entry is a substance record in the simulation catalogue."
 	var output := "[b]%s (%s)[/b]\nState: %s\nCategory: %s\n%s\n" % [
 		chemical.display_name, chemical.formula_display, chemical.state, chemical.category, summary_text]
 	if chemical.id == "water" or chemical.id == "sodium_chloride":
