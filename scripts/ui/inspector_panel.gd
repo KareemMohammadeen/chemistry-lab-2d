@@ -46,6 +46,7 @@ var _heater_signature: String = ""
 var _heater_power_on: bool = false
 var _amount_unit: String = "mL"
 var _fade: Tween
+var _collapsed_sections: Dictionary = {}
 
 
 func _ready() -> void:
@@ -129,6 +130,7 @@ func _show_empty() -> void:
 
 func _fill_rows(rows: Array) -> void:
 	_clear(rows_box)
+	_add_heading(rows_box, "PROPERTIES")
 	for entry in rows:
 		var row := HBoxContainer.new()
 		var name_label := _make_label(str(entry["label"]), FONT_SIZE_BODY, LabColors.TEXT_SECONDARY)
@@ -140,6 +142,7 @@ func _fill_rows(rows: Array) -> void:
 		row.add_child(name_label)
 		row.add_child(value_label)
 		rows_box.add_child(row)
+	_apply_section_visibility(rows_box, "PROPERTIES")
 
 
 func _fill_contents(contents: Array) -> void:
@@ -147,6 +150,7 @@ func _fill_contents(contents: Array) -> void:
 	_add_heading(contents_box, "CONTENTS")
 	if contents.is_empty():
 		contents_box.add_child(_make_label("Nothing inside.", FONT_SIZE_BODY, LabColors.TEXT_SECONDARY))
+		_apply_section_visibility(contents_box, "CONTENTS")
 		return
 	for entry in contents:
 		var row := HBoxContainer.new()
@@ -161,6 +165,7 @@ func _fill_contents(contents: Array) -> void:
 		contents_box.add_child(row)
 		if str(entry["detail"]) != "":
 			contents_box.add_child(_make_label(str(entry["detail"]), FONT_SIZE_SMALL, LabColors.TEXT_SECONDARY))
+	_apply_section_visibility(contents_box, "CONTENTS")
 
 
 func _fill_observations(observations: Array) -> void:
@@ -174,6 +179,7 @@ func _fill_observations(observations: Array) -> void:
 		observations_box.add_child(_make_label(str(entry["text"]), FONT_SIZE_BODY, LabColors.TEXT_PRIMARY))
 		if str(entry["explanation"]) != "":
 			observations_box.add_child(_make_label(str(entry["explanation"]), FONT_SIZE_SMALL, LabColors.TEXT_SECONDARY))
+	_apply_section_visibility(observations_box, "WHAT HAPPENED")
 
 
 func _fill_safety(lines: Array) -> void:
@@ -184,6 +190,7 @@ func _fill_safety(lines: Array) -> void:
 	_add_heading(safety_box, "SAFETY", LabColors.WARNING)
 	for line in lines:
 		safety_box.add_child(_make_label(str(line), FONT_SIZE_SMALL, LabColors.TEXT_PRIMARY))
+	_apply_section_visibility(safety_box, "SAFETY")
 
 
 # ---------------------------------------------------------------- controls (kept between refreshes)
@@ -276,8 +283,30 @@ func _make_label(text: String, font_size: int, color: Color) -> Label:
 
 
 func _add_heading(box: Container, text: String, color: Color = LabColors.ACCENT) -> void:
-	var heading := Label.new()
-	heading.text = text
-	heading.theme_type_variation = &"HeadingLabel"
+	var heading := Button.new()
+	heading.text = ("▸ " if bool(_collapsed_sections.get(text, false)) else "▾ ") + text
+	heading.flat = true
+	heading.toggle_mode = true
+	heading.button_pressed = not bool(_collapsed_sections.get(text, false))
+	heading.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	heading.focus_mode = Control.FOCUS_NONE
+	heading.theme_type_variation = &"ToolButton"
 	heading.add_theme_color_override("font_color", color)
+	heading.toggled.connect(func(expanded: bool) -> void:
+		_collapsed_sections[text] = not expanded
+		_apply_section_visibility(box, text))
 	box.add_child(heading)
+	box.move_child(heading, 0)
+
+
+func _apply_section_visibility(box: Container, section_title: String) -> void:
+	if box.get_child_count() == 0:
+		return
+	var header := box.get_child(0) as Button
+	var expanded := not bool(_collapsed_sections.get(section_title, false))
+	if is_instance_valid(header):
+		header.text = ("▾ " if expanded else "▸ ") + section_title
+		header.set_pressed_no_signal(expanded)
+	for child in box.get_children():
+		if child != header and child is Control:
+			(child as Control).visible = expanded
