@@ -1,3 +1,4 @@
+class_name WelcomeOverlay
 extends Control
 ## First-run entry screen. It only routes the user into the existing lab or Teacher Mode;
 ## it does not create or mutate simulation state.
