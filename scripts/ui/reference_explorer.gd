@@ -4,37 +4,57 @@ extends Window
 ## reaction/process. This window never creates reagents or invokes the simulation engine.
 
 var _database: ContentDatabase
+var _current_kind: String = ""
+var _current_entry: Variant = null
+var _current_formatter: Callable
+var _current_pin_button: Button
+var _current_detail: RichTextLabel
 
 
 func bind(database: ContentDatabase) -> void:
 	_database = database
 	title = "Materials & Reactions Reference Explorer"
 	transient = true
-	size = Vector2i(1120, 780)
-	min_size = Vector2i(840, 560)
+	size = Vector2i(1160, 820)
+	min_size = Vector2i(860, 580)
+	theme = LabTheme.build()
 	_build()
 
 
 func _build() -> void:
-	var root := VBoxContainer.new()
+	for child in get_children():
+		remove_child(child)
+		child.queue_free()
+
+	var root := MarginContainer.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_theme_constant_override("separation", 10)
+	root.add_theme_constant_override("margin_left", 18)
+	root.add_theme_constant_override("margin_top", 16)
+	root.add_theme_constant_override("margin_right", 18)
+	root.add_theme_constant_override("margin_bottom", 16)
 	add_child(root)
+
+	var shell := VBoxContainer.new()
+	shell.add_theme_constant_override("separation", 10)
+	shell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	shell.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root.add_child(shell)
 
 	var heading := Label.new()
 	heading.text = "SCIENTIFIC REFERENCE EXPLORER"
-	heading.add_theme_font_size_override("font_size", 20)
-	root.add_child(heading)
+	heading.theme_type_variation = &"TitleLabel"
+	shell.add_child(heading)
 
 	var notice := Label.new()
 	notice.text = "Read-only learning reference. Only the separate classroom demo materials are usable in the guided simulation. Hazardous and advanced catalogue entries are not experiment instructions or playable reagents."
 	notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	root.add_child(notice)
+	notice.theme_type_variation = &"MutedLabel"
+	shell.add_child(notice)
 
 	var tabs := TabContainer.new()
 	tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	root.add_child(tabs)
+	shell.add_child(tabs)
 
 	var element_entries: Array = _database.elements.values()
 	element_entries.sort_custom(func(left: Variant, right: Variant) -> bool:
@@ -43,7 +63,7 @@ func _build() -> void:
 	for value in element_entries:
 		var item := value as ElementDefinition
 		element_labels.append("%03d  %s  %s" % [item.atomic_number, item.id, item.display_name])
-	_add_tab(tabs, "Elements · 118", element_labels, element_entries, _format_element)
+	_add_tab(tabs, "Elements · 118", "element", element_labels, element_entries, _format_element)
 
 	var compound_entries: Array = _database.compounds.values()
 	compound_entries.sort_custom(func(left: Variant, right: Variant) -> bool:
@@ -52,7 +72,7 @@ func _build() -> void:
 	for value in compound_entries:
 		var item := value as CompoundDefinition
 		compound_labels.append("%s  ·  %s" % [item.display_name, item.formula_display])
-	_add_tab(tabs, "Compounds · %d" % compound_entries.size(), compound_labels, compound_entries, _format_compound)
+	_add_tab(tabs, "Compounds · %d" % compound_entries.size(), "compound", compound_labels, compound_entries, _format_compound)
 
 	var chemical_entries: Array = _database.chemicals.values()
 	chemical_entries.sort_custom(func(left: Variant, right: Variant) -> bool:
@@ -61,7 +81,7 @@ func _build() -> void:
 	for value in chemical_entries:
 		var item := value as ChemicalDefinition
 		chemical_labels.append("%s  ·  %s" % [item.display_name, item.formula_display])
-	_add_tab(tabs, "Simulation materials · %d" % chemical_entries.size(), chemical_labels, chemical_entries, _format_chemical)
+	_add_tab(tabs, "Simulation materials · %d" % chemical_entries.size(), "chemical", chemical_labels, chemical_entries, _format_chemical)
 
 	var reaction_entries: Array = _database.reactions.values()
 	reaction_entries.sort_custom(func(left: Variant, right: Variant) -> bool:
@@ -70,18 +90,18 @@ func _build() -> void:
 	for value in reaction_entries:
 		var item := value as ReactionDefinition
 		reaction_labels.append("%s  ·  %s" % [item.display_name, item.type.capitalize()])
-	_add_tab(tabs, "Processes & reactions · %d" % reaction_entries.size(), reaction_labels, reaction_entries, _format_reaction)
+	_add_tab(tabs, "Processes & reactions · %d" % reaction_entries.size(), "reaction", reaction_labels, reaction_entries, _format_reaction)
 
 	var sources := RichTextLabel.new()
 	sources.bbcode_enabled = true
 	sources.fit_content = true
-	sources.custom_minimum_size.y = 76.0
+	sources.custom_minimum_size.y = 80.0
 	sources.meta_clicked.connect(_open_reference_link)
 	sources.text = "[b]Reference sources[/b]  [url=https://iupac.org/what-we-do/periodic-table-of-elements/]IUPAC[/url]  ·  [url=https://pubchem.ncbi.nlm.nih.gov/ptable/]PubChem[/url]  ·  [url=https://www.nist.gov/pml/periodic-table-elements]NIST[/url]  ·  [url=https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process]OpenStax: dissolution[/url]  ·  [url=https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions]OpenStax: phase transitions[/url]  ·  [url=https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html]ACS laboratory safety[/url]\nProperty records in this project include unverified and derived fields; do not treat every numeric entry as an authoritative measured value."
-	root.add_child(sources)
+	shell.add_child(sources)
 
 
-func _add_tab(tabs: TabContainer, tab_title: String, labels: Array[String], entries: Array, formatter: Callable) -> void:
+func _add_tab(tabs: TabContainer, tab_title: String, kind: String, labels: Array[String], entries: Array, formatter: Callable) -> void:
 	var split := HSplitContainer.new()
 	split.name = tab_title
 	split.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -89,36 +109,111 @@ func _add_tab(tabs: TabContainer, tab_title: String, labels: Array[String], entr
 	tabs.add_child(split)
 
 	var list := ItemList.new()
-	list.custom_minimum_size.x = 230.0
+	list.custom_minimum_size.x = 250.0
 	list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	list.select_mode = ItemList.SELECT_SINGLE
 	split.add_child(list)
 
+	var right := VBoxContainer.new()
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right.add_theme_constant_override("separation", 10)
+	split.add_child(right)
+
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	split.add_child(scroll)
+	right.add_child(scroll)
 
 	var detail := RichTextLabel.new()
 	detail.bbcode_enabled = true
 	detail.fit_content = true
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	detail.custom_minimum_size = Vector2(500.0, 480.0)
+	detail.custom_minimum_size = Vector2(500.0, 500.0)
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail.meta_clicked.connect(_open_reference_link)
 	scroll.add_child(detail)
 
+	var actions := HBoxContainer.new()
+	actions.add_theme_constant_override("separation", 8)
+	right.add_child(actions)
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actions.add_child(spacer)
+	var pin_button := Button.new()
+	pin_button.text = "Pin to dashboard"
+	pin_button.theme_type_variation = &"AccentButton"
+	pin_button.focus_mode = Control.FOCUS_NONE
+	pin_button.disabled = true
+	actions.add_child(pin_button)
+
 	for label in labels:
 		list.add_item(label)
-	list.item_selected.connect(func(index: int) -> void:
-		if index >= 0 and index < entries.size():
-			detail.text = str(formatter.call(entries[index]))
-		)
+
+	var current_index := -1
+	var select_entry := func(index: int) -> void:
+		if index < 0 or index >= entries.size():
+			return
+		current_index = index
+		_current_kind = kind
+		_current_entry = entries[index]
+		_current_formatter = formatter
+		detail.text = str(formatter.call(entries[index]))
+		pin_button.disabled = false
+		_current_detail = detail
+		_current_pin_button = pin_button
+		pin_button.tooltip_text = "Pin this %s into the classroom dashboard as a draggable reference badge." % kind
+		pin_button.pressed.connect(_pin_current_entry, CONNECT_ONE_SHOT)
+	
+	list.item_selected.connect(select_entry)
 	if not entries.is_empty():
 		list.select(0)
-		detail.text = str(formatter.call(entries[0]))
+		select_entry.call(0)
 	else:
 		detail.text = "No records are available in this category."
+		pin_button.disabled = true
+
+
+func _pin_current_entry() -> void:
+	if _current_entry == null:
+		return
+	var reference := _reference_from_current_entry(_current_kind, _current_entry, _current_formatter)
+	if reference.is_empty():
+		return
+	EventBus.reference_pin_requested.emit(reference)
+
+
+func _reference_from_current_entry(kind: String, entry: Variant, formatter: Callable) -> Dictionary:
+	var reference: Dictionary = {"kind": kind}
+	if kind == "element":
+		var element := entry as ElementDefinition
+		reference["id"] = element.id
+		reference["title"] = "%s (%s)" % [element.display_name, element.id]
+		reference["subtitle"] = "Atomic number %d • %s • %s" % [element.atomic_number, ("f-block" if element.group <= 0 else str(element.group)), element.block]
+		reference["body"] = formatter.call(entry)
+		reference["accent"] = Color("#63D5F0")
+	elif kind == "compound":
+		var compound := entry as CompoundDefinition
+		reference["id"] = compound.id
+		reference["title"] = compound.display_name
+		reference["subtitle"] = "Formula %s" % compound.formula_display
+		reference["body"] = formatter.call(entry)
+		reference["accent"] = Color("#8C87FF")
+	elif kind == "chemical":
+		var chemical := entry as ChemicalDefinition
+		reference["id"] = chemical.id
+		reference["title"] = chemical.display_name
+		reference["subtitle"] = "%s • %s" % [chemical.formula_display, chemical.category]
+		reference["body"] = formatter.call(entry)
+		reference["accent"] = Color("#40D0C0")
+	elif kind == "reaction":
+		var reaction := entry as ReactionDefinition
+		reference["id"] = reaction.id
+		reference["title"] = reaction.display_name
+		reference["subtitle"] = reaction.type.capitalize()
+		reference["body"] = formatter.call(entry)
+		reference["accent"] = Color("#F4C34D")
+	return reference
 
 
 func _format_element(item: Variant) -> String:
