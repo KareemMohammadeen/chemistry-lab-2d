@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "title": "Safe experiment curriculum mapping",
+  "scope": "Supplementary mapping for classroom-friendly demonstrations only. This file does not replace the official textbook review and does not claim to be the official lesson order.",
+  "notes": [
+    "Use the official Ministry book portals for the final unit order.",
+    "These packs are safe teaching previews that can sit beside the official book mapping.",
+    "Senior 2 remains pathway-dependent; confirm the student's actual pathway before lesson planning."
+  ],
+  "sources": [
+    {
+      "id": "official_student_books",
+      "title": "Ministry of Education — Student Books",
+      "url": "https://studentbooks.moe.gov.eg/Books"
+    },
+    {
+      "id": "official_secondary_books",
+      "title": "Ministry of Education — Secondary Books",
+      "url": "https://ellibrary.moe.gov.eg/Books-sec/"
+    },
+    {
+      "id": "senior1_integrated_science_statement",
+      "title": "State Information Service — Ministry clarification on first-secondary subjects",
+      "url": "https://sis.gov.eg/ar/%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%B9%D9%84%D8%A7%D9%85%D9%8A/%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%AA%D9%88%D8%B6%D9%8A%D8%AD-%D9%87%D8%A7%D9%85-%D9%85%D9%86-%D9%88%D8%B2%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%8A%D8%A9-%D9%88%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%8A%D9%85-%D8%AD%D9%88%D9%84-%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA-%D9%85%D8%AA%D8%AF%D8%A7%D9%88%D9%84%D8%A9-%D8%AA%D8%AF%D8%B9%D9%8A-%D8%A5%D9%84%D8%BA%D8%A7%D8%A1-%D9%85%D8%A7%D8%AF%D8%A9-%D8%A7%D9%84%D8%B9%D9%84%D9%88%D9%85-%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%D8%A9/"
+    },
+    {
+      "id": "ministerial_decree_213_2025",
+      "title": "Official Gazette — Decree 213/2025 on the Egyptian Baccalaureate",
+      "url": "https://mediadr.sis.gov.eg/bitstream/handle/123456789/108533/WQ202_20250911_1658.pdf?isAllowed=y&sequence=2"
+    }
+  ],
+  "grade_mappings": [
+    {
+      "grade_id": "prep1",
+      "label": "Prep 1",
+      "safe_experiments": [
+        "prep1_solution_vs_mixture",
+        "prep1_changes_of_state"
+      ],
+      "teacher_notes": "Use these previews to explain matter, mixture, solution and physical change ideas before moving to more advanced lessons."
+    },
+    {
+      "grade_id": "prep2",
+      "label": "Prep 2",
+      "safe_experiments": [
+        "prep2_saturation_and_evaporation",
+        "prep2_solution_formation"
+      ],
+      "teacher_notes": "Use the pack for solute/solvent language, saturation and concentration discussions in the virtual lab."
+    },
+    {
+      "grade_id": "prep3",
+      "label": "Prep 3",
+      "safe_experiments": [
+        "prep3_filtration_concept",
+        "prep3_paper_chromatography",
+        "prep3_indicator_colour_change"
+      ],
+      "teacher_notes": "Use the pack for separation methods, mixtures and indicator-based observation only."
+    },
+    {
+      "grade_id": "senior1",
+      "label": "Senior 1",
+      "safe_experiments": [
+        "senior1_slow_oxidation",
+        "senior1_model_limits"
+      ],
+      "teacher_notes": "Use the pack to show slow change, model limits and how to interpret a simplified simulation."
+    },
+    {
+      "grade_id": "senior2",
+      "label": "Senior 2",
+      "safe_experiments": [
+        "senior2_pathway_review"
+      ],
+      "teacher_notes": "Use this as a gateway step only. The exact chemistry lesson set must follow the student's official pathway." 
+    }
+  ]
+}
