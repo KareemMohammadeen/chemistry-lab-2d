@@ -68,7 +68,7 @@ var _hero_grade_label: Label
 var _hero_focus_label: Label
 var _hero_status_label: Label
 var _reference_layer: Control
-var _reference_count_label: Label
+var _reference_stat_panel: Control
 var _reference_pin_count: int = 0
 
 
@@ -226,8 +226,9 @@ func _build_dashboard_banner() -> void:
 	middle.add_theme_constant_override("separation", 8)
 	middle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(middle)
-	_reference_count_label = _make_dashboard_stat("118", "elements")
-	middle.add_child(_reference_count_label.get_parent())
+	var reference_panel := _make_dashboard_stat("118", "elements")
+	middle.add_child(reference_panel)
+	_reference_stat_panel = reference_panel
 	middle.add_child(_make_dashboard_stat("5", "grades"))
 	middle.add_child(_make_dashboard_stat("safe", "mode"))
 
@@ -268,8 +269,10 @@ func _build_dashboard_banner() -> void:
 	library_button.text = "Toggle Library"
 	library_button.theme_type_variation = &"ToolButton"
 	library_button.focus_mode = Control.FOCUS_NONE
-	library_button.toggled.connect(_on_library_toggled)
-	library_button.set_pressed_no_signal(library.visible)
+	library_button.pressed.connect(func() -> void:
+		library_toggle.set_pressed_no_signal(not library.visible)
+		_on_library_toggled(not library.visible)
+	)
 	button_row.add_child(library_button)
 
 	_reference_layer = Control.new()
@@ -310,8 +313,8 @@ func _update_dashboard_banner() -> void:
 	_hero_grade_label.text = profile_label
 	_hero_focus_label.text = subject_label
 	_hero_status_label.text = note
-	if _reference_count_label != null:
-		(_reference_count_label.get_parent() as PanelContainer).tooltip_text = "%d pinned references" % _reference_pin_count
+	if _reference_stat_panel != null:
+		_reference_stat_panel.tooltip_text = "%d pinned references" % _reference_pin_count
 
 
 # ---------------------------------------------------------------- speed buttons and toasts
