@@ -23,6 +23,7 @@ const CLASSROOM_CHEMICAL_IDS: Array[String] = ["water", "sodium_chloride"]
 const CLASSROOM_EQUIPMENT_IDS: Array[String] = ["beaker_250ml", "test_tube_20ml", "thermometer_general", "dropper_3ml", "hot_plate_basic"]
 const SAFE_REFERENCE_COMPOUND_IDS: Array[String] = ["glucose", "sucrose", "starch"]
 const LEARNING_GUIDE_PATH := "res://data/learning/learning_guide.json"
+const TEACHER_PREVIEWS_PATH := "res://data/learning/teacher_previews.json"
 
 @export var subtitle_label: Label
 @export var content_box: VBoxContainer
@@ -35,6 +36,7 @@ var _refresh_left_s: float = 0.0
 var _section_written: Dictionary = {}
 var _curriculum_profile: Dictionary = {}
 var _guide_window: Window
+var _guide_rich_text: RichTextLabel
 
 
 func bind(host: SimulationHost) -> void:
@@ -132,11 +134,15 @@ func _on_guide_button_pressed() -> void:
 	open_learning_guide(_curriculum_profile)
 
 
-func open_learning_guide(_profile: Dictionary = {}) -> void:
+func open_learning_guide(profile: Dictionary = {}) -> void:
+	if not profile.is_empty():
+		_curriculum_profile = profile.duplicate(true)
+	var data := JsonDataLoader.load_dictionary(LEARNING_GUIDE_PATH)
 	if is_instance_valid(_guide_window):
+		if is_instance_valid(_guide_rich_text):
+			_guide_rich_text.text = _build_learning_guide_text(data)
 		_guide_window.popup_centered(Vector2i(780, 680))
 		return
-	var data := JsonDataLoader.load_dictionary(LEARNING_GUIDE_PATH)
 	if data.is_empty():
 		EventBus.feedback_message_requested.emit("The learning guide could not be loaded.", &"warning")
 		return
@@ -165,6 +171,7 @@ func open_learning_guide(_profile: Dictionary = {}) -> void:
 	rich.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	rich.meta_clicked.connect(_open_guide_link)
 	rich.text = _build_learning_guide_text(data)
+	_guide_rich_text = rich
 	scroll.add_child(rich)
 
 	add_child(_guide_window)
@@ -178,6 +185,7 @@ func _build_learning_guide_text(data: Dictionary) -> String:
 	output += "[b]Selected grade[/b]\n"
 	output += "%s — %s\n" % [str(_curriculum_profile.get("label", "Not selected")), str(_curriculum_profile.get("subject", "Select a grade"))]
 	output += "%s\n\n" % str(_curriculum_profile.get("note", "Choose a grade in the top bar."))
+	output += _build_grade_preview_text(str(_curriculum_profile.get("id", "")))
 	output += "[b]Materials available in this classroom demo[/b]\n"
 	for material_value in data.get("materials", []):
 		var material: Dictionary = material_value
@@ -207,6 +215,33 @@ func _build_learning_guide_text(data: Dictionary) -> String:
 			output += "[url=%s]%s[/url] — %s\n" % [source_url, str(source.get("title", "Source")), str(source.get("supports", ""))]
 	output += "\n[b]Reference boundary[/b]\nAll 118 elements remain read-only periodic-table references. Other advanced catalogue records are intentionally not exposed as classroom reagents or given operational descriptions."
 	return output
+
+
+func _build_grade_preview_text(profile_id: String) -> String:
+	var data := JsonDataLoader.load_dictionary(TEACHER_PREVIEWS_PATH)
+	if data.is_empty():
+		return "[b]Teacher preview[/b]\nNo grade preview data is available.\n\n"
+	for preview_value in data.get("grade_previews", []):
+		var preview: Dictionary = preview_value
+		if str(preview.get("profile_id", "")) != profile_id:
+			continue
+		var status := str(preview.get("curriculum_alignment_status", "suggested_not_verified_against_official_textbook"))
+		var output := "[b]TEACHER PREVIEW[/b]\n"
+		output += "[b]%s[/b]\n%s\n" % [str(preview.get("title", "")), str(preview.get("focus", ""))]
+		output += "[i]Alignment status: %s[/i]\n\n" % status
+		output += "[b]Learning goals[/b]\n"
+		for goal in preview.get("learning_goals", []):
+			output += "• %s\n" % str(goal)
+		output += "\n[b]Materials and equipment[/b]\nMaterials: %s\nEquipment: %s\n\n" % [
+			", ".join(PackedStringArray(preview.get("material_ids", []))),
+			", ".join(PackedStringArray(preview.get("equipment_ids", [])))]
+		output += "[b]Suggested virtual lesson flow[/b]\n"
+		for step in preview.get("virtual_flow", []):
+			output += "• %s\n" % str(step)
+		output += "\n[b]Teacher prompt[/b]\n%s\n\n" % str(preview.get("teacher_prompt", ""))
+		output += "This is a suggested software activity, not a claim about the official textbook's exact lesson order.\n\n"
+		return output
+	return "[b]Teacher preview[/b]\nNo preview is mapped to this profile yet.\n\n"
 
 
 func _open_guide_link(meta: Variant) -> void:
