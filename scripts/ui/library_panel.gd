@@ -108,7 +108,7 @@ func _build() -> void:
 			reagent_count += 1
 
 	var equipment_items: Array = []
-	for equipment_id in CLASSROOM_EQUIPMENT_IDS:
+	for equipment_id in _equipment_ids_for_current_profile():
 		var equipment: EquipmentDefinition = database.get_equipment(equipment_id)
 		if equipment != null and not HIDDEN_EQUIPMENT_STYLES.has(equipment.style()):
 			equipment_items.append(equipment)
@@ -129,6 +129,23 @@ func _build() -> void:
 	if str(_curriculum_profile.get("topic_mapping_status", "")) == "pending_official_textbook_review":
 		mapping_note = "Lesson-by-lesson mapping is pending direct review of the matching official textbook. " + mapping_note
 	subtitle_label.text = "%d classroom reagents  •  %d instruments  •  118 read-only elements\n%s — %s\n%s" % [reagent_count, equipment_count, profile_label, subject_label, mapping_note]
+
+
+func _equipment_ids_for_current_profile() -> Array[String]:
+	if _curriculum_profile.is_empty():
+		return CLASSROOM_EQUIPMENT_IDS.duplicate()
+	var preview_data := JsonDataLoader.load_dictionary(TEACHER_PREVIEWS_PATH)
+	for preview_value in preview_data.get("grade_previews", []):
+		var preview: Dictionary = preview_value
+		if str(preview.get("profile_id", "")) != str(_curriculum_profile.get("id", "")):
+			continue
+		var selected: Array[String] = []
+		for raw_id in preview.get("equipment_ids", []):
+			var equipment_id := str(raw_id)
+			if CLASSROOM_EQUIPMENT_IDS.has(equipment_id) and not selected.has(equipment_id):
+				selected.append(equipment_id)
+		return selected if not selected.is_empty() else CLASSROOM_EQUIPMENT_IDS.duplicate()
+	return CLASSROOM_EQUIPMENT_IDS.duplicate()
 
 
 func _add_safe_reference_materials_section(database: ContentDatabase) -> void:
