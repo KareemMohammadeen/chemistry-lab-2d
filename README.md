@@ -67,3 +67,8 @@ demo flow, curriculum evidence status and scientific sources.
 Written without access to a Godot binary: everything has been statically checked but **not yet run in the engine**.
 See `NEXT_SESSION.md` for the in-engine checklist. Many numeric values are marked `placeholder` in the data and
 must be reviewed before teaching use (`docs/CHEMISTRY_REQUIREMENTS.md`).
+
+## Expanded safe curriculum content
+Teacher Mode now includes a broader, safe learning guide covering matter, solutions, mixtures, state changes,
+conservation reasoning, simple biology connections and model-evaluation prompts for Prep 1 through Senior 2.
+These additions are classroom-only references and do not turn hazardous substances into executable real-world procedures.
