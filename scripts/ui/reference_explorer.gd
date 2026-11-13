@@ -1,3 +1,4 @@
+class_name ReferenceExplorer
 extends Window
 ## Read-only educational catalogue for every loaded element, compound, playable chemical and
 ## reaction/process. This window never creates reagents or invokes the simulation engine.
@@ -8,6 +9,7 @@ var _database: ContentDatabase
 func bind(database: ContentDatabase) -> void:
 	_database = database
 	title = "Materials & Reactions Reference Explorer"
+	transient = true
 	size = Vector2i(1120, 780)
 	min_size = Vector2i(840, 560)
 	_build()
