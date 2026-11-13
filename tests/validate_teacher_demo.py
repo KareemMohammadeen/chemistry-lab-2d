@@ -41,8 +41,17 @@ def main() -> int:
         assert set(preview.get("material_ids", [])) <= allowed_materials, (
             f"Non-classroom material exposed in {preview.get('profile_id')}"
         )
-        missing_equipment = set(preview.get("equipment_ids", [])) - equipment_files
+        selected_equipment = set(preview.get("equipment_ids", []))
+        missing_equipment = selected_equipment - equipment_files
         assert not missing_equipment, f"Missing equipment in {preview.get('profile_id')}: {missing_equipment}"
+        classroom_equipment = {
+            "beaker_250ml", "test_tube_20ml", "thermometer_general",
+            "dropper_3ml", "hot_plate_basic",
+        }
+        assert selected_equipment <= classroom_equipment, (
+            f"Non-classroom equipment exposed in {preview.get('profile_id')}: {selected_equipment - classroom_equipment}"
+        )
+        assert selected_equipment, f"No classroom equipment mapped to {preview.get('profile_id')}"
 
     for obj in setup.get("objects", []):
         contents = obj.get("contents", {})
