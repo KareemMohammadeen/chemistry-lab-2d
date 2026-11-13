@@ -345,6 +345,22 @@ def check_element_visual_coverage():
         errors.append("element visuals: dropped specimen does not instantiate ElementVisual")
     if '"simulation_reagent": false' not in card:
         errors.append("element visuals: periodic-table payload must remain non-reactive")
+    drag_function = re.search(
+        r"(?ms)^func _get_drag_data[^\n]*:\n(?P<body>.*?)(?=^func |\Z)",
+        card,
+    )
+    if drag_function is None:
+        errors.append("element visuals: periodic-table card has no _get_drag_data implementation")
+    else:
+        drag_body = drag_function.group("body")
+        if "\tvar payload: Dictionary = {" not in drag_body:
+            errors.append("element visuals: drag payload must be declared at the function scope")
+        if "\t\tvar payload" in drag_body:
+            errors.append("element visuals: drag payload must not be nested inside the null guard")
+        if "\tset_drag_preview(preview)" not in drag_body:
+            errors.append("element visuals: drag preview is not assigned by _get_drag_data")
+        if "\treturn payload" not in drag_body:
+            errors.append("element visuals: _get_drag_data must return its payload at function scope")
 
     elements = _load("data/elements/elements.json")["elements"]
     if len(elements) != 118:
