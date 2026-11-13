@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "title": "Expanded safe classroom experiment pack",
+  "scope": "Supplementary teacher-facing experiments for the virtual chemistry lab. This pack keeps to low-risk, classroom-friendly concepts and uses only observation-level descriptions.",
+  "virtual_only_notice": "Every entry below describes the virtual lab only. It is not a real-world laboratory procedure.",
+  "experiments": [
+    {
+      "id": "prep1_solution_vs_mixture",
+      "grade": "Prep 1",
+      "title": "Solution vs. mixture",
+      "focus": "Recognize when a solid disperses into a homogeneous solution and when a material remains a separate visible phase.",
+      "materials": ["water", "sodium_chloride", "sand"],
+      "equipment": ["beaker_250ml", "test_tube_20ml", "dropper_3ml"],
+      "observations": [
+        "A dissolved solid becomes invisible as individual crystals.",
+        "An insoluble solid remains visible and can be separated conceptually.",
+        "Students can compare a mixture with a solution."
+      ],
+      "keywords": ["matter", "mixture", "solution", "dissolution", "separation"]
+    },
+    {
+      "id": "prep1_changes_of_state",
+      "grade": "Prep 1",
+      "title": "Changes of state",
+      "focus": "Connect heating and cooling with evaporation, boiling and condensation as physical changes.",
+      "materials": ["water"],
+      "equipment": ["beaker_250ml", "thermometer_general", "hot_plate_basic"],
+      "observations": [
+        "Heating increases temperature until boiling can be discussed.",
+        "Cooling is presented as the reverse of heating ideas.",
+        "The material stays water throughout the physical change." 
+      ],
+      "keywords": ["state change", "boiling", "evaporation", "condensation", "physical change"]
+    },
+    {
+      "id": "prep2_saturation_and_evaporation",
+      "grade": "Prep 2",
+      "title": "Saturation and evaporation",
+      "focus": "Show that a solution can reach a limit and that removing solvent can reveal dissolved material again.",
+      "materials": ["water", "sodium_chloride"],
+      "equipment": ["beaker_250ml", "erlenmeyer_flask_250ml", "thermometer_general", "hot_plate_basic"],
+      "observations": [
+        "Concentration increases as solvent is reduced.",
+        "A saturated state means the solution has reached its visible classroom limit.",
+        "A dissolved solid can reappear when the solution becomes concentrated enough."
+      ],
+      "keywords": ["saturation", "concentration", "evaporation", "crystallisation"]
+    },
+    {
+      "id": "prep2_solution_formation",
+      "grade": "Prep 2",
+      "title": "Solution formation",
+      "focus": "Use particle language to explain why a dissolved substance is still present even when it cannot be seen.",
+      "materials": ["water", "sodium_chloride", "glucose", "sucrose"],
+      "equipment": ["beaker_250ml", "test_tube_20ml", "dropper_3ml"],
+      "observations": [
+        "The liquid becomes visually uniform.",
+        "The solvent and solute can be named separately.",
+        "Different solutes can be compared at a conceptual level."
+      ],
+      "keywords": ["solute", "solvent", "homogeneous mixture", "dissolution"]
+    },
+    {
+      "id": "prep3_filtration_concept",
+      "grade": "Prep 3",
+      "title": "Filtration concept",
+      "focus": "Separate an insoluble solid from a liquid in a classroom-friendly way.",
+      "materials": ["water", "sand"],
+      "equipment": ["beaker_250ml", "erlenmeyer_flask_250ml"],
+      "observations": [
+        "The insoluble solid stays separate from the liquid phase.",
+        "Students can compare the idea of a residue with a clear filtrate.",
+        "The activity stays at the observation level only."
+      ],
+      "keywords": ["filtration", "separation", "insoluble solid", "mixture"]
+    },
+    {
+      "id": "prep3_paper_chromatography",
+      "grade": "Prep 3",
+      "title": "Paper chromatography concept",
+      "focus": "Show that a colour mixture can separate into different bands or spots.",
+      "materials": ["marker_ink"],
+      "equipment": ["filter_paper", "beaker_250ml", "dropper_3ml"],
+      "observations": [
+        "A mixed colour can split into more than one visible component.",
+        "Not every component moves in the same way.",
+        "Students see a separation idea rather than a real laboratory protocol."
+      ],
+      "keywords": ["chromatography", "mixture", "pigment", "separation"]
+    },
+    {
+      "id": "prep3_indicator_colour_change",
+      "grade": "Prep 3",
+      "title": "Indicator colour change",
+      "focus": "Introduce an indicator as a visual way to compare solutions.",
+      "materials": ["red_cabbage_indicator", "vinegar", "baking_soda", "water"],
+      "equipment": ["beaker_250ml", "test_tube_20ml", "dropper_3ml"],
+      "observations": [
+        "A colour shift can represent a different solution environment.",
+        "The activity is about observation and comparison, not procedure.",
+        "Students can relate a visible change to acid-base ideas at a high level."
+      ],
+      "keywords": ["indicator", "acid-base", "observation", "colour change"]
+    },
+    {
+      "id": "senior1_slow_oxidation",
+      "grade": "Senior 1",
+      "title": "Slow oxidation and rusting",
+      "focus": "Explain a gradual chemical change using a familiar metal sample.",
+      "materials": ["iron_wool", "water", "oil"],
+      "equipment": ["beaker_250ml", "test_tube_20ml"],
+      "observations": [
+        "A visible change can happen slowly over time.",
+        "Students discuss oxygen, moisture and gradual change as a concept.",
+        "The model distinguishes a slow chemical change from a fast one."
+      ],
+      "keywords": ["oxidation", "rusting", "chemical change", "time"]
+    },
+    {
+      "id": "senior1_model_limits",
+      "grade": "Senior 1",
+      "title": "Model limits and data quality",
+      "focus": "Teach students how to judge what the virtual lab does and does not represent.",
+      "materials": ["water", "sodium_chloride", "glucose", "starch"],
+      "equipment": ["beaker_250ml", "thermometer_general"],
+      "observations": [
+        "A model can be useful even when it is simplified.",
+        "Not every numerical value should be treated as a measured lab value.",
+        "Students can identify assumptions and limitations."
+      ],
+      "keywords": ["model", "assumption", "limitation", "data quality"]
+    },
+    {
+      "id": "senior2_pathway_review",
+      "grade": "Senior 2",
+      "title": "Pathway review and lesson selection",
+      "focus": "Confirm the student pathway before choosing chemistry lessons in the lab.",
+      "materials": ["water", "sodium_chloride", "glucose", "sucrose", "starch"],
+      "equipment": ["beaker_250ml", "thermometer_general", "hot_plate_basic"],
+      "observations": [
+        "Teacher Mode should start by confirming the pathway.",
+        "The same virtual lab can support different lesson choices.",
+        "Students can compare a model with the actual official book path."
+      ],
+      "keywords": ["pathway", "teacher mode", "curriculum", "selection"]
+    }
+  ]
+}
