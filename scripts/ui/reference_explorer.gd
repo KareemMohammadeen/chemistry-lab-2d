@@ -9,6 +9,9 @@ var _current_entry: Variant = null
 var _current_formatter: Callable
 var _current_pin_button: Button
 var _current_detail: RichTextLabel
+var _periodic_selected: ElementDefinition
+var _periodic_detail: RichTextLabel
+var _periodic_pin_button: Button
 
 
 func bind(database: ContentDatabase) -> void:
@@ -164,7 +167,7 @@ func _add_element_table_tab(tabs: TabContainer, entries: Array) -> void:
 				card.custom_minimum_size = Vector2(54.0, 64.0)
 				grid.add_child(card)
 				card.setup(element)
-				card.activated.connect(_on_periodic_element_selected.bind(element))
+				card.activated.connect(_on_periodic_element_selected)
 				element_cards.append(card)
 				if first_element == null or element.atomic_number < first_element.atomic_number:
 					first_element = element
@@ -203,13 +206,9 @@ func _add_element_table_tab(tabs: TabContainer, entries: Array) -> void:
 	pin_button.disabled = true
 	detail_column.add_child(pin_button)
 
-	var selected_element: ElementDefinition = null
-	pin_button.pressed.connect(func() -> void:
-		if selected_element == null:
-			return
-		var reference := _reference_from_current_entry("element", selected_element, _format_element)
-		EventBus.reference_pin_requested.emit(reference)
-	)
+	_periodic_detail = detail
+	_periodic_pin_button = pin_button
+	pin_button.pressed.connect(_pin_periodic_element)
 
 	search.text_changed.connect(func(query: String) -> void:
 		for card in element_cards:
@@ -217,11 +216,26 @@ func _add_element_table_tab(tabs: TabContainer, entries: Array) -> void:
 	)
 
 	if first_element != null:
-		selected_element = first_element
-		detail.text = _format_element(first_element)
-		pin_button.disabled = false
+		_on_periodic_element_selected(first_element)
 	else:
 		detail.text = "No element data is available."
+
+
+func _on_periodic_element_selected(element: ElementDefinition) -> void:
+	if element == null:
+		return
+	_periodic_selected = element
+	if _periodic_detail != null:
+		_periodic_detail.text = _format_element(element)
+	if _periodic_pin_button != null:
+		_periodic_pin_button.disabled = false
+
+
+func _pin_periodic_element() -> void:
+	if _periodic_selected == null:
+		return
+	var reference := _reference_from_current_entry("element", _periodic_selected, _format_element)
+	EventBus.reference_pin_requested.emit(reference)
 
 
 func _add_tab(tabs: TabContainer, tab_title: String, kind: String, labels: Array[String], entries: Array, formatter: Callable) -> void:
