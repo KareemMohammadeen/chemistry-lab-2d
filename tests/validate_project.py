@@ -346,7 +346,7 @@ def check_element_visual_coverage():
     if '"simulation_reagent": false' not in card:
         errors.append("element visuals: periodic-table payload must remain non-reactive")
     drag_function = re.search(
-        r"(?ms)^func _get_drag_data.*:\n(?P<body>.*?)(?=^func |\Z)",
+        r"(?ms)^func _get_drag_data[^\\n]*:\\n(?P<body>.*?)(?=^func |\\Z)",
         card,
     )
     if drag_function is None:
