@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Safe classroom experiment concepts only. These are software teaching lenses, not real-world laboratory instructions.",
+  "grades": [
+    {
+      "grade_id": "prep1",
+      "grade_label": "Prep 1",
+      "experiments": [
+        {
+          "id": "prep1_states_of_matter",
+          "title": "States of matter at a glance",
+          "materials": ["water", "ice", "air"],
+          "equipment": ["beaker_250ml", "thermometer_general"],
+          "focus": "Compare solid, liquid and gas using the virtual model.",
+          "student_observations": ["Ice keeps its shape.", "Water takes the shape of the container.", "Air expands to fill space."],
+          "teacher_note": "Use it as a visual classification activity."
+        },
+        {
+          "id": "prep1_solution_intro",
+          "title": "What a solution looks like",
+          "materials": ["water", "sodium_chloride"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Observe a homogeneous mixture in the classroom model.",
+          "student_observations": ["The solid becomes invisible in the liquid.", "The mixture stays uniform.", "The solute is still present even when not visible."],
+          "teacher_note": "Keep the explanation particle-level and visual only."
+        },
+        {
+          "id": "prep1_mixtures",
+          "title": "Mixtures and simple sorting",
+          "materials": ["water", "sand"],
+          "equipment": ["beaker_250ml", "erlenmeyer_flask_250ml"],
+          "focus": "Discuss visible differences between a dissolved sample and an insoluble mixture.",
+          "student_observations": ["Sand remains separate.", "The mixture is not uniform.", "Some materials do not dissolve in water."],
+          "teacher_note": "Link the activity to the idea of separation methods without giving a lab procedure."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_solvent_solute",
+          "title": "Solvent and solute roles",
+          "materials": ["water", "sodium_chloride"],
+          "equipment": ["beaker_250ml", "test_tube_20ml", "dropper_3ml"],
+          "focus": "Identify the solvent and the solute in the model solution.",
+          "student_observations": ["Water is the solvent.", "Salt is the solute.", "The particles become distributed in the liquid."],
+          "teacher_note": "Ask students to explain the difference before showing the guide text."
+        },
+        {
+          "id": "prep2_saturation_idea",
+          "title": "A saturation idea",
+          "materials": ["water", "sodium_chloride"],
+          "equipment": ["beaker_250ml", "thermometer_general"],
+          "focus": "Introduce the idea of a limit to dissolving under a chosen condition.",
+          "student_observations": ["Extra solid can remain at the bottom.", "The solution can stop becoming more concentrated.", "The model needs a stated temperature."],
+          "teacher_note": "Describe it as a concept, not a measured curve."
+        },
+        {
+          "id": "prep2_state_changes",
+          "title": "Heating and cooling as physical changes",
+          "materials": ["water", "ice"],
+          "equipment": ["beaker_250ml", "hot_plate_basic", "thermometer_general"],
+          "focus": "Connect heating with melting and boiling at a high level.",
+          "student_observations": ["Heating changes the state.", "The substance stays water.", "Temperature helps explain what happens."],
+          "teacher_note": "Use the model to compare observations and explanations."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep3",
+      "grade_label": "Prep 3",
+      "experiments": [
+        {
+          "id": "prep3_conservation",
+          "title": "Conservation in a closed model",
+          "materials": ["water", "sodium_chloride", "air"],
+          "equipment": ["beaker_250ml", "erlenmeyer_flask_250ml"],
+          "focus": "Show that matter is not lost when a process only rearranges particles.",
+          "student_observations": ["The sample changes appearance.", "The total amount in the model stays accounted for.", "A model can simplify reality without breaking the idea."],
+          "teacher_note": "Separate observation from explanation carefully."
+        },
+        {
+          "id": "prep3_material_categories",
+          "title": "Classifying familiar materials",
+          "materials": ["water", "sand", "air", "carbon_dioxide"],
+          "equipment": ["beaker_250ml", "test_tube_20ml"],
+          "focus": "Compare compounds, mixtures and gases in a classroom-safe way.",
+          "student_observations": ["Air is a mixture.", "Carbon dioxide is a compound.", "Sand is a solid material used for mixture examples."],
+          "teacher_note": "This is a discussion activity with visual support."
+        },
+        {
+          "id": "prep3_solution_review",
+          "title": "Reviewing a clear solution",
+          "materials": ["water", "sodium_chloride"],
+          "equipment": ["beaker_250ml", "thermometer_general"],
+          "focus": "Revisit the dissolved-state model and explain why the liquid stays clear.",
+          "student_observations": ["The solution can remain transparent.", "Dissolved particles are too small to see individually.", "The model uses a simplified timescale."],
+          "teacher_note": "Great as a short recap before a test or quiz."
+        }
+      ]
+    },
+    {
+      "grade_id": "senior1",
+      "grade_label": "Senior 1",
+      "experiments": [
+        {
+          "id": "senior1_particles_energy",
+          "title": "Particles, energy and state",
+          "materials": ["water", "ice", "air"],
+          "equipment": ["beaker_250ml", "thermometer_general", "hot_plate_basic"],
+          "focus": "Link particle motion to the visible state of matter.",
+          "student_observations": ["Heating increases motion in the model.", "Cooling can reverse the change.", "Physical changes are not chemical reactions."],
+          "teacher_note": "Connect it to biology and Earth science where helpful."
+        },
+        {
+          "id": "senior1_biological_molecules",
+          "title": "Glucose and starch as study examples",
+          "materials": ["glucose", "starch", "water"],
+          "equipment": ["beaker_250ml", "erlenmeyer_flask_250ml"],
+          "focus": "Compare a small molecule with a polymeric carbohydrate.",
+          "student_observations": ["Glucose is a small molecular formula.", "Starch has repeating units.", "The two are used differently in living systems."],
+          "teacher_note": "Stay at the classroom explanation level."
+        },
+        {
+          "id": "senior1_carbon_cycle",
+          "title": "Carbon dioxide in science systems",
+          "materials": ["carbon_dioxide", "water", "air"],
+          "equipment": ["beaker_250ml", "thermometer_general"],
+          "focus": "Discuss how chemistry links to the carbon cycle and the water cycle.",
+          "student_observations": ["Carbon dioxide is part of the atmosphere.", "Water appears in many system models.", "Some substances are mixtures rather than single compounds."],
+          "teacher_note": "A good cross-curricular discussion activity."
+        }
+      ]
+    },
+    {
+      "grade_id": "senior2",
+      "grade_label": "Senior 2",
+      "experiments": [
+        {
+          "id": "senior2_model_limits",
+          "title": "What a scientific model can and cannot show",
+          "materials": ["water", "sodium_chloride", "air"],
+          "equipment": ["beaker_250ml", "thermometer_general"],
+          "focus": "Evaluate the simulation as a model and identify its assumptions.",
+          "student_observations": ["The model simplifies reality.", "Some values are marked unverified or derived.", "A model is useful even when it is not complete."],
+          "teacher_note": "Good for revision before higher secondary planning."
+        },
+        {
+          "id": "senior2_pathway_check",
+          "title": "Pathway-aware lesson planning",
+          "materials": ["water", "glucose", "starch", "carbon_dioxide"],
+          "equipment": ["beaker_250ml", "erlenmeyer_flask_250ml"],
+          "focus": "Show why Senior 2 content must match the student's exact pathway.",
+          "student_observations": ["Not all students follow the same official map.", "The app can show safe concepts across pathways.", "The final syllabus still needs confirmation."],
+          "teacher_note": "Use this to avoid mixing General Secondary and Baccalaureate assumptions."
+        },
+        {
+          "id": "senior2_safe_review",
+          "title": "Safe review of classroom chemistry concepts",
+          "materials": ["water", "sodium_chloride", "glucose", "starch"],
+          "equipment": ["beaker_250ml", "test_tube_20ml", "dropper_3ml"],
+          "focus": "Reinforce safe, non-hazardous classroom concepts before exam revision.",
+          "student_observations": ["Dissolution remains a physical change.", "Reference entries can still teach chemistry.", "Safety and evidence matter together."],
+          "teacher_note": "This is a recap lesson, not a lab procedure guide."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_phase_transitions",
+      "title": "OpenStax Chemistry 2e — 10.3 Phase Transitions",
+      "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
+      "supports": "Melting, boiling, evaporation and condensation concepts."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    },
+    {
+      "id": "moe_student_books",
+      "title": "Egyptian Ministry of Education — Student Books",
+      "url": "https://studentbooks.moe.gov.eg/Books",
+      "supports": "Official preparatory-stage textbooks for the 2026–2027 school year."
+    },
+    {
+      "id": "moe_secondary_books",
+      "title": "Egyptian Ministry of Education — Secondary Books",
+      "url": "https://ellibrary.moe.gov.eg/Books-sec/",
+      "supports": "Official secondary-stage textbooks for the 2026–2027 school year."
+    }
+  ]
+}

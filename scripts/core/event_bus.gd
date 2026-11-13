@@ -18,3 +18,7 @@ signal observation_added(object_id: String, entry: Dictionary)
 ## A command was executed or rejected. The entry is the command-log record.
 @warning_ignore("unused_signal")
 signal command_logged(entry: Dictionary)
+
+## A reference card should be pinned into the classroom dashboard overlay.
+@warning_ignore("unused_signal")
+signal reference_pin_requested(reference: Dictionary)

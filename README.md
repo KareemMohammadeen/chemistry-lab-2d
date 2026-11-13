@@ -54,6 +54,14 @@ are suggestions for using the software, not claims about official lesson order.
 The periodic-table browser shows all 118 elements as read-only reference entries. Only water and table salt are available in
 the guided classroom setup. Other catalogue records are not unlocked as classroom reagents.
 
+The redesigned dashboard now supports pinned reference badges: teachers can pin elements, compounds and other reference entries
+from the Reference Explorer into the classroom overlay as draggable study notes. Those badges are visual references only and do
+not mutate the simulation.
+
+A separate safe experiment pack lives in `data/learning/expanded_safe_experiments.json` with grade mappings in
+`data/curricula/egypt_2026_2027_safe_experiments.json`. These files collect classroom-safe experiment concepts for Prep 1,
+Prep 2, Prep 3, Senior 1 and Senior 2 without adding hazardous real-world procedures.
+
 ## Where things are
 `scripts/simulation` (truth: state, commands, heat), `scripts/chemistry` (engine, acid/base, appearance),
 `scripts/interaction` (pointer to commands), `scripts/ui` (views, inspector), `data/` (all content as JSON),
