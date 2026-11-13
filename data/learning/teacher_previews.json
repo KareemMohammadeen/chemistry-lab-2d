@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "purpose": "Teacher-facing preview activities for the virtual classroom demo. These are suggested teaching lenses, not claims about the official unit order or exact lesson titles.",
+  "global_alignment_status": "suggested_not_verified_against_official_textbook",
+  "virtual_only_notice": "All listed flows describe actions inside this software. They are not real-world laboratory procedures.",
+  "grade_previews": [
+    {
+      "profile_id": "prep1",
+      "title": "Classifying matter and observing a solution",
+      "focus": "Distinguish a pure substance from a mixture and describe the visible difference between a solid and a liquid in the model.",
+      "learning_goals": [
+        "Describe matter using observable properties.",
+        "Distinguish a solid sample from a liquid sample.",
+        "Recognize that a uniform solution is a mixture."
+      ],
+      "material_ids": ["water", "sodium_chloride"],
+      "equipment_ids": ["beaker_250ml", "test_tube_20ml", "dropper_3ml"],
+      "virtual_flow": [
+        "Open the Classroom Demo setup.",
+        "Select the beaker and read its Inspector panel.",
+        "Inspect the water and salt entries in the Library and Learning Guide.",
+        "Compare the model before and after the virtual dissolution demonstration."
+      ],
+      "teacher_prompt": "Ask students to describe what changed in appearance and what did not change about the identity of the substances.",
+      "curriculum_alignment_status": "suggested_not_verified_against_official_textbook"
+    },
+    {
+      "profile_id": "prep2",
+      "title": "Solute, solvent and solution formation",
+      "focus": "Use a particle-level explanation to distinguish the solvent from the solute in a model solution.",
+      "learning_goals": [
+        "Identify the solvent and solute in the classroom model.",
+        "Explain why dissolved particles are not individually visible.",
+        "Describe a homogeneous mixture."
+      ],
+      "material_ids": ["water", "sodium_chloride"],
+      "equipment_ids": ["beaker_250ml", "test_tube_20ml", "dropper_3ml"],
+      "virtual_flow": [
+        "Open the Classroom Demo setup.",
+        "Select the beaker and review its contents.",
+        "Observe the software's dissolution animation.",
+        "Open Learning Guide and compare the observation with the explanation."
+      ],
+      "teacher_prompt": "Ask which material acts as the solvent and how the model represents particles becoming distributed.",
+      "curriculum_alignment_status": "suggested_not_verified_against_official_textbook"
+    },
+    {
+      "profile_id": "prep3",
+      "title": "Saturation and conservation in a simplified model",
+      "focus": "Discuss the idea of a solubility limit and distinguish dissolved material from a separate solid phase.",
+      "learning_goals": [
+        "Define a saturated solution at a conceptual level.",
+        "Distinguish dissolved material from visible undissolved solid.",
+        "Discuss why a simulation needs stated assumptions and limits."
+      ],
+      "material_ids": ["water", "sodium_chloride"],
+      "equipment_ids": ["beaker_250ml", "thermometer_general"],
+      "virtual_flow": [
+        "Open the Classroom Demo setup.",
+        "Read the Learning Guide section on saturation.",
+        "Use the Inspector to identify the different contents and observations.",
+        "Discuss which aspects are simplified and which are represented by the software."
+      ],
+      "teacher_prompt": "Ask students why a model must state its temperature and solubility assumptions before making quantitative claims.",
+      "curriculum_alignment_status": "suggested_not_verified_against_official_textbook"
+    },
+    {
+      "profile_id": "senior1",
+      "title": "Integrated view: particles, matter and energy",
+      "focus": "Connect particle-level explanations of solutions with the temperature information displayed by the virtual model.",
+      "learning_goals": [
+        "Relate a macroscopic observation to a particle-level explanation.",
+        "Distinguish a physical process from a chemical reaction.",
+        "Evaluate the limits of a simplified simulation."
+      ],
+      "material_ids": ["water", "sodium_chloride"],
+      "equipment_ids": ["beaker_250ml", "thermometer_general"],
+      "virtual_flow": [
+        "Select the classroom beaker and inspect the displayed temperature.",
+        "Read the explanation for dissolution and changes of state.",
+        "Compare the observed model behaviour with the stated model limitations."
+      ],
+      "teacher_prompt": "Ask students to connect an observable change with a possible explanation at the particle level.",
+      "curriculum_alignment_status": "suggested_not_verified_against_official_textbook"
+    },
+    {
+      "profile_id": "senior2",
+      "title": "Evaluate a scientific model",
+      "focus": "Treat the virtual laboratory as a scientific model: identify what it represents, what it simplifies and which curriculum pathway must be confirmed.",
+      "learning_goals": [
+        "Separate a model's output from an experimentally measured value.",
+        "Identify assumptions and limitations.",
+        "Explain why the exact Senior 2 pathway is required before official Chemistry mapping."
+      ],
+      "material_ids": ["water", "sodium_chloride"],
+      "equipment_ids": ["beaker_250ml", "thermometer_general"],
+      "virtual_flow": [
+        "Open the Classroom Demo setup.",
+        "Review one observation and its explanation in the Inspector.",
+        "Read the data-quality notes and curriculum status.",
+        "Compare the preview with the student's selected official pathway before using it for lesson planning."
+      ],
+      "teacher_prompt": "Ask students which statements are direct observations, which are explanations and which are assumptions in the model.",
+      "curriculum_alignment_status": "pathway_and_official_textbook_review_required"
+    }
+  ]
+}
