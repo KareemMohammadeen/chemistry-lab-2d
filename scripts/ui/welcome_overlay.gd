@@ -35,13 +35,13 @@ func _build_screen() -> void:
 	add_child(center)
 
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(660.0, 500.0)
+	panel.custom_minimum_size = Vector2(540.0, 0.0)
 	panel.add_theme_stylebox_override("panel",
-		LabTheme.box(Color("#111F2D"), Color("#2B5363"), 1, 22, 36, 32))
+		LabTheme.box(Color("#111F2D"), Color("#2B5363"), 1, 22, 24, 18))
 	center.add_child(panel)
 
 	var content := VBoxContainer.new()
-	content.add_theme_constant_override("separation", 16)
+	content.add_theme_constant_override("separation", 8)
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	panel.add_child(content)
 
