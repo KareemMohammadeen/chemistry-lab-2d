@@ -243,10 +243,10 @@ func _add_teacher_guide_button() -> void:
 	var grade_chip := grade_selector.get_parent().get_parent()
 	var top_row := grade_chip.get_parent()
 	_teacher_guide_button = Button.new()
-	_teacher_guide_button.text = "Guide"
-	_teacher_guide_button.tooltip_text = "Open Teacher Mode guidance, material explanations and trusted sources."
+	_teacher_guide_button.text = "Teacher Guide"
+	_teacher_guide_button.tooltip_text = "Open Teacher Mode: grade previews, material explanations and trusted sources."
 	_teacher_guide_button.theme_type_variation = &"ToolButton"
-	_teacher_guide_button.custom_minimum_size = Vector2(78.0, 40.0)
+	_teacher_guide_button.custom_minimum_size = Vector2(116.0, 40.0)
 	_teacher_guide_button.focus_mode = Control.FOCUS_NONE
 	_teacher_guide_button.pressed.connect(_open_teacher_guide)
 	top_row.add_child(_teacher_guide_button)
@@ -256,3 +256,11 @@ func _add_teacher_guide_button() -> void:
 func _open_teacher_guide() -> void:
 	if library != null:
 		library.open_learning_guide(_selected_curriculum_profile)
+
+
+## Reveals the teaching Library and opens the grade-aware teacher guide.
+func open_teacher_mode() -> void:
+	_library_user_choice = true
+	library.visible = true
+	library_toggle.set_pressed_no_signal(true)
+	_open_teacher_guide()
