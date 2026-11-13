@@ -188,6 +188,7 @@ theme_override_constants/separation = 1
 
 [node name="MainMargin" type="MarginContainer" parent="Root"]
 layout_mode = 2
+mouse_filter = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 12
@@ -196,6 +197,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="MainArea" type="HBoxContainer" parent="Root/MainMargin"]
 layout_mode = 2
+mouse_filter = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
@@ -206,11 +208,13 @@ layout_mode = 2
 [node name="StageFrame" type="PanelContainer" parent="Root/MainMargin/MainArea"]
 custom_minimum_size = Vector2(520, 0)
 layout_mode = 2
+mouse_filter = 2
 size_flags_horizontal = 3
 theme_type_variation = &"DisplayPanel"
 
 [node name="StageColumn" type="VBoxContainer" parent="Root/MainMargin/MainArea/StageFrame"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 8
 
 [node name="StageHeader" type="PanelContainer" parent="Root/MainMargin/MainArea/StageFrame/StageColumn"]
