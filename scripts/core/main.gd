@@ -18,7 +18,7 @@ const MIN_UI_SCALE := 0.75
 var _host: SimulationHost
 var _controller: InteractionController
 var _last_stage_rect: Rect2 = Rect2()
-var _welcome_overlay: Control
+var _welcome_overlay: WelcomeOverlay
 
 
 func _ready() -> void:
@@ -45,7 +45,7 @@ func _ready() -> void:
 
 
 func _show_welcome_overlay() -> void:
-	_welcome_overlay = WELCOME_OVERLAY_SCRIPT.new() as Control
+	_welcome_overlay = WELCOME_OVERLAY_SCRIPT.new() as WelcomeOverlay
 	_welcome_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_welcome_overlay.mode_selected.connect(_on_welcome_mode_selected)
 	lab_interface.add_child(_welcome_overlay)
