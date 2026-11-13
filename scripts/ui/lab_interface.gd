@@ -1,10 +1,7 @@
 class_name LabInterface
 extends Control
-## The screen furniture around the workspace: top bar (library toggle, experiment title, lab
-## time, undo, redo, reset, pause, speed), the Library panel on the left, the Inspector on the
-## right and short messages for the operator. The stage between the panels is an empty slot the
-## laboratory is fitted into. This class turns clicks into signals; the InteractionController
-## decides what they do.
+## Presentation layer for the chemistry workbench. The scene is organised as a compact studio:
+## command header, materials dock, central live bench, and contextual inspector.
 
 signal undo_requested
 signal redo_requested
@@ -12,9 +9,7 @@ signal reset_requested
 signal pause_toggled(paused: bool)
 signal speed_selected(speed: float)
 signal action_requested(action_id: StringName, payload: Dictionary)
-## The operator picked an item in the Library; the controller selects that object.
 signal object_focus_requested(object_id: String)
-## A reference explorer entry should be pinned into the visual dashboard.
 signal reference_pin_requested(reference: Dictionary)
 
 const TOAST_SECONDS := 4.0
@@ -23,18 +18,16 @@ const TOAST_RADIUS := 12
 const TOAST_PADDING_PX := 14
 const FALLBACK_SPEEDS: Array = [1.0]
 const ICON_PATH := "res://assets/icons/%s.svg"
-## Panel widths follow the window width (in interface pixels) between these limits.
-const LIBRARY_WIDTH_FRACTION := 0.14
-const LIBRARY_WIDTH_MIN := 210.0
-const LIBRARY_WIDTH_MAX := 280.0
-const INSPECTOR_WIDTH_FRACTION := 0.19
-const INSPECTOR_WIDTH_MIN := 270.0
-const INSPECTOR_WIDTH_MAX := 390.0
-## Below this width the Library starts hidden so the laboratory keeps a usable size.
-const LIBRARY_OPEN_MIN_WIDTH := 1600.0
-const SPEED_BUTTON_WIDTH := 52.0
-const HERO_HEIGHT := 116.0
-const PIN_OFFSET_STEP := 22.0
+const LIBRARY_WIDTH_FRACTION := 0.18
+const LIBRARY_WIDTH_MIN := 268.0
+const LIBRARY_WIDTH_MAX := 330.0
+const INSPECTOR_WIDTH_FRACTION := 0.20
+const INSPECTOR_WIDTH_MIN := 300.0
+const INSPECTOR_WIDTH_MAX := 370.0
+const LIBRARY_OPEN_MIN_WIDTH := 1120.0
+const SPEED_BUTTON_WIDTH := 48.0
+const SPECIMEN_MARGIN := 18.0
+const SPECIMEN_CELL := Vector2(252.0, 110.0)
 
 @export var top_bar: Control
 @export var title_label: Label
@@ -63,13 +56,8 @@ var _library_user_choice: bool = false
 var _curriculum_catalog: CurriculumCatalog
 var _selected_curriculum_profile: Dictionary = {}
 var _teacher_guide_button: Button
-var _hero_panel: PanelContainer
-var _hero_grade_label: Label
-var _hero_focus_label: Label
-var _hero_status_label: Label
-var _reference_layer: Control
-var _reference_stat_panel: Control
 var _reference_pin_count: int = 0
+var _specimen_count: int = 0
 
 
 func _ready() -> void:
@@ -85,6 +73,7 @@ func _ready() -> void:
 	_info_style = _make_toast_style(LabColors.PANEL_RAISED, LabColors.PANEL_BORDER_STRONG)
 	_warning_style = _make_toast_style(Color("#3A2D12"), LabColors.WARNING)
 	toast_label.visible = false
+	hint_label.text = "Drag an element from the periodic table into this workbench. Tokens are visual learning aids, not reactive reagents."
 	hint_label.visible = true
 	undo_button.pressed.connect(undo_requested.emit)
 	redo_button.pressed.connect(redo_requested.emit)
@@ -96,18 +85,17 @@ func _ready() -> void:
 	library_toggle.toggled.connect(_on_library_toggled)
 	grade_selector.item_selected.connect(_on_grade_selected)
 	resized.connect(_apply_responsive_layout)
-	# Space must pause the simulation, not re-press whichever button was clicked last.
 	for button in [undo_button, redo_button, reset_button, pause_button, library_toggle]:
 		(button as Button).focus_mode = Control.FOCUS_NONE
 	grade_selector.focus_mode = Control.FOCUS_NONE
-	_add_teacher_guide_button()
-	_build_dashboard_banner()
+	if stage_slot is LabDropZone:
+		(stage_slot as LabDropZone).element_dropped.connect(_on_periodic_element_dropped)
 	_apply_responsive_layout()
 
 
 func bind(host: SimulationHost) -> void:
 	_host = host
-	title_label.text = "Virtual Chemistry Laboratory"
+	title_label.text = "WORKBENCH  /  CHEMISTRY LAB"
 	inspector.bind(host)
 	library.bind(host)
 	_curriculum_catalog = CurriculumCatalog.new()
@@ -118,10 +106,9 @@ func bind(host: SimulationHost) -> void:
 	_build_speed_buttons(host.database.constants.get("speeds", FALLBACK_SPEEDS))
 	EventBus.feedback_message_requested.connect(_show_toast)
 	EventBus.observation_added.connect(_on_observation_added)
-	_update_dashboard_banner()
 
 
-## Rectangles (screen pixels) where dropped objects must not land.
+## Screen-space panels that should reject placement from the simulation pointer controller.
 func get_blocking_rects() -> Array:
 	var rects: Array = [top_bar.get_global_rect(), inspector.get_global_rect()]
 	if library.visible:
@@ -129,7 +116,7 @@ func get_blocking_rects() -> Array:
 	return rects
 
 
-## The empty area between the panels, in screen pixels: where the laboratory is drawn.
+## Screen-space region occupied by the visible laboratory stage.
 func get_stage_rect() -> Rect2:
 	return stage_slot.get_global_rect()
 
@@ -144,7 +131,7 @@ func _process(delta: float) -> void:
 	pause_button.text = "Resume" if _host.clock.paused else "Pause"
 	var time_text := UnitFormat.time_mmss(_host.simulation.state.time_s)
 	if _host.clock.paused:
-		time_text += "  (paused)"
+		time_text += "  ·  PAUSED"
 	time_label.text = time_text
 	if _toast_left_s > 0.0:
 		_toast_left_s -= delta
@@ -153,16 +140,12 @@ func _process(delta: float) -> void:
 			toast_label.visible = false
 
 
-# ---------------------------------------------------------------- responsive layout
-
 func _apply_responsive_layout() -> void:
 	var width := size.x
 	if width <= 0.0:
 		return
 	library.custom_minimum_size.x = clampf(width * LIBRARY_WIDTH_FRACTION, LIBRARY_WIDTH_MIN, LIBRARY_WIDTH_MAX)
 	inspector.custom_minimum_size.x = clampf(width * INSPECTOR_WIDTH_FRACTION, INSPECTOR_WIDTH_MIN, INSPECTOR_WIDTH_MAX)
-	if _hero_panel != null:
-		_hero_panel.custom_minimum_size.y = HERO_HEIGHT
 	if not _library_user_choice:
 		var open := width >= LIBRARY_OPEN_MIN_WIDTH
 		library.visible = open
@@ -172,152 +155,7 @@ func _apply_responsive_layout() -> void:
 func _on_library_toggled(pressed: bool) -> void:
 	_library_user_choice = true
 	library.visible = pressed
-	_update_dashboard_banner()
 
-
-# ---------------------------------------------------------------- dashboard banner
-
-func _build_dashboard_banner() -> void:
-	var root := get_node_or_null("Root") as VBoxContainer
-	if root == null:
-		return
-	_hero_panel = PanelContainer.new()
-	_hero_panel.custom_minimum_size = Vector2(0.0, HERO_HEIGHT)
-	_hero_panel.theme_type_variation = &"HeroPanel"
-	root.add_child(_hero_panel)
-	root.move_child(_hero_panel, 1)
-
-	var margin := MarginContainer.new()
-	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	margin.add_theme_constant_override("margin_left", 18)
-	margin.add_theme_constant_override("margin_top", 12)
-	margin.add_theme_constant_override("margin_right", 18)
-	margin.add_theme_constant_override("margin_bottom", 12)
-	_hero_panel.add_child(margin)
-
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 14)
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	margin.add_child(row)
-
-	var left := VBoxContainer.new()
-	left.custom_minimum_size.x = 320.0
-	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.add_theme_constant_override("separation", 4)
-	row.add_child(left)
-
-	var caption := Label.new()
-	caption.text = "CLASSROOM DASHBOARD"
-	caption.theme_type_variation = &"HeadingLabel"
-	left.add_child(caption)
-
-	var title := Label.new()
-	title.text = "Virtual Chemistry Laboratory"
-	title.theme_type_variation = &"TitleLabel"
-	left.add_child(title)
-
-	var summary := Label.new()
-	summary.text = "Safe, evidence-labelled chemistry and science learning for classroom demos."
-	summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	summary.theme_type_variation = &"MutedLabel"
-	left.add_child(summary)
-
-	var middle := HBoxContainer.new()
-	middle.add_theme_constant_override("separation", 8)
-	middle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(middle)
-	var reference_panel := _make_dashboard_stat("118", "elements")
-	middle.add_child(reference_panel)
-	_reference_stat_panel = reference_panel
-	middle.add_child(_make_dashboard_stat("5", "grades"))
-	middle.add_child(_make_dashboard_stat("safe", "mode"))
-
-	var right := VBoxContainer.new()
-	right.custom_minimum_size.x = 250.0
-	right.add_theme_constant_override("separation", 6)
-	row.add_child(right)
-
-	_hero_grade_label = Label.new()
-	_hero_grade_label.theme_type_variation = &"StrongLabel"
-	_hero_grade_label.text = "Prep 1"
-	right.add_child(_hero_grade_label)
-
-	_hero_focus_label = Label.new()
-	_hero_focus_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_hero_focus_label.theme_type_variation = &"CaptionLabel"
-	_hero_focus_label.text = "Choose a grade to preview the matching curriculum, materials and teacher flow."
-	right.add_child(_hero_focus_label)
-
-	_hero_status_label = Label.new()
-	_hero_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_hero_status_label.theme_type_variation = &"MutedLabel"
-	_hero_status_label.text = "Library and inspector stay in sync with the selected curriculum profile."
-	right.add_child(_hero_status_label)
-
-	var button_row := HBoxContainer.new()
-	button_row.add_theme_constant_override("separation", 8)
-	right.add_child(button_row)
-
-	var teacher_button := Button.new()
-	teacher_button.text = "Teacher Guide"
-	teacher_button.theme_type_variation = &"AccentButton"
-	teacher_button.focus_mode = Control.FOCUS_NONE
-	teacher_button.pressed.connect(_open_teacher_guide)
-	button_row.add_child(teacher_button)
-
-	var library_button := Button.new()
-	library_button.text = "Toggle Library"
-	library_button.theme_type_variation = &"ToolButton"
-	library_button.focus_mode = Control.FOCUS_NONE
-	library_button.pressed.connect(func() -> void:
-		library_toggle.set_pressed_no_signal(not library.visible)
-		_on_library_toggled(not library.visible)
-	)
-	button_row.add_child(library_button)
-
-	_reference_layer = Control.new()
-	_reference_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_reference_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	stage_slot.add_child(_reference_layer)
-	_update_dashboard_banner()
-
-
-func _make_dashboard_stat(value: String, caption: String) -> Control:
-	var panel := PanelContainer.new()
-	panel.theme_type_variation = &"StatPanel"
-	panel.custom_minimum_size = Vector2(0.0, 68.0)
-	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var column := VBoxContainer.new()
-	column.add_theme_constant_override("separation", 0)
-	panel.add_child(column)
-	var value_label := Label.new()
-	value_label.text = value
-	value_label.theme_type_variation = &"StrongLabel"
-	value_label.add_theme_font_size_override("font_size", 18)
-	column.add_child(value_label)
-	var caption_label := Label.new()
-	caption_label.text = caption
-	caption_label.theme_type_variation = &"CaptionLabel"
-	column.add_child(caption_label)
-	return panel
-
-
-func _update_dashboard_banner() -> void:
-	if _hero_panel == null:
-		return
-	var profile_label := str(_selected_curriculum_profile.get("label", "Select a grade"))
-	var subject_label := str(_selected_curriculum_profile.get("subject", ""))
-	var note := str(_selected_curriculum_profile.get("note", ""))
-	if note.is_empty():
-		note = "Choose a grade to view the curriculum context."
-	_hero_grade_label.text = profile_label
-	_hero_focus_label.text = subject_label
-	_hero_status_label.text = note
-	if _reference_stat_panel != null:
-		_reference_stat_panel.tooltip_text = "%d pinned references" % _reference_pin_count
-
-
-# ---------------------------------------------------------------- speed buttons and toasts
 
 func _build_speed_buttons(speeds: Array) -> void:
 	var group := ButtonGroup.new()
@@ -326,7 +164,7 @@ func _build_speed_buttons(speeds: Array) -> void:
 		var button := Button.new()
 		button.text = "%gx" % speed
 		button.theme_type_variation = &"ToolButton"
-		button.custom_minimum_size = Vector2(SPEED_BUTTON_WIDTH, 40.0)
+		button.custom_minimum_size = Vector2(SPEED_BUTTON_WIDTH, 38.0)
 		button.tooltip_text = "Run the simulation at %gx speed" % speed
 		button.toggle_mode = true
 		button.button_group = group
@@ -334,6 +172,23 @@ func _build_speed_buttons(speeds: Array) -> void:
 		button.button_pressed = is_equal_approx(speed, _host.clock.speed)
 		button.pressed.connect(func() -> void: speed_selected.emit(speed))
 		speed_box.add_child(button)
+
+
+func _on_periodic_element_dropped(element_data: Dictionary, drop_position: Vector2) -> void:
+	var symbol := str(element_data.get("symbol", ""))
+	if symbol.is_empty():
+		return
+	var specimen := ElementSpecimen.new()
+	specimen.setup(element_data)
+	specimen.position = drop_position - SPECIMEN_CELL * 0.5
+	var maximum := Vector2(maxf(stage_slot.size.x - SPECIMEN_CELL.x, 0.0), maxf(stage_slot.size.y - SPECIMEN_CELL.y, 0.0))
+	specimen.position = specimen.position.clamp(Vector2(SPECIMEN_MARGIN, SPECIMEN_MARGIN), Vector2(
+		maxf(SPECIMEN_MARGIN, maximum.x - SPECIMEN_MARGIN), maxf(SPECIMEN_MARGIN, maximum.y - SPECIMEN_MARGIN)))
+	specimen.z_index = 10
+	stage_slot.add_child(specimen)
+	_specimen_count += 1
+	var label := "visual sample token" if bool(element_data.get("display_only_sample", false)) else "reference-only token"
+	_show_toast("%s added to the workbench as a %s. It cannot be mixed or reacted." % [str(element_data.get("name", symbol)), label], &"info")
 
 
 func _on_observation_added(_object_id: String, entry: Dictionary) -> void:
@@ -357,15 +212,12 @@ func _make_toast_style(fill: Color, border: Color) -> StyleBoxFlat:
 	return style
 
 
-## Icons are imported by the editor on first open; a missing import simply shows a text-only button.
 func _load_icon(icon_name: String) -> Texture2D:
 	var path := ICON_PATH % icon_name
 	if ResourceLoader.exists(path):
 		return load(path) as Texture2D
 	return null
 
-
-# ---------------------------------------------------------------- curriculum selector
 
 func _populate_grade_selector() -> void:
 	grade_selector.clear()
@@ -393,23 +245,21 @@ func _on_grade_selected(index: int) -> void:
 		return
 	_selected_curriculum_profile = profile.duplicate(true)
 	library.set_curriculum_profile(profile)
-	_update_dashboard_banner()
 	_show_toast("%s selected — %s" % [str(profile.get("label", "")), str(profile.get("subject", ""))], &"info")
 
-# ---------------------------------------------------------------- teacher guide
 
 func _add_teacher_guide_button() -> void:
 	var grade_chip := grade_selector.get_parent().get_parent()
 	var top_row := grade_chip.get_parent()
-	_teacher_guide_button = Button.new()
-	_teacher_guide_button.text = "Teacher Guide"
-	_teacher_guide_button.tooltip_text = "Open Teacher Mode: grade previews, material explanations and trusted sources."
-	_teacher_guide_button.theme_type_variation = &"ToolButton"
-	_teacher_guide_button.custom_minimum_size = Vector2(116.0, 40.0)
-	_teacher_guide_button.focus_mode = Control.FOCUS_NONE
-	_teacher_guide_button.pressed.connect(_open_teacher_guide)
-	top_row.add_child(_teacher_guide_button)
-	top_row.move_child(_teacher_guide_button, grade_chip.get_index() + 1)
+	var teacher_button := Button.new()
+	teacher_button.text = "Teacher Guide"
+	teacher_button.tooltip_text = "Open grade previews, learning explanations and trusted sources."
+	teacher_button.theme_type_variation = &"ToolButton"
+	teacher_button.custom_minimum_size = Vector2(118.0, 38.0)
+	teacher_button.focus_mode = Control.FOCUS_NONE
+	teacher_button.pressed.connect(_open_teacher_guide)
+	top_row.add_child(teacher_button)
+	top_row.move_child(teacher_button, grade_chip.get_index() + 1)
 
 
 func _open_teacher_guide() -> void:
@@ -417,7 +267,6 @@ func _open_teacher_guide() -> void:
 		library.open_learning_guide(_selected_curriculum_profile)
 
 
-## Reveals the teaching Library and opens the grade-aware teacher guide.
 func open_teacher_mode() -> void:
 	_library_user_choice = true
 	library.visible = true
@@ -428,20 +277,18 @@ func open_teacher_mode() -> void:
 	_open_teacher_guide()
 
 
-# ---------------------------------------------------------------- reference badges
-
 func _on_reference_pin_requested(reference: Dictionary) -> void:
-	if reference.is_empty() or _reference_layer == null:
+	if reference.is_empty():
 		return
 	var badge := ReferenceBadge.new()
 	badge.setup(reference)
-	badge.position = Vector2(28.0 + float(_reference_pin_count % 5) * PIN_OFFSET_STEP, 22.0 + float(_reference_pin_count / 5) * PIN_OFFSET_STEP)
+	var columns := maxi(1, int(floor((stage_slot.size.x - 28.0) / 300.0)))
+	var index := _reference_pin_count
+	badge.position = Vector2(18.0 + float(index % columns) * 300.0, 18.0 + float(index / columns) * 148.0)
 	badge.removed.connect(_on_reference_badge_removed)
-	_reference_layer.add_child(badge)
+	stage_slot.add_child(badge)
 	_reference_pin_count += 1
-	_update_dashboard_banner()
 
 
 func _on_reference_badge_removed() -> void:
-	_reference_pin_count = max(0, _reference_pin_count - 1)
-	_update_dashboard_banner()
+	_reference_pin_count = maxi(0, _reference_pin_count - 1)
