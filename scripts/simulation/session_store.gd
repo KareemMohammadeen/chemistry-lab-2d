@@ -70,15 +70,17 @@ static func load_from_path(simulation: LabSimulation, command_stack: CommandStac
 	var snapshot: Variant = document.get("state")
 	if typeof(snapshot) != TYPE_DICTIONARY:
 		return _failure("The session does not contain a valid laboratory state.")
-	var validation_message := _validate_snapshot(snapshot, database)
+	var snapshot_dictionary: Dictionary = snapshot
+	var validation_message := _validate_snapshot(snapshot_dictionary, database)
 	if not validation_message.is_empty():
 		return _failure(validation_message)
 
 	var raw_history: Variant = document.get("history", [])
 	if typeof(raw_history) != TYPE_ARRAY:
 		return _failure("The experiment log in this session is not valid.")
+	var saved_history: Array = raw_history
 	var history: Array = []
-	for entry in raw_history:
+	for entry in saved_history:
 		if typeof(entry) != TYPE_DICTIONARY:
 			return _failure("The experiment log contains an invalid entry.")
 		if history.size() >= MAX_HISTORY_ENTRIES:
@@ -86,7 +88,7 @@ static func load_from_path(simulation: LabSimulation, command_stack: CommandStac
 		history.append((entry as Dictionary).duplicate(true))
 
 	# No live state is changed until every part of the file has passed validation.
-	simulation.restore_snapshot(snapshot)
+	simulation.restore_snapshot(snapshot_dictionary)
 	simulation.setup_title = str(document.get("setup_title", "Saved experiment"))
 	command_stack.restore_history(history)
 	return {"ok": true, "message": "Opened experiment: %s." % simulation.setup_title,
@@ -112,10 +114,15 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 		if typeof(object_data) != TYPE_DICTIONARY:
 			return "A saved laboratory object is not valid."
 		var item: Dictionary = object_data
+		if str(item.get("id", "")) != str(object_key):
+			return "A saved object's id does not match its object key."
 		var equipment_id := str(item.get("equipment_id", ""))
 		var equipment := database.get_equipment(equipment_id)
 		if equipment == null:
 			return "The session refers to unknown equipment '%s'." % equipment_id
+		for numeric_field in ["target_temperature_c", "surface_temperature_c"]:
+			if not _is_finite_number(item.get(numeric_field, 22.0)):
+				return "A saved object has an invalid %s." % numeric_field
 		var position: Variant = item.get("position", [])
 		if typeof(position) != TYPE_ARRAY or (position as Array).size() < 2:
 			return "A saved object's position is invalid."
@@ -133,6 +140,26 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 			var capacity: Variant = vessel.get("capacity_ml", equipment.capacity_ml)
 			if not _is_finite_number(capacity) or float(capacity) <= 0.0:
 				return "A saved vessel has an invalid capacity."
+			if absf(float(capacity) - equipment.capacity_ml) > VOLUME_EPSILON:
+				return "A saved vessel capacity does not match its equipment definition."
+			for numeric_field in ["temperature_c", "stir_time_left_s", "neutralised_mol"]:
+				var fallback := 22.0 if numeric_field == "temperature_c" else 0.0
+				var numeric_value: Variant = vessel.get(numeric_field, fallback)
+				if not _is_finite_number(numeric_value) or float(numeric_value) < 0.0 and numeric_field != "temperature_c":
+					return "A saved vessel has an invalid %s." % numeric_field
+			if float(vessel.get("temperature_c", 22.0)) < -273.15 or float(vessel.get("temperature_c", 22.0)) > 5000.0:
+				return "A saved vessel temperature is outside the supported model range."
+			var raw_fired: Variant = vessel.get("fired_observations", {})
+			if typeof(raw_fired) != TYPE_DICTIONARY:
+				return "A saved vessel has invalid observation flags."
+			var raw_observations: Variant = vessel.get("observations", [])
+			if typeof(raw_observations) != TYPE_ARRAY or (raw_observations as Array).size() > VesselState.MAX_OBSERVATIONS:
+				return "A saved vessel has an invalid observation history."
+			for observation in raw_observations:
+				if typeof(observation) != TYPE_DICTIONARY:
+					return "A saved vessel contains an invalid observation."
+				if not _is_finite_number(observation.get("time_s", 0.0)):
+					return "A saved observation contains an invalid time."
 			var liquid_total := 0.0
 			for bucket in ["liquids", "solids", "dissolved"]:
 				var amounts: Variant = vessel.get(bucket, {})
@@ -152,10 +179,23 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 
 	for object_key in objects.keys():
 		var item: Dictionary = objects[object_key]
+		var supported_by := str(item.get("supported_by", ""))
+		var inserted_in := str(item.get("inserted_in", ""))
+		if not supported_by.is_empty() and not inserted_in.is_empty():
+			return "A saved object cannot be supported by and inserted into another object at the same time."
 		for relation in ["supported_by", "inserted_in"]:
 			var related_id := str(item.get(relation, ""))
-			if not related_id.is_empty() and (not objects.has(related_id) or related_id == str(object_key)):
+			if related_id.is_empty():
+				continue
+			if not objects.has(related_id) or related_id == str(object_key):
 				return "A saved object has an invalid %s relationship." % relation
+			var related_item: Dictionary = objects[related_id]
+			var related_equipment := database.get_equipment(str(related_item.get("equipment_id", "")))
+			if relation == "supported_by" and (related_equipment == null or related_equipment.support.is_empty()):
+				return "A saved support relationship points to equipment that cannot support objects."
+			if relation == "inserted_in":
+				if related_item.get("vessel") == null or not bool(database.get_equipment(str(item.get("equipment_id", ""))).placement.get("insert_into_vessel", false)):
+					return "A saved insertion relationship is not supported by the equipment definitions."
 	return ""
 
 
