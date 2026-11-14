@@ -22,3 +22,25 @@ jobs:
         run: python tests/validate_curriculum.py
       - name: Validate teacher demo
         run: python tests/validate_teacher_demo.py
+
+  godot-headless:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Download Godot 4.3
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 --retry-delay 2 \
+            -o "$RUNNER_TEMP/godot.zip" \
+            https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.3-stable_linux.x86_64"
+          echo "GODOT_BIN=$RUNNER_TEMP/godot/Godot_v4.3-stable_linux.x86_64" >> "$GITHUB_ENV"
+          "$RUNNER_TEMP/godot/Godot_v4.3-stable_linux.x86_64" --version
+      - name: Import project resources
+        run: '"$GODOT_BIN" --headless --path . --import'
+      - name: Run headless simulation scenarios
+        run: '"$GODOT_BIN" --headless --path . -s tests/run_simulation_tests.gd'
