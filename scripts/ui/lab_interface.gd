@@ -104,6 +104,9 @@ func _ready() -> void:
 	_add_teacher_guide_button()
 	if stage_slot is LabDropZone:
 		(stage_slot as LabDropZone).element_dropped.connect(_on_periodic_element_dropped)
+	_build_session_menu()
+	_build_session_dialogs()
+	_build_experiment_log_window()
 	_apply_responsive_layout()
 
 
