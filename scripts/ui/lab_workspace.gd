@@ -241,7 +241,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and _pan_active:
 		var motion := event as InputEventMouseMotion
 		var screen_delta := motion.relative
-		position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta) / maxf(scale.x, 0.001)
+		position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta)
 		queue_redraw()
 		get_viewport().set_input_as_handled()
 	elif event is InputEventKey:
@@ -347,14 +347,18 @@ func _draw_infinite_workbench() -> void:
 	var x := floorf(bounds.position.x / step) * step
 	while x <= bounds.end.x:
 		var major_x := int(round(x / (step * 5.0))) % 2 == 0
+		var grid_tint_x := LabColors.BENCH_GRID
+		grid_tint_x.a = 0.24 if major_x else 0.11
 		draw_line(Vector2(x, bounds.position.y), Vector2(x, bounds.end.y),
-			Color(LabColors.BENCH_GRID, 0.24 if major_x else 0.11), 1.0 if major_x else 0.7)
+			grid_tint_x, 1.0 if major_x else 0.7)
 		x += step
 	var y := floorf(bounds.position.y / step) * step
 	while y <= bounds.end.y:
 		var major_y := int(round(y / (step * 5.0))) % 2 == 0
+		var grid_tint_y := LabColors.BENCH_GRID
+		grid_tint_y.a = 0.24 if major_y else 0.11
 		draw_line(Vector2(bounds.position.x, y), Vector2(bounds.end.x, y),
-			Color(LabColors.BENCH_GRID, 0.24 if major_y else 0.11), 1.0 if major_y else 0.7)
+			grid_tint_y, 1.0 if major_y else 0.7)
 		y += step
 	var mark_x := floorf(bounds.position.x / 400.0) * 400.0
 	while mark_x <= bounds.end.x:

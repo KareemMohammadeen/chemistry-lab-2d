@@ -1,7 +1,7 @@
 # Chemistry Lab
 
-A calm, 2D educational chemistry laboratory with a pan-and-zoom infinite workbench in a fixed front view. Drag bottles and glassware with the
-mouse (touch-ready architecture), pour, mix, heat, and read what happened in the Inspector.
+A calm, 2D educational chemistry laboratory with a pan-and-zoom infinite workbench. Drag glassware and classroom reagents,
+pour, mix, heat, and read what happened in the Inspector.
 Godot 4.3+, GDScript, Compatibility renderer. **Milestone 1: functional 2D laboratory prototype.**
 
 ## Open and run
@@ -11,23 +11,26 @@ Godot 4.3+, GDScript, Compatibility renderer. **Milestone 1: functional 2D labor
 
 ## First demo: water + table salt (classroom-safe virtual scenario)
 1. Choose **Start Classroom Demo** on the welcome screen.
-2. Select the beaker on the lower shelf and move it onto the bench.
-3. Drag the **Water** bottle onto the beaker to add the virtual solvent.
-4. Drag the **Sodium chloride** bottle onto the beaker to observe the model's dissolution behaviour.
-5. Select the beaker and read the Inspector observations and explanations.
+2. Drag a fresh **Beaker 250 mL** card from the Library onto the workbench.
+3. Drag **Water** onto the beaker to add 50 mL directly; drag **Sodium chloride** onto it to add 5 g.
+4. Select the beaker and press **Mix** in the Inspector to start stirring and observe the dissolution model.
+5. You can also drag a reagent card onto empty space to create a refillable virtual bottle, then pour from it.
 6. Open **Teacher Guide** to see learning goals, suggested grade preview, model limitations and sources.
 
 The application demo is a software-only educational model. It is not a set of instructions for real laboratory work.
 
 ## Screen layout
-The rebuilt **Studio Workbench** uses a compact command header, a left materials dock, a large framed live workbench in the centre, and a contextual Inspector on the right. The header keeps grade selection, simulation time, undo/redo, reset, pause/speed and the Teacher Guide together. The Library can be collapsed on smaller windows.
+The rebuilt **Studio Workbench** uses a compact command header, a left materials dock, a central infinite workbench, and a contextual Inspector on the right. The dark resin finish and measurement grid continue as you pan across the work surface. Use the middle mouse button to pan, the wheel or − / + buttons to zoom, and Center or Home to return to the starting view. The Library can be collapsed on smaller windows.
 
 ## Controls
 | Action | Input |
 |--------|-------|
 | Select / inspect | Click an object (right click also selects) |
-| Pick up, move, place, pour | Drag an object; drop on a shelf, the bench, the hot plate, or on another vessel |
+| Pick up and move | Drag an object anywhere on the infinite workbench |
+| Add equipment or reagents | Drag an equipment card to spawn it; drag water / table salt onto a vessel to add it |
 | Pour with the Inspector | Select a vessel, press **Pour**, click the target vessel |
+| Mix | Select a vessel containing liquid and press **Mix** in the Inspector |
+| Pan / zoom | Middle-mouse drag / wheel; use −, +, Center or Home for view controls |
 | Undo / redo | Ctrl+Z / Ctrl+Y or the top bar |
 | Deselect / cancel | Esc |
 | Pause simulated time | Space or the top bar (speeds 1x, 2x, 4x) |
