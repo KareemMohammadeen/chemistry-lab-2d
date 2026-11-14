@@ -27,10 +27,13 @@ static func save_to_path(simulation: LabSimulation, command_stack: CommandStack,
 		"state": simulation.capture_snapshot(),
 		"history": command_stack.history.duplicate(true),
 	}
+	var serialised := JSON.stringify(document, "\t")
+	if serialised.to_utf8_buffer().size() > MAX_FILE_BYTES:
+		return _failure("This experiment is too large to save as one session file.")
 	var file := FileAccess.open(target_path, FileAccess.WRITE)
 	if file == null:
 		return _failure("Could not open the save file: %s" % error_string(FileAccess.get_open_error()))
-	file.store_string(JSON.stringify(document, "\t"))
+	file.store_string(serialised)
 	var write_error := file.get_error()
 	file.close()
 	if write_error != OK:
@@ -108,14 +111,21 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 	var next_index: Variant = snapshot.get("next_index", 1)
 	if typeof(next_index) != TYPE_INT or int(next_index) < 1:
 		return "The saved object counter is invalid."
+	var highest_object_index := 0
 
 	for object_key in objects.keys():
 		var object_data: Variant = objects[object_key]
 		if typeof(object_data) != TYPE_DICTIONARY:
 			return "A saved laboratory object is not valid."
 		var item: Dictionary = object_data
-		if str(item.get("id", "")) != str(object_key):
+		var object_id := str(object_key)
+		if not object_id.begins_with("obj_") or not object_id.trim_prefix("obj_").is_valid_int() or int(object_id.trim_prefix("obj_")) < 1:
+			return "A saved laboratory object has an invalid id."
+		highest_object_index = maxi(highest_object_index, int(object_id.trim_prefix("obj_")))
+		if str(item.get("id", "")) != object_id:
 			return "A saved object's id does not match its object key."
+		if typeof(item.get("power_on", false)) != TYPE_BOOL:
+			return "A saved object has an invalid power state."
 		var equipment_id := str(item.get("equipment_id", ""))
 		var equipment := database.get_equipment(equipment_id)
 		if equipment == null:
@@ -177,6 +187,8 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 			if liquid_total > float(capacity) + VOLUME_EPSILON:
 				return "A saved vessel contains more liquid than its capacity."
 
+	if int(next_index) <= highest_object_index:
+		return "The saved object counter could create duplicate object ids."
 	for object_key in objects.keys():
 		var item: Dictionary = objects[object_key]
 		var supported_by := str(item.get("supported_by", ""))
