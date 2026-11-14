@@ -10,13 +10,15 @@
 - [ ] Verify element values against a primary source (NIST/IUPAC); replace the Engineering ToolBox extraction.
 - [ ] Oxidation states, appearance and hazards for every element; subshell-level checks for 104-118.
 - [ ] Make more compounds playable (colour, solubility curve, reactions) and an in-app periodic table / compound browser.
-- [ ] Executable reaction data (precipitation, acid-carbonate, displacement) for the ReactionEngine.
+- [ ] Audit and expand executable reaction data (precipitation, acid-carbonate, displacement) only after checking balanced equations, conditions, equilibrium/stoichiometry and safety/provenance; do not activate the 118 visual-only element tokens.
 
 ## Milestone 2 candidates
 - [ ] Graduated pipette/dropper behaviour (drop-wise addition), stirring rod, spatula and balance.
 - [ ] Remaining apparatus: graduated cylinder, burette, funnel, filter; pH indicator and pH meter.
 - [ ] Right-click context menu and double-click actions; touch gestures (long press).
-- [ ] Save/load experiments (the state is already serialisable) and a lab report from the command history.
+- [x] Save/load validated experiment sessions (equipment state, vessel contents, temperatures, observations and action history).
+- [x] In-app Experiment Log for accepted/refused actions and recorded observations.
 - [ ] Replay from the command history.
-- [ ] Sound effects (`assets/audio`), glass sprites or shaders (`assets/sprites`, `assets/effects`).
+- [x] Optional, muteable procedural feedback sounds for actions and observations.
+- [ ] Glass sprites or shaders (`assets/sprites`, `assets/effects`).
 - [ ] Teacher/student modes and guided experiments.

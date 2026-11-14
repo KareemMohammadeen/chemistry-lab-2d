@@ -34,6 +34,11 @@ The rebuilt **Studio Workbench** uses a compact command header, a left materials
 
 Every refused action shows its reason at the bottom of the screen.
 
+## Session tools
+The **Session** menu in the top bar can save the current virtual-lab state to a JSON session file, reopen a validated session, show the chronological Experiment Log, and toggle optional feedback sounds. Session files contain the simulation clock, equipment positions and contents, vessel temperatures, observations, and the command log. They do not include visual-only periodic-table specimen cards or pinned reference badges; those remain catalogue aids, not part of the chemistry simulation.
+
+The Reaction Engine currently models the documented processes in `data/reactions`: dissolution of sodium chloride and copper sulfate pentahydrate, strong acid/base neutralisation, and water boiling. It does not simulate arbitrary element pairs. The 118 periodic-table specimens remain visual-only and cannot be mixed, heated or reacted.
+
 ## Tests
 - Static (no engine): `python3 tests/validate_project.py`
 - Simulation scenarios (needs Godot, headless):

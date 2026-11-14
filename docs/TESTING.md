@@ -17,7 +17,8 @@ godot --headless --path . -s tests/run_simulation_tests.gd
 ```
 Drives the real commands: setup, refused actions and their reasons, the water + copper sulfate demo (blue solution,
 observations, inspector content), undo/redo, neutralisation (pH, heat), heating with the hot plate and thermometer,
-and conservation of dissolved salt when pouring. Exit code 0 means all checks passed.
+conservation of dissolved salt when pouring, and session save/load including invalid-file refusal and log restoration.
+Exit code 0 means all checks passed.
 
 ## 3. In-engine checklist (not yet performed)
 - [ ] Project opens with no script errors in Output / Debugger (reload once if class names are unknown).
@@ -34,6 +35,9 @@ and conservation of dissolved salt when pouring. Exit code 0 means all checks pa
 - [ ] Pour acid and base into the flask: pH about 7 and a small warming.
 - [ ] Ctrl+Z / Ctrl+Y and the buttons; Reset bench; Space pauses; 2x and 4x speed.
 - [ ] Resize the window (16:9 and 4:3): the scene letterboxes and the Inspector stays readable.
+- [ ] Open **Session**: Save an experiment, change the bench, then reopen the saved file; check positions, contents, temperatures and observations are restored.
+- [ ] Open **Experiment Log**: confirm accepted and refused commands plus chemistry observations appear in time order.
+- [ ] Toggle **Sound effects** off and on; confirm no sounds play while muted and actions still work.
 Record results in CHANGELOG.md.
 
 

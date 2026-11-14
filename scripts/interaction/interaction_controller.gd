@@ -125,6 +125,20 @@ func _update_hover(pointer: Vector2) -> void:
 	Input.set_default_cursor_shape(cursor)
 
 
+## Called after a session is loaded so the Inspector cannot keep a stale object selection.
+func clear_selection() -> void:
+	_cancel_armed_action()
+	_press_object_id = ""
+	_press_position = Vector2.ZERO
+	var dragged_id := _drag_object_id
+	_dragging = false
+	_drag_object_id = ""
+	if not dragged_id.is_empty():
+		_workspace.end_drag(dragged_id)
+	_host.simulation.release_held()
+	_select("")
+
+
 func _select(object_id: String) -> void:
 	if object_id == _selected_id:
 		return

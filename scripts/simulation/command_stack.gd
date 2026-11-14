@@ -79,6 +79,18 @@ func redo(sim: LabSimulation) -> InteractionResult:
 	return InteractionResult.success("Redone: %s" % step["label"])
 
 
+## Restores the visible log after loading a session. Past commands remain reportable, but their
+## undo snapshots are deliberately not restored because they belong to another runtime.
+func restore_history(entries: Array) -> void:
+	history.clear()
+	_undo_stack.clear()
+	_redo_stack.clear()
+	for entry in entries:
+		if typeof(entry) == TYPE_DICTIONARY:
+			history.append((entry as Dictionary).duplicate(true))
+	changed.emit()
+
+
 func _log(command: LabCommand, sim: LabSimulation, result: InteractionResult) -> void:
 	var entry := {
 		"index": history.size(),

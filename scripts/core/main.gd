@@ -1,6 +1,7 @@
 extends Node
 
 const WELCOME_OVERLAY_SCRIPT := preload("res://scripts/ui/welcome_overlay.gd")
+const LAB_AUDIO_SCRIPT := preload("res://scripts/core/lab_audio.gd")
 ## Composition root. Builds the content database, the simulation host and the interaction
 ## controller and hands them to the views. It contains no laboratory logic of its own.
 
@@ -19,6 +20,7 @@ var _host: SimulationHost
 var _controller: InteractionController
 var _last_stage_rect: Rect2 = Rect2()
 var _welcome_overlay: WelcomeOverlay
+var _audio: LabAudio
 
 
 func _ready() -> void:
@@ -37,6 +39,13 @@ func _ready() -> void:
 		return
 	workspace.bind(_host)
 	lab_interface.bind(_host)
+	lab_interface.save_session_requested.connect(_on_save_session_requested)
+	lab_interface.load_session_requested.connect(_on_load_session_requested)
+	_audio = LAB_AUDIO_SCRIPT.new() as LabAudio
+	_audio.name = "LabAudio"
+	add_child(_audio)
+	_audio.bind()
+	lab_interface.sound_enabled_changed.connect(_audio.set_enabled)
 	_controller = InteractionController.new()
 	_controller.name = "InteractionController"
 	add_child(_controller)
@@ -68,6 +77,28 @@ func _process(_delta: float) -> void:
 	if not rect.is_equal_approx(_last_stage_rect):
 		_last_stage_rect = rect
 		workspace.fit_to_rect(rect)
+
+
+
+func _on_save_session_requested(path: String) -> void:
+	if _host == null or _host.simulation == null:
+		lab_interface.show_message("The laboratory is not ready to save.", &"warning")
+		return
+	var result := LabSessionStore.save_to_path(_host.simulation, _host.commands, path)
+	lab_interface.show_message(str(result.get("message", "Save failed.")),
+		&"info" if bool(result.get("ok", false)) else &"warning")
+
+
+func _on_load_session_requested(path: String) -> void:
+	if _host == null or _host.simulation == null:
+		lab_interface.show_message("The laboratory is not ready to open a session.", &"warning")
+		return
+	var result := LabSessionStore.load_from_path(
+		_host.simulation, _host.commands, _host.database, path)
+	if bool(result.get("ok", false)) and _controller != null:
+		_controller.clear_selection()
+	lab_interface.show_message(str(result.get("message", "Open failed.")),
+		&"info" if bool(result.get("ok", false)) else &"warning")
 
 
 func _update_content_scale() -> void:
