@@ -11,6 +11,9 @@ signal speed_selected(speed: float)
 signal action_requested(action_id: StringName, payload: Dictionary)
 signal object_focus_requested(object_id: String)
 signal reference_pin_requested(reference: Dictionary)
+signal save_session_requested(path: String)
+signal load_session_requested(path: String)
+signal sound_enabled_changed(enabled: bool)
 
 const TOAST_SECONDS := 4.0
 const TOAST_FADE_SECONDS := 0.6
@@ -28,6 +31,10 @@ const LIBRARY_OPEN_MIN_WIDTH := 1120.0
 const SPEED_BUTTON_WIDTH := 48.0
 const SPECIMEN_MARGIN := 18.0
 const SPECIMEN_CELL := Vector2(342.0, 154.0)
+const MENU_SAVE := 10
+const MENU_OPEN := 11
+const MENU_LOG := 12
+const MENU_SOUND := 13
 
 @export var top_bar: Control
 @export var title_label: Label
@@ -58,6 +65,12 @@ var _selected_curriculum_profile: Dictionary = {}
 var _teacher_guide_button: Button
 var _reference_pin_count: int = 0
 var _specimen_count: int = 0
+var _session_menu: MenuButton
+var _save_dialog: FileDialog
+var _open_dialog: FileDialog
+var _log_window: Window
+var _log_text: RichTextLabel
+var _sound_enabled: bool = true
 
 
 func _ready() -> void:
@@ -107,6 +120,7 @@ func bind(host: SimulationHost) -> void:
 	_build_speed_buttons(host.database.constants.get("speeds", FALLBACK_SPEEDS))
 	EventBus.feedback_message_requested.connect(_show_toast)
 	EventBus.observation_added.connect(_on_observation_added)
+	EventBus.command_logged.connect(_on_command_logged)
 
 
 ## Screen-space panels that should reject placement from the simulation pointer controller.
@@ -193,8 +207,181 @@ func _on_periodic_element_dropped(element_data: Dictionary, drop_position: Vecto
 	_show_toast("%s added to the workbench as a %s. It cannot be mixed or reacted." % [str(element_data.get("name", symbol)), label], &"info")
 
 
+
+# ---------------------------------------------------------------- session tools
+
+func _build_session_menu() -> void:
+	_session_menu = MenuButton.new()
+	_session_menu.text = "Session"
+	_session_menu.tooltip_text = "Save, open and review a laboratory session."
+	_session_menu.theme_type_variation = &"ToolButton"
+	_session_menu.custom_minimum_size = Vector2(88.0, 40.0)
+	_session_menu.focus_mode = Control.FOCUS_NONE
+	var popup := _session_menu.get_popup()
+	popup.add_item("Save experiment…", MENU_SAVE)
+	popup.add_item("Open experiment…", MENU_OPEN)
+	popup.add_item("Experiment log", MENU_LOG)
+	popup.add_separator()
+	popup.add_check_item("Sound effects", MENU_SOUND)
+	popup.set_item_checked(popup.get_item_index(MENU_SOUND), _sound_enabled)
+	popup.id_pressed.connect(_on_session_menu_id_pressed)
+	var row := reset_button.get_parent() as HBoxContainer
+	row.add_child(_session_menu)
+	row.move_child(_session_menu, reset_button.get_index() + 1)
+
+
+func _build_session_dialogs() -> void:
+	_save_dialog = FileDialog.new()
+	_save_dialog.title = "Save Chemistry Lab Session"
+	_save_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	_save_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	_save_dialog.filters = PackedStringArray(["*.json ; Chemistry Lab Session"])
+	_save_dialog.current_file = "chemistry_lab_session.json"
+	_save_dialog.file_selected.connect(func(path: String) -> void:
+		save_session_requested.emit(path))
+	add_child(_save_dialog)
+
+	_open_dialog = FileDialog.new()
+	_open_dialog.title = "Open Chemistry Lab Session"
+	_open_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	_open_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	_open_dialog.filters = PackedStringArray(["*.json ; Chemistry Lab Session"])
+	_open_dialog.file_selected.connect(func(path: String) -> void:
+		load_session_requested.emit(path))
+	add_child(_open_dialog)
+
+
+func _build_experiment_log_window() -> void:
+	_log_window = Window.new()
+	_log_window.title = "Experiment Log"
+	_log_window.size = Vector2i(820, 620)
+	_log_window.min_size = Vector2i(540, 380)
+	_log_window.close_requested.connect(_on_log_window_close_requested)
+	add_child(_log_window)
+
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 18)
+	margin.add_theme_constant_override("margin_top", 16)
+	margin.add_theme_constant_override("margin_right", 18)
+	margin.add_theme_constant_override("margin_bottom", 16)
+	_log_window.add_child(margin)
+
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 10)
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	margin.add_child(column)
+
+	var subtitle := Label.new()
+	subtitle.text = "A chronological record of accepted actions, refused actions and visible observations."
+	subtitle.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	subtitle.add_theme_color_override("font_color", LabColors.TEXT_SECONDARY)
+	column.add_child(subtitle)
+
+	_log_text = RichTextLabel.new()
+	_log_text.bbcode_enabled = false
+	_log_text.fit_content = false
+	_log_text.scroll_active = true
+	_log_text.selection_enabled = true
+	_log_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_log_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_log_text.add_theme_font_size_override("normal_font_size", 15)
+	_log_text.add_theme_color_override("default_color", LabColors.TEXT_PRIMARY)
+	column.add_child(_log_text)
+
+
+func _on_session_menu_id_pressed(item_id: int) -> void:
+	match item_id:
+		MENU_SAVE:
+			_save_dialog.popup_centered(Vector2i(900, 620))
+		MENU_OPEN:
+			_open_dialog.popup_centered(Vector2i(900, 620))
+		MENU_LOG:
+			_refresh_experiment_log()
+			_log_window.popup_centered(Vector2i(820, 620))
+		MENU_SOUND:
+			_sound_enabled = not _sound_enabled
+			var popup := _session_menu.get_popup()
+			popup.set_item_checked(popup.get_item_index(MENU_SOUND), _sound_enabled)
+			sound_enabled_changed.emit(_sound_enabled)
+
+
+func _on_log_window_close_requested() -> void:
+	_log_window.hide()
+
+
+func _on_command_logged(_entry: Dictionary) -> void:
+	if _log_window != null and _log_window.visible:
+		_refresh_experiment_log()
+
+
+func _refresh_experiment_log() -> void:
+	if _log_text == null:
+		return
+	if _host == null or _host.simulation == null:
+		_log_text.text = "The laboratory is not ready."
+		return
+
+	var lines := PackedStringArray()
+	lines.append("ACTIONS")
+	lines.append("-------")
+	var history: Array = _host.commands.history
+	if history.is_empty():
+		lines.append("No actions have been recorded yet.")
+	else:
+		for entry in history:
+			if typeof(entry) != TYPE_DICTIONARY:
+				continue
+			var successful := bool(entry.get("ok", false))
+			var detail := str(entry.get("description", ""))
+			if not successful:
+				detail = "Not completed: %s" % str(entry.get("reason", "Action refused."))
+			lines.append("%s   %s   %s" % [
+				UnitFormat.time_mmss(float(entry.get("sim_time_s", 0.0))),
+				"OK" if successful else "BLOCKED",
+				detail])
+
+	var observations: Array = []
+	for object_id in _host.simulation.state.objects.keys():
+		var item := _host.simulation.state.get_object(str(object_id))
+		if item == null or item.vessel == null:
+			continue
+		for observation in item.vessel.observations:
+			if typeof(observation) != TYPE_DICTIONARY:
+				continue
+			var copy: Dictionary = (observation as Dictionary).duplicate(true)
+			copy["object_label"] = _host.simulation.object_label(item)
+			observations.append(copy)
+	observations.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a.get("time_s", 0.0)) < float(b.get("time_s", 0.0)))
+
+	lines.append("")
+	lines.append("OBSERVATIONS")
+	lines.append("------------")
+	if observations.is_empty():
+		lines.append("No chemical or physical observations have been recorded yet.")
+	else:
+		for observation in observations:
+			lines.append("%s   %s" % [
+				UnitFormat.time_mmss(float(observation.get("time_s", 0.0))),
+				str(observation.get("text", ""))])
+			var object_label := str(observation.get("object_label", "Vessel"))
+			var explanation := str(observation.get("explanation", ""))
+			if not explanation.is_empty():
+				lines.append("    %s — %s" % [object_label, explanation])
+	_log_text.text = "\n".join(lines)
+
+
+## Public message entry point for Main after save/load operations.
+func show_message(message: String, severity: StringName = &"info") -> void:
+	_show_toast(message, severity)
+
+
 func _on_observation_added(_object_id: String, entry: Dictionary) -> void:
 	_show_toast(str(entry.get("text", "")), &"info")
+	if _log_window != null and _log_window.visible:
+		_refresh_experiment_log()
 
 
 func _show_toast(message: String, severity: StringName) -> void:
