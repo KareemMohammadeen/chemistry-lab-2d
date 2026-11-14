@@ -28,6 +28,7 @@ func _initialize() -> void:
 	_check(_host.initialise(content, SETUP_PATH), "first demo setup loads")
 
 	_test_setup()
+	_test_infinite_spawn_and_reagents()
 	_test_invalid_actions_explain_themselves()
 	_test_water_and_copper_sulfate_demo()
 	_test_undo_and_redo()
@@ -54,6 +55,44 @@ func _test_setup() -> void:
 		_check(_find("reagent_bottle_500ml", chemical_id) != null, "a bottle holds %s" % chemical_id)
 
 
+func _test_infinite_spawn_and_reagents() -> void:
+	_fresh()
+	print("-- infinite workbench, spawning and direct reagents")
+	var spawn := SpawnObjectCommand.new()
+	spawn.context = InteractionContext.create(&"spawn", "", "", {"device": "test"}, {
+		"equipment_id": "beaker_250ml",
+		"position": Vector2(-12500.0, 34200.0),
+		"contents": {},
+	}, _sim().state.time_s)
+	var spawn_result := _host.submit(spawn)
+	_check(spawn_result.is_success, "spawn a new beaker anywhere on the infinite workbench")
+	var beaker := _sim().state.get_object(spawn.created_object_id)
+	_check(beaker != null and beaker.position.is_equal_approx(Vector2(-12500.0, 34200.0)),
+		"the new beaker keeps its world position far beyond the original canvas")
+	_check(_sim().state.objects.size() == 12, "spawning adds one object without rebuilding the setup")
+
+	var water := AddReagentCommand.new()
+	water.context = InteractionContext.create(&"add_reagent", beaker.id, "", {"device": "test"},
+		{"chemical_id": "water", "amount": 50.0}, _sim().state.time_s)
+	var water_result := _host.submit(water)
+	_check(water_result.is_success, "add classroom water directly from the Library")
+	_near(beaker.vessel.liquid_volume_ml(), 50.0, "the beaker receives 50 mL of water")
+
+	var salt := AddReagentCommand.new()
+	salt.context = InteractionContext.create(&"add_reagent", beaker.id, "", {"device": "test"},
+		{"chemical_id": "sodium_chloride", "amount": 5.0}, _sim().state.time_s)
+	var salt_result := _host.submit(salt)
+	_check(salt_result.is_success, "add table salt directly from the Library")
+	_check(absf(float(beaker.vessel.solids.get("sodium_chloride", 0.0)) - 5.0) < 0.001,
+		"the beaker receives 5 g of table salt")
+	_expect_success(MixCommand.new(), &"mix", beaker.id, "", {}, "mix the water and table salt")
+	_check(beaker.vessel.stir_time_left_s > 0.0, "mix starts the stirring period")
+	_check(_host.undo().is_success, "undo reverses the latest workbench operation")
+	beaker = _sim().state.get_object(spawn.created_object_id)
+	_check(beaker.vessel.stir_time_left_s <= 0.0, "undo restores the state before stirring")
+	_check(_host.redo().is_success, "redo restores the mixing operation")
+
+
 func _test_invalid_actions_explain_themselves() -> void:
 	_fresh()
 	print("-- invalid actions")
@@ -62,8 +101,8 @@ func _test_invalid_actions_explain_themselves() -> void:
 	var bottle := _find("reagent_bottle_500ml", "water")
 	_expect_failure(PourCommand.new(), &"pour", beaker.id, beaker.id, {}, "pour into itself")
 	_expect_failure(PourCommand.new(), &"pour", tube.id, beaker.id, {}, "pour from an empty tube")
-	_expect_failure(PlaceCommand.new(), &"place", bottle.id, "",
-		{"mode": PlaceCommand.MODE_SURFACE, "position": Vector2(30.0, 30.0)}, "place outside every surface")
+	_expect_success(PlaceCommand.new(), &"place", bottle.id, "",
+		{"mode": PlaceCommand.MODE_SURFACE, "position": Vector2(-2400.0, 5300.0)}, "place anywhere on the infinite workbench")
 	_expect_failure(HeatCommand.new(), &"heat", beaker.id, "", {}, "heat a vessel that is not on the hot plate")
 	_expect_failure(PlaceCommand.new(), &"place", bottle.id, _find("hot_plate_basic").id,
 		{"mode": PlaceCommand.MODE_SUPPORT}, "put a reagent bottle on the hot plate")
@@ -71,7 +110,7 @@ func _test_invalid_actions_explain_themselves() -> void:
 	for entry in _host.commands.history:
 		if not bool(entry["ok"]) and str(entry["reason"]) != "":
 			failed += 1
-	_check(failed == 5, "all five rejected commands are in the command log with a reason (%d)" % failed)
+	_check(failed == 4, "all four rejected commands are in the command log with a reason (%d)" % failed)
 
 
 func _test_water_and_copper_sulfate_demo() -> void:

@@ -1,6 +1,6 @@
 # Chemistry Lab
 
-A calm, 2D educational chemistry laboratory in a fixed front view. Drag bottles and glassware with the
+A calm, 2D educational chemistry laboratory with a pan-and-zoom infinite workbench in a fixed front view. Drag bottles and glassware with the
 mouse (touch-ready architecture), pour, mix, heat, and read what happened in the Inspector.
 Godot 4.3+, GDScript, Compatibility renderer. **Milestone 1: functional 2D laboratory prototype.**
 
@@ -32,7 +32,12 @@ The rebuilt **Studio Workbench** uses a compact command header, a left materials
 | Deselect / cancel | Esc |
 | Pause simulated time | Space or the top bar (speeds 1x, 2x, 4x) |
 
-Every refused action shows its reason at the bottom of the screen.
+Every refused action shows its reason at the bottom of the screen. Object creation and reagent additions are undoable commands. The classroom Library exposes only water and sodium chloride as playable materials; the 118 periodic-table entries remain visual references.
+
+## Infinite workbench and Library drag/drop
+The central work surface extends in every direction while keeping the laboratory's dark resin finish and measurement grid. Pan with the middle mouse button, zoom with the wheel or the − / + controls, and press Home or Center to return to the starting view. The Library can create additional movable glassware and instruments: drag an equipment card onto the workbench. Drag Water or Sodium chloride onto a vessel to add a classroom quantity directly; drag a reagent card onto open space to create a refillable virtual bottle. Select a vessel and press **Mix** in the Inspector to start stirring.
+
+The 118 periodic-table entries remain read-only visual references, not reactive reagents. The new direct-add interaction is limited to the classroom water and table-salt materials.
 
 ## Session tools
 The **Session** menu in the top bar can save the current virtual-lab state to a JSON session file, reopen a validated session, show the chronological Experiment Log, and toggle optional feedback sounds. Session files contain the simulation clock, equipment positions and contents, vessel temperatures, observations, and the command log. They do not include visual-only periodic-table specimen cards or pinned reference badges; those remain catalogue aids, not part of the chemistry simulation.
