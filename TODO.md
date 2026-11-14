@@ -1,7 +1,7 @@
 # TODO
 
 ## Blocking
-- [ ] Verify drag/drop visual polish in Godot: lift/scale/lean, ground shadow, valid/invalid target colours, surface previews and an inserted thermometer moving with its vessel.
+- [ ] Verify drag/drop visual polish and infinite-workbench pan/zoom in Godot: lift/scale/lean, ground shadow, valid/invalid target colours, surface previews and an inserted thermometer moving with its vessel.
 - [ ] Open in Godot 4.3+, run `scenes/main.tscn`, work through the checklist in `docs/TESTING.md`, fix what it finds.
 - [ ] Run `tests/run_simulation_tests.gd` headless and fix failures.
 - [ ] Review every `placeholder` / `unverified_reference` value (CuSO4 solubility conversion, time constants, heater rates, glass mass).
@@ -13,6 +13,9 @@
 - [ ] Audit and expand executable reaction data (precipitation, acid-carbonate, displacement) only after checking balanced equations, conditions, equilibrium/stoichiometry and safety/provenance; do not activate the 118 visual-only element tokens.
 
 ## Milestone 2 candidates
+- [x] Drag equipment from the Library to create additional movable vessels and instruments.
+- [x] Infinite pan-and-zoom workbench with free placement across the world plane.
+- [x] Drag classroom water / sodium chloride cards onto a vessel to add measured virtual quantities.
 - [ ] Graduated pipette/dropper behaviour (drop-wise addition), stirring rod, spatula and balance.
 - [ ] Remaining apparatus: graduated cylinder, burette, funnel, filter; pH indicator and pH meter.
 - [ ] Right-click context menu and double-click actions; touch gestures (long press).

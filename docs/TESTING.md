@@ -26,7 +26,11 @@ Exit code 0 means all checks passed.
 - [ ] Hover highlights objects; click selects with corner brackets and fills the Inspector.
 - [ ] Drag feedback eases the object upward with a slight scale/lean change and leaves a soft shadow on the surface below.
 - [ ] While dragging, valid drop targets/surfaces glow green and refused targets glow red; the preview changes as the pointer moves.
-- [ ] Drag the beaker to the bench; dropping outside the shelves/bench shows a reason and the beaker returns.
+- [ ] Drag a beaker card from the Library onto the stage; it creates another movable beaker.
+- [ ] Drag water and sodium-chloride cards directly onto a beaker; verify 50 mL and 5 g are added, then press Mix.
+- [ ] Drag a reagent card onto open workbench space; verify a refillable bottle is created.
+- [ ] Middle-drag to pan, mouse-wheel to zoom around the cursor, and use Center / Home to restore the initial view.
+- [ ] Place equipment far beyond the original 1600×900 canvas; it remains on the infinite workbench.
 - [ ] Drag the Water bottle onto the beaker: tilt, stream, level rises smoothly; Inspector shows 50 mL (default amount).
 - [ ] Drag the CuSO4 bottle onto the beaker: grains fall, crystals dissolve, water turns blue, a toast and the Inspector explain it.
 - [ ] Change the amount in the Inspector and pour again; pour more than fits and read the message.
@@ -34,7 +38,7 @@ Exit code 0 means all checks passed.
 - [ ] Put the thermometer into the beaker (drop it on the beaker); it follows the beaker when moved and reads its temperature.
 - [ ] Pour acid and base into the flask: pH about 7 and a small warming.
 - [ ] Ctrl+Z / Ctrl+Y and the buttons; Reset bench; Space pauses; 2x and 4x speed.
-- [ ] Resize the window (16:9 and 4:3): the scene letterboxes and the Inspector stays readable.
+- [ ] Resize the window (16:9 and 4:3): the workbench remains usable and the Inspector stays readable.
 - [ ] Open **Session**: Save an experiment, change the bench, then reopen the saved file; check positions, contents, temperatures and observations are restored.
 - [ ] Open **Experiment Log**: confirm accepted and refused commands plus chemistry observations appear in time order.
 - [ ] Toggle **Sound effects** off and on; confirm no sounds play while muted and actions still work.
