@@ -33,6 +33,7 @@ func _initialize() -> void:
 	_test_heating_and_thermometer()
 	_test_pour_moves_dissolved_substance()
 	_test_reference_data()
+	_test_save_load_session()
 
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
 	quit(1 if _failures > 0 else 0)
@@ -216,6 +217,45 @@ func _test_reference_data() -> void:
 	for compound_id in db.compounds.keys():
 		var compound: CompoundDefinition = db.compounds[compound_id]
 		_check(compound.hazard_summary != "" and compound.storage != "", "%s has hazard and storage text" % compound.display_name)
+
+
+
+func _test_save_load_session() -> void:
+	_fresh()
+	print("-- session save and load")
+	var beaker := _find("beaker_250ml")
+	var water_bottle := _find("reagent_bottle_500ml", "water")
+	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
+		{"amount_ml": 50.0}, "prepare a session with 50 mL of water")
+	var expected_state: Dictionary = _sim().capture_snapshot()
+	var expected_history_size := _host.commands.history.size()
+	const SESSION_PATH := "user://session_roundtrip_test.json"
+	var save_result := LabSessionStore.save_to_path(_sim(), _host.commands, SESSION_PATH)
+	_check(bool(save_result.get("ok", false)), "session save succeeds: %s" % str(save_result.get("message", "")))
+
+	_check(_host.undo().is_success, "change the session state before reloading")
+	beaker = _find("beaker_250ml")
+	_near(beaker.vessel.liquid_volume_ml(), 0.0, "the changed session is now empty")
+
+	var load_result := LabSessionStore.load_from_path(_sim(), _host.commands, _host.database, SESSION_PATH)
+	_check(bool(load_result.get("ok", false)), "session load succeeds: %s" % str(load_result.get("message", "")))
+	beaker = _find("beaker_250ml")
+	_near(beaker.vessel.liquid_volume_ml(), 50.0, "loading restores vessel contents")
+	_check(_sim().capture_snapshot() == expected_state, "loading restores the complete simulation snapshot")
+	_check(_host.commands.history.size() == expected_history_size, "loading restores the experiment action log")
+	_check(not _host.commands.can_undo() and not _host.commands.can_redo(),
+		"loaded history is reportable without stale undo snapshots")
+
+	const INVALID_PATH := "user://invalid_lab_session.json"
+	var invalid_file := FileAccess.open(INVALID_PATH, FileAccess.WRITE)
+	invalid_file.store_string("{\"not_a_session\":true}")
+	invalid_file.close()
+	var before_invalid_load: Dictionary = _sim().capture_snapshot()
+	var invalid_result := LabSessionStore.load_from_path(_sim(), _host.commands, _host.database, INVALID_PATH)
+	_check(not bool(invalid_result.get("ok", false)), "an invalid session is refused")
+	_check(_sim().capture_snapshot() == before_invalid_load, "an invalid session cannot replace the live laboratory")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(SESSION_PATH))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(INVALID_PATH))
 
 
 # ---------------------------------------------------------------- helpers
