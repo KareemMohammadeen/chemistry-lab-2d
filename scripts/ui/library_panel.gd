@@ -20,7 +20,7 @@ const EQUIPMENT_GROUP_ORDER: Array = ["vessel", "appliance", "tool"]
 const HIDDEN_EQUIPMENT_STYLES: Array = ["bottle"]
 ## The classroom-facing Library deliberately exposes only this safe teaching subset.
 const CLASSROOM_CHEMICAL_IDS: Array[String] = ["water", "sodium_chloride"]
-const CLASSROOM_EQUIPMENT_IDS: Array[String] = ["beaker_250ml", "test_tube_20ml", "thermometer_general", "dropper_3ml", "hot_plate_basic"]
+const CLASSROOM_EQUIPMENT_IDS: Array[String] = ["beaker_250ml", "erlenmeyer_flask_250ml", "test_tube_20ml", "thermometer_general", "dropper_3ml", "hot_plate_basic"]
 const SAFE_REFERENCE_COMPOUND_IDS: Array[String] = ["glucose", "sucrose", "starch"]
 const LEARNING_GUIDE_PATH := "res://data/learning/learning_guide.json"
 const TEACHER_PREVIEWS_PATH := "res://data/learning/teacher_previews.json"
@@ -438,9 +438,7 @@ func _tag_for(sim: LabSimulation, card: LibraryCard) -> String:
 		for item in sim.state.objects.values():
 			if (item as LabObject).equipment_id == card.key:
 				count += 1
-		if count == 0:
-			return "Not available"
-		return "Available" if count == 1 else "×%d available" % count
+		return "Drag to add" if count == 0 else "On bench: %d  ·  drag to add another" % count
 	var liquid_ml := 0.0
 	var solid_g := 0.0
 	for item in sim.state.objects.values():
