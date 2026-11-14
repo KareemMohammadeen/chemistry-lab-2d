@@ -45,6 +45,16 @@
       "id": "heat",
       "label": "Heat",
       "mode": "toggle"
+    },
+    {
+      "id": "spawn",
+      "label": "Spawn equipment",
+      "mode": "instant"
+    },
+    {
+      "id": "add_reagent",
+      "label": "Add classroom reagent",
+      "mode": "instant"
     }
   ]
 }

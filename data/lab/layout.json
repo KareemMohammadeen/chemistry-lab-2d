@@ -42,5 +42,6 @@
       "y_max": 830,
       "accept_margin": 50
     }
-  ]
+  ],
+  "infinite_workbench": true
 }
