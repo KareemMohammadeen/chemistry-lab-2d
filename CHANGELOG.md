@@ -1,5 +1,14 @@
 # Changelog
 
+## Session persistence, experiment log and optional audio (2026-11-14) - awaiting Godot verification
+- Added versioned JSON session save/load for the complete serialisable simulation state: simulation time, equipment locations, vessel contents, temperatures, observations and command history.
+- Validate session format, version, object/equipment references, quantities, capacities and relationships before replacing the live simulation; invalid files leave the current lab state unchanged.
+- Added a top-bar Session menu with Save experiment, Open experiment, Experiment log and a Sound effects toggle.
+- Added a chronological Experiment Log for accepted/refused commands and vessel observations.
+- Added short procedural, low-volume feedback tones for actions and observations; sound is optional and can be muted.
+- Added headless round-trip and invalid-session regression checks; Godot 4.3 runtime/editor testing is still required.
+- Periodic-table tokens remain visual-only and are not stored as chemical reagents. Existing reaction models remain limited to their documented data.
+
 ## Teacher presentation flow and classroom previews (2026-11-13) - awaiting Godot verification
 - Added a polished welcome screen with separate Classroom Demo and Teacher Mode entry actions.
 - Added grade-specific teacher preview cards for Prep 1, Prep 2, Prep 3, Senior 1 and Senior 2; each preview is explicitly labelled as suggested rather than verified against exact official unit order.
