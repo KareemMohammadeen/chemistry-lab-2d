@@ -50,6 +50,10 @@ func _ready() -> void:
 	_controller.name = "InteractionController"
 	add_child(_controller)
 	_controller.setup(_host, workspace, lab_interface)
+	lab_interface.library_item_dropped.connect(_controller.on_library_item_dropped)
+	lab_interface.canvas_zoom_requested.connect(workspace.zoom_by)
+	lab_interface.canvas_reset_requested.connect(workspace.reset_view)
+	workspace.view_changed.connect(lab_interface.update_zoom_label)
 	_show_welcome_overlay()
 
 
@@ -75,8 +79,11 @@ func _process(_delta: float) -> void:
 		return
 	var rect := lab_interface.get_stage_rect()
 	if not rect.is_equal_approx(_last_stage_rect):
+		if _last_stage_rect.size.x <= 0.0:
+			workspace.fit_to_rect(rect)
+		else:
+			workspace.update_stage_rect(rect)
 		_last_stage_rect = rect
-		workspace.fit_to_rect(rect)
 
 
 

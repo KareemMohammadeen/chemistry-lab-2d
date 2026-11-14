@@ -14,6 +14,9 @@ signal reference_pin_requested(reference: Dictionary)
 signal save_session_requested(path: String)
 signal load_session_requested(path: String)
 signal sound_enabled_changed(enabled: bool)
+signal library_item_dropped(payload: Dictionary, screen_position: Vector2)
+signal canvas_zoom_requested(factor: float)
+signal canvas_reset_requested
 
 const TOAST_SECONDS := 4.0
 const TOAST_FADE_SECONDS := 0.6
@@ -71,6 +74,7 @@ var _open_dialog: FileDialog
 var _log_window: Window
 var _log_text: RichTextLabel
 var _sound_enabled: bool = true
+var _zoom_label: Label
 
 
 func _ready() -> void:
@@ -86,7 +90,7 @@ func _ready() -> void:
 	_info_style = _make_toast_style(LabColors.PANEL_RAISED, LabColors.PANEL_BORDER_STRONG)
 	_warning_style = _make_toast_style(Color("#3A2D12"), LabColors.WARNING)
 	toast_label.visible = false
-	hint_label.text = "Drag an element from the periodic table into this workbench. Tokens are visual learning aids, not reactive reagents."
+	hint_label.text = "Drag equipment or water / table-salt cards from Library onto this infinite workbench. Drop a reagent on a vessel to add it. Middle-drag to pan · mouse wheel to zoom · Home to centre. Periodic-table samples remain reference-only."
 	hint_label.visible = true
 	undo_button.pressed.connect(undo_requested.emit)
 	redo_button.pressed.connect(redo_requested.emit)
@@ -104,9 +108,11 @@ func _ready() -> void:
 	_add_teacher_guide_button()
 	if stage_slot is LabDropZone:
 		(stage_slot as LabDropZone).element_dropped.connect(_on_periodic_element_dropped)
+		(stage_slot as LabDropZone).library_item_dropped.connect(_on_library_item_dropped_from_stage)
 	_build_session_menu()
 	_build_session_dialogs()
 	_build_experiment_log_window()
+	_build_canvas_controls()
 	_apply_responsive_layout()
 
 
@@ -209,6 +215,67 @@ func _on_periodic_element_dropped(element_data: Dictionary, drop_position: Vecto
 	var label := "visual sample token" if bool(element_data.get("display_only_sample", false)) else "reference-only token"
 	_show_toast("%s added to the workbench as a %s. It cannot be mixed or reacted." % [str(element_data.get("name", symbol)), label], &"info")
 
+
+
+func _on_library_item_dropped_from_stage(payload: Dictionary, local_position: Vector2) -> void:
+	var screen_position := stage_slot.get_global_transform_with_canvas() * local_position
+	library_item_dropped.emit(payload, screen_position)
+
+
+func _build_canvas_controls() -> void:
+	var stage_column := stage_slot.get_parent() as VBoxContainer
+	var header_row := stage_column.get_node("StageHeader/StageHeaderRow") as HBoxContainer
+	var controls := HBoxContainer.new()
+	controls.add_theme_constant_override("separation", 3)
+	controls.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+	var minus := Button.new()
+	minus.text = "−"
+	minus.tooltip_text = "Zoom out"
+	minus.custom_minimum_size = Vector2(34.0, 34.0)
+	minus.theme_type_variation = &"ToolButton"
+	minus.focus_mode = Control.FOCUS_NONE
+	minus.pressed.connect(func() -> void: canvas_zoom_requested.emit(1.0 / 1.2))
+	controls.add_child(minus)
+
+	_zoom_label = Label.new()
+	_zoom_label.text = "100%"
+	_zoom_label.custom_minimum_size = Vector2(48.0, 0.0)
+	_zoom_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_zoom_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_zoom_label.theme_type_variation = &"StrongLabel"
+	controls.add_child(_zoom_label)
+
+	var plus := Button.new()
+	plus.text = "+"
+	plus.tooltip_text = "Zoom in"
+	plus.custom_minimum_size = Vector2(34.0, 34.0)
+	plus.theme_type_variation = &"ToolButton"
+	plus.focus_mode = Control.FOCUS_NONE
+	plus.pressed.connect(func() -> void: canvas_zoom_requested.emit(1.2))
+	controls.add_child(plus)
+
+	var centre := Button.new()
+	centre.text = "Center"
+	centre.tooltip_text = "Return to the starting workbench view (Home)"
+	centre.custom_minimum_size = Vector2(68.0, 34.0)
+	centre.theme_type_variation = &"ToolButton"
+	centre.focus_mode = Control.FOCUS_NONE
+	centre.pressed.connect(func() -> void: canvas_reset_requested.emit())
+	controls.add_child(centre)
+
+	var drop_chip := header_row.get_node("DropChip")
+	header_row.add_child(controls)
+	header_row.move_child(controls, drop_chip.get_index())
+	var eyebrow := stage_column.get_node("StageHeader/StageHeaderRow/StageTitleBox/StageEyebrow") as Label
+	eyebrow.text = "INFINITE WORKBENCH"
+	var drop_label := drop_chip.get_node("DropLabel") as Label
+	drop_label.text = "DRAG FROM LIBRARY"
+
+
+func update_zoom_label(percent: int) -> void:
+	if _zoom_label != null:
+		_zoom_label.text = "%d%%" % percent
 
 
 # ---------------------------------------------------------------- session tools

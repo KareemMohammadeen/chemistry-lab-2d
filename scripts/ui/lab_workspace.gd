@@ -179,6 +179,16 @@ func screen_to_workspace(screen_position: Vector2) -> Vector2:
 	return get_global_transform_with_canvas().affine_inverse() * screen_position
 
 
+func update_stage_rect(rect: Rect2) -> void:
+	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
+		return
+	if _stage_rect.size.x > 0.0:
+		var screen_delta := rect.position - _stage_rect.position
+		position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta)
+	_stage_rect = rect
+	queue_redraw()
+
+
 func zoom_by(factor: float) -> void:
 	if _stage_rect.size.x > 0.0 and is_finite(factor) and factor > 0.0:
 		zoom_at_screen(_stage_rect.get_center(), factor)
