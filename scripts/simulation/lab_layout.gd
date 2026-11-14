@@ -4,6 +4,7 @@ extends RefCounted
 ## The simulation owns these rules; the workspace view draws them.
 
 var canvas_size: Vector2 = Vector2(1600.0, 900.0)
+var infinite_workbench: bool = false
 var wall_bottom_y: float = 640.0
 var bench_top_y: float = 640.0
 var bench_front_y: float = 820.0
@@ -15,6 +16,7 @@ static func from_dictionary(data: Dictionary) -> LabLayout:
 	var layout := LabLayout.new()
 	var canvas: Array = data.get("canvas", [1600, 900])
 	layout.canvas_size = Vector2(float(canvas[0]), float(canvas[1]))
+	layout.infinite_workbench = bool(data.get("infinite_workbench", false))
 	var wall: Dictionary = data.get("wall", {})
 	layout.wall_bottom_y = float(wall.get("bottom_y", layout.wall_bottom_y))
 	var bench: Dictionary = data.get("bench", {})
@@ -39,6 +41,11 @@ static func from_dictionary(data: Dictionary) -> LabLayout:
 ## Returns {"surface_id": String, "position": Vector2} with the position snapped onto the
 ## surface, or an empty dictionary when the position is not on any surface.
 func resolve_surface(position: Vector2) -> Dictionary:
+	if infinite_workbench:
+		if not is_finite(position.x) or not is_finite(position.y) \
+				or absf(position.x) > 1000000.0 or absf(position.y) > 1000000.0:
+			return {}
+		return {"surface_id": "infinite_workbench", "position": position}
 	var best: Dictionary = {}
 	var best_distance := INF
 	for surface in surfaces:
