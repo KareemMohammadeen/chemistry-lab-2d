@@ -278,7 +278,10 @@ func _test_gas_closed_system_and_magnesium_demo() -> void:
 	var data := ObjectInspector.inspect(_sim(), beaker.id)
 	_check(data["rows"].any(func(row: Dictionary) -> bool: return str(row.get("label", "")) == "Pressure (model)"),
 		"the Inspector displays the closed-vessel pressure estimate")
-	var gas_contents := data["contents"].any(func(row: Dictionary) -> bool: return str(row.get("detail", "")) == "retained gas")
+	var gas_contents: bool = false
+	for content_row in data["contents"]:
+		if str(content_row.get("detail", "")) == "retained gas":
+			gas_contents = true
 	_check(gas_contents, "the Inspector lists the retained gas and its amount")
 	var action_ids: Array = []
 	for action in data["actions"]:
