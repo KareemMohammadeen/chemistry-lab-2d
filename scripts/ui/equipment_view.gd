@@ -316,10 +316,34 @@ func _draw_vessel_body(vessel: VesselState) -> void:
 	draw_polygon(glass, _glass_colors(glass))
 	if vessel != null:
 		_draw_contents(vessel)
+		if vessel.has_gas():
+			_draw_virtual_gas_particles(top)
 	_draw_glass_details(top)
+	if vessel != null and vessel.is_closed_system:
+		_draw_virtual_stopper(top)
 	_draw_graduations()
 	if vessel != null and _shown_color.a > 0.1:
 		_draw_steam(vessel.temperature_c, top)
+
+
+
+## A visible plug makes the open/closed model state explicit in the scene.
+func _draw_virtual_stopper(top: float) -> void:
+	var rim_width := VesselGeometry.half_width_at(_profile, top)
+	var stopper := Rect2(-rim_width - 5.0, -top - 8.0, rim_width * 2.0 + 10.0, 11.0)
+	draw_style_box(LabTheme.box(LabColors.METAL.darkened(0.18), LabColors.METAL.lightened(0.2), 1, 4, 2, 2), stopper)
+	draw_line(Vector2(-rim_width, -top - 3.0), Vector2(rim_width, -top - 3.0), Color(1.0, 1.0, 1.0, 0.6), 1.2, true)
+	draw_string(ThemeDB.fallback_font, Vector2(-22.0, -top - 13.0), "SEALED", HORIZONTAL_ALIGNMENT_CENTER, 44.0, 9, LabColors.TEXT_PRIMARY)
+
+
+func _draw_virtual_gas_particles(top: float) -> void:
+	var time_s := _seconds()
+	var width := VesselGeometry.half_width_at(_profile, top * 0.55) * 0.55
+	for index in range(5):
+		var phase := fposmod(time_s * 0.18 + float(index) * 0.19, 1.0)
+		var x := sin(time_s * 0.55 + float(index) * 2.1) * width
+		var y := -top * (0.20 + phase * 0.24)
+		draw_circle(Vector2(x, y), 2.2, Color("#B8E7F1", 0.34))
 
 
 ## Glass is denser toward its edges, clearer in the middle.

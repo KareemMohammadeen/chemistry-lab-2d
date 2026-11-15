@@ -36,6 +36,7 @@ func _initialize() -> void:
 	_test_heating_and_thermometer()
 	_test_pour_moves_dissolved_substance()
 	_test_reference_data()
+	_test_gas_closed_system_and_magnesium_demo()
 	_test_save_load_session()
 
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
@@ -261,6 +262,65 @@ func _test_reference_data() -> void:
 
 
 
+func _test_gas_closed_system_and_magnesium_demo() -> void:
+	_fresh()
+	print("-- virtual gas, closed system and magnesium observation model")
+	var beaker := _find("beaker_250ml")
+	var ambient_pressure := _host.database.constant("ambient_pressure_kpa", 101.325)
+	_expect_success(AddGasCommand.new(), &"add_gas", beaker.id, "",
+		{"chemical_id": "carbon_dioxide", "amount_mol": 0.002}, "add an approved virtual carbon-dioxide sample")
+	_check(beaker.vessel.is_closed_system, "adding virtual gas automatically closes the vessel")
+	_check(absf(float(beaker.vessel.gases.get("carbon_dioxide", 0.0)) - 0.002) < 0.000001,
+		"the vessel retains the gas amount in moles")
+	_check(beaker.vessel.pressure_kpa(ambient_pressure) > ambient_pressure,
+		"the simplified model reports pressure above ambient after retaining gas")
+
+	var data := ObjectInspector.inspect(_sim(), beaker.id)
+	_check(data["rows"].any(func(row: Dictionary) -> bool: return str(row.get("label", "")) == "Pressure (model)"),
+		"the Inspector displays the closed-vessel pressure estimate")
+	var gas_contents := data["contents"].any(func(row: Dictionary) -> bool: return str(row.get("detail", "")) == "retained gas")
+	_check(gas_contents, "the Inspector lists the retained gas and its amount")
+	var action_ids: Array = []
+	for action in data["actions"]:
+		action_ids.append(str(action["id"]))
+	_check(action_ids.has("vent_system"), "the closed-vessel Inspector offers a return-to-open-system action")
+
+	_check(_host.undo().is_success, "undo the gas addition")
+	beaker = _find("beaker_250ml")
+	_check(not beaker.vessel.is_closed_system and not beaker.vessel.has_gas(),
+		"undo restores the vessel to open with no retained gas")
+	_check(_host.redo().is_success, "redo the gas addition")
+	beaker = _find("beaker_250ml")
+	_check(beaker.vessel.is_closed_system and beaker.vessel.has_gas(),
+		"redo restores the closed vessel and gas ledger")
+
+	_expect_success(VentSystemCommand.new(), &"vent_system", beaker.id, "",
+		{}, "return the virtual vessel to the open-system model")
+	_check(not beaker.vessel.is_closed_system and not beaker.vessel.has_gas(),
+		"opening clears retained gas and returns to ambient conditions")
+	_check(_host.undo().is_success, "undo the system-opening action")
+	beaker = _find("beaker_250ml")
+	_check(beaker.vessel.is_closed_system and beaker.vessel.has_gas(),
+		"undo restores the previously closed gas state")
+
+	_fresh()
+	beaker = _find("beaker_250ml")
+	_expect_success(RunVirtualDemoCommand.new(), &"run_virtual_demo", beaker.id, "",
+		{}, "run the qualitative magnesium observation model")
+	_check(float(beaker.vessel.solids.get("magnesium_oxide", 0.0)) > 0.0,
+		"the virtual demonstration creates a white magnesium-oxide product")
+	var demo_observed := false
+	for observation in beaker.vessel.observations:
+		if str(observation.get("effect_id", "")) == "white_flash":
+			demo_observed = true
+	_check(demo_observed, "the magnesium observation records the white-light visual effect")
+	_expect_failure(RunVirtualDemoCommand.new(), &"run_virtual_demo", beaker.id, "",
+		{}, "the same one-time visual demo cannot be duplicated in a vessel")
+	_check(_host.undo().is_success, "undo the qualitative magnesium demonstration")
+	beaker = _find("beaker_250ml")
+	_check(not beaker.vessel.solids.has("magnesium_oxide"), "undo removes the illustrative demo product")
+
+
 func _test_save_load_session() -> void:
 	_fresh()
 	print("-- session save and load")
@@ -268,6 +328,8 @@ func _test_save_load_session() -> void:
 	var water_bottle := _find("reagent_bottle_500ml", "water")
 	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
 		{"amount_ml": 50.0}, "prepare a session with 50 mL of water")
+	_expect_success(AddGasCommand.new(), &"add_gas", beaker.id, "",
+		{"chemical_id": "carbon_dioxide", "amount_mol": 0.001}, "seal the session with a retained virtual gas")
 	var expected_state: Dictionary = _sim().capture_snapshot()
 	var expected_history_size := _host.commands.history.size()
 	var save_result := LabSessionStore.save_to_path(_sim(), _host.commands, SESSION_TEST_PATH)
@@ -281,6 +343,10 @@ func _test_save_load_session() -> void:
 	_check(bool(load_result.get("ok", false)), "session load succeeds: %s" % str(load_result.get("message", "")))
 	beaker = _find("beaker_250ml")
 	_near(beaker.vessel.liquid_volume_ml(), 50.0, "loading restores vessel contents")
+	_check(beaker.vessel.is_closed_system and beaker.vessel.has_gas(),
+		"loading restores the closed-system state and retained gas ledger")
+	_check(beaker.vessel.pressure_kpa() > _host.database.constant("ambient_pressure_kpa", 101.325),
+		"loading restores the calculated virtual pressure")
 	_check(_sim().capture_snapshot() == expected_state, "loading restores the complete simulation snapshot")
 	_check(_host.commands.history.size() == expected_history_size, "loading restores the experiment action log")
 	_check(not _host.commands.can_undo() and not _host.commands.can_redo(),
@@ -314,7 +380,7 @@ func _find(equipment_id: String, content_id: String = "") -> LabObject:
 			continue
 		if content_id == "":
 			return item
-		if item.vessel != null and (item.vessel.liquids.has(content_id) or item.vessel.solids.has(content_id)):
+		if item.vessel != null and (item.vessel.liquids.has(content_id) or item.vessel.solids.has(content_id) or item.vessel.gases.has(content_id)):
 			return item
 	return null
 

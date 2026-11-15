@@ -74,6 +74,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		"block": element.block,
 		"category": element.category,
 		"state_at_stp": element.state_at_stp,
+		"sample_form": element.sample_form,
 		"appearance": element.appearance,
 		"hazards": element.hazards,
 		"radioactive": element.radioactive,

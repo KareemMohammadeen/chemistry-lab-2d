@@ -42,3 +42,7 @@ concern; the simulation core is always the same.
 | Temperature-dependent state | A central phase-resolution function (substance + temperature + pressure -> state) shared by heating, cooling, liquids and reactions |
 | Many equipment types | One container component + data-defined equipment (capacity, graduations, openings) instead of per-device scripts |
 | Multiple education levels | `education_levels` tag on substances, equipment and experiments; level filtering lives outside the simulation |
+
+
+## Chemistry Engine v2 virtual-gas boundary
+The current software-only closed-system layer records virtual gas moles, a trapped-air estimate and a simplified ideal-gas pressure value. It is deliberately bounded by a configurable software limit and does not represent pressure-vessel engineering, a real gas-cylinder system, or an instruction for handling gases. A vessel's visual stopper is a representation of a model state only.

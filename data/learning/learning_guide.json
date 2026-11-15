@@ -109,6 +109,18 @@
       "source_ids": [
         "openstax_dissolution"
       ]
+    },
+    {
+      "id": "carbon_dioxide",
+      "name": "Carbon dioxide",
+      "formula": "CO₂",
+      "concept": "Virtual gas sample",
+      "explanation": "A very small software-only gas sample can be added to a virtual vessel. The vessel switches to a closed-system model, retains the gas and reports a simplified pressure estimate.",
+      "learning_goals": [
+        "Distinguish open and closed system models.",
+        "Understand that gas is accounted for inside the virtual vessel."
+      ],
+      "status": "playable_classroom_demo"
     }
   ],
   "processes": [

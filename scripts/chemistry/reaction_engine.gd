@@ -123,3 +123,49 @@ func _emit_on_change(vessel: VesselState, events: Array, key: String, state_valu
 	if text.is_empty():
 		return
 	events.append({"key": key, "kind": kind, "text": text, "explanation": explanation})
+
+
+## Runs a data-described visual demonstration. Output mass is explicitly illustrative and
+## is not derived from reactant quantities or presented as a measured yield.
+func run_visual_demo(vessel: VesselState, reaction_id: String) -> Dictionary:
+	var reaction := _db.reactions.get(reaction_id) as ReactionDefinition
+	if reaction == null or reaction.type != "visual_demo" or not reaction.virtual_only:
+		return {}
+	var fired_key := "visual_demo:%s" % reaction_id
+	if vessel.fired_observations.has(fired_key):
+		return {}
+	var product := _db.get_chemical(reaction.product_solid_id)
+	if product == null or product.state != "solid":
+		return {}
+	if reaction.illustrative_output_g <= 0.0 or reaction.illustrative_output_g > 5.0:
+		return {}
+	vessel.add_solid(product.id, reaction.illustrative_output_g)
+	vessel.fired_observations[fired_key] = true
+	return {
+		"key": fired_key,
+		"kind": "visual_demo",
+		"text": reaction.observation("summary"),
+		"explanation": reaction.explanation,
+		"equation": reaction.equation,
+		"effect_id": reaction.visual_effect,
+		"virtual_only": true,
+	}
+
+
+## Shared gas-product entry point for future reaction definitions. A gas product automatically
+## seals its receiving vessel before being retained; gas is never silently lost from a closed model.
+func add_gas_product(vessel: VesselState, chemical_id: String, amount_mol: float) -> bool:
+	var chemical := _db.get_chemical(chemical_id)
+	if chemical == null or chemical.state != "gas" or not chemical.virtual_simulation_enabled:
+		return false
+	if not is_finite(amount_mol) or amount_mol <= 0.0 or amount_mol > 0.01:
+		return false
+	if vessel.free_volume_ml() <= VesselState.EPSILON:
+		return false
+	var ambient_pressure := _db.constant("ambient_pressure_kpa", 101.325)
+	var pressure_limit := _db.constant("max_virtual_pressure_kpa", 300.0)
+	var projected_pressure := vessel.pressure_after_adding_gas(amount_mol, ambient_pressure)
+	if not is_finite(projected_pressure) or projected_pressure > pressure_limit:
+		return false
+	vessel.add_gas(chemical_id, amount_mol, ambient_pressure)
+	return true

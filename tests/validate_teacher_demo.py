@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SAFE_PLAYABLE = {"water", "sodium_chloride"}
 SAFE_REFERENCE = {"glucose", "sucrose", "starch"}
+SAFE_VIRTUAL_GASES = {"carbon_dioxide"}
 
 
 def read_json(path: Path):
@@ -28,7 +29,7 @@ def main() -> int:
 
     equipment_files = {path.stem for path in (ROOT / "data/equipment").glob("*.json")}
     material_ids = {item.get("id") for item in guide.get("materials", [])}
-    allowed_materials = SAFE_PLAYABLE | SAFE_REFERENCE
+    allowed_materials = SAFE_PLAYABLE | SAFE_REFERENCE | SAFE_VIRTUAL_GASES
     assert SAFE_PLAYABLE.issubset(material_ids), "Classroom materials missing from learning guide"
 
     for preview in previews:
@@ -58,6 +59,22 @@ def main() -> int:
         for kind in ("liquids", "solids"):
             ids = set(contents.get(kind, {}).keys())
             assert ids <= SAFE_PLAYABLE, f"Classroom demo setup contains an unapproved reagent: {ids}"
+
+    # Gas support is opt-in and remains separate from the original classroom water/salt setup.
+    co2 = read_json(ROOT / "data/chemicals/carbon_dioxide.json")
+    assert co2.get("state") == "gas" and co2.get("simulation", {}).get("enabled") is True
+    assert co2.get("simulation", {}).get("role") == "virtual_gas"
+
+    experiment_pack = read_json(ROOT / "data/learning/expanded_safe_experiments.json")
+    prep2 = next(item for item in experiment_pack["grades"] if item["grade_id"] == "prep2")
+    magnesium_demo = next(item for item in prep2["experiments"] if item["id"] == "prep2_magnesium_combustion_observation")
+    assert magnesium_demo.get("visual_demo_id") == "magnesium_combustion_virtual_demo"
+    assert magnesium_demo.get("curriculum_alignment_status") == "suggested_not_verified_against_official_textbook"
+    assert not magnesium_demo.get("steps"), "The magnesium activity must remain observational, not procedural."
+
+    grade_pack = read_json(ROOT / "data/curricula/egypt_2026_2027_safe_experiments.json")
+    mapped_prep2 = next(item for item in grade_pack["grade_experiments"] if item["grade_id"] == "prep2")
+    assert magnesium_demo["id"] in mapped_prep2["experiment_ids"], "Prep 2 experiment bank mapping missing magnesium demo."
 
     source_ids = {item.get("id") for item in guide.get("sources", [])}
     required_sources = {

@@ -334,7 +334,7 @@ def check_element_visual_coverage():
     visual = visual_path.read_text(encoding="utf-8")
     specimen = specimen_path.read_text(encoding="utf-8")
     card = card_path.read_text(encoding="utf-8")
-    required_modes = {"solid_metal", "solid_crystal", "liquid", "gas_molecule", "gas_atom", "unknown_atom"}
+    required_modes = {"solid_metal", "solid_crystal", "solid_powder", "solid_ribbon", "liquid", "gas_cylinder", "unknown_atom"}
     for mode in required_modes:
         if f'"{mode}"' not in visual:
             errors.append(f"element visuals: missing renderer for {mode}")
@@ -367,13 +367,17 @@ def check_element_visual_coverage():
         errors.append(f"element visuals: expected 118 element entries, got {len(elements)}")
         return
     covered = set()
+    allowed_sample_forms = {"cube", "powder", "ribbon", "gas_cylinder", "liquid_drop", "crystal", "conceptual_atom"}
     for element in elements:
         symbol = element.get("symbol", "")
+        sample_form = element.get("sample_form", "")
+        if sample_form not in allowed_sample_forms:
+            errors.append(f"element visuals: {symbol} has unknown or missing sample_form '{sample_form}'")
         state_entry = element.get("state_at_stp")
         state = state_entry.get("value", "") if isinstance(state_entry, dict) else ""
         category = str(element.get("category", "")).lower()
         if state == "gas":
-            covered.add("gas_atom" if category == "noble gas" or symbol in {"He", "Ne", "Ar", "Kr", "Xe", "Rn"} else "gas_molecule")
+            covered.add("gas_cylinder")
         elif state == "liquid":
             covered.add("liquid")
         elif state == "solid":
@@ -384,8 +388,10 @@ def check_element_visual_coverage():
     missing = covered - required_modes
     if missing:
         errors.append(f"element visuals: catalogue states have no renderer: {sorted(missing)}")
-    if "SEALED VIRTUAL SPECIMEN" not in specimen or "NOT A REAGENT" not in specimen:
-        errors.append("element visuals: specimen UI must clearly state virtual-only/non-reagent status")
+    if "NOT A REAGENT" not in specimen:
+        errors.append("element visuals: specimen UI must clearly state non-reagent status")
+    if "visual reference only" not in specimen.lower():
+        errors.append("element visuals: specimen UI must clearly state visual-reference status")
 
 
 def main():

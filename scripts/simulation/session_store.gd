@@ -184,6 +184,33 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 						return "A saved amount for '%s' is invalid." % chemical_id
 					if bucket == "liquids":
 						liquid_total += float(amount)
+			var raw_gases: Variant = vessel.get("gases", {})
+			if typeof(raw_gases) != TYPE_DICTIONARY:
+				return "A saved vessel has an invalid gas ledger."
+			var gas_total := 0.0
+			for gas_key in (raw_gases as Dictionary).keys():
+				var gas_id := str(gas_key)
+				var gas := database.get_chemical(gas_id)
+				if gas == null or gas.state != "gas" or not gas.virtual_simulation_enabled:
+					return "The session refers to an unsupported virtual gas '%s'." % gas_id
+				var moles: Variant = raw_gases[gas_key]
+				if not _is_finite_number(moles) or float(moles) <= 0.0 or float(moles) > 0.01:
+					return "A saved virtual gas amount is invalid."
+				gas_total += float(moles)
+			if typeof(vessel.get("is_closed_system", false)) != TYPE_BOOL:
+				return "A saved vessel has an invalid open/closed system state."
+			var closed_system := bool(vessel.get("is_closed_system", false))
+			var trapped_air: Variant = vessel.get("trapped_air_moles", 0.0)
+			if not _is_finite_number(trapped_air) or float(trapped_air) < 0.0:
+				return "A saved vessel has an invalid trapped-air amount."
+			if gas_total > 0.0 and not closed_system:
+				return "A saved vessel cannot retain gas while marked as an open system."
+			if closed_system:
+				if float(trapped_air) <= 0.0:
+					return "A closed vessel is missing its trapped-air state."
+				var restored_vessel := VesselState.from_dictionary(vessel)
+				if restored_vessel.pressure_kpa(database.constant("ambient_pressure_kpa", 101.325)) > database.constant("max_virtual_pressure_kpa", 300.0):
+					return "The saved vessel pressure is outside the supported virtual model range."
 			if liquid_total > float(capacity) + VOLUME_EPSILON:
 				return "A saved vessel contains more liquid than its capacity."
 

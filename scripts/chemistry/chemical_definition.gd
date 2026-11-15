@@ -27,6 +27,9 @@ var solubility_curve: Array = []
 var label_lines: Array = []
 var safety: Dictionary = {}
 var summary: String = ""
+## Explicit opt-in for safe virtual simulation. Reference-only chemistry stays disabled.
+var virtual_simulation_enabled: bool = false
+var simulation_role: String = ""
 ## Names of data fields whose provenance status is not "reference" (see DataValue).
 var unreviewed_fields: Array = []
 
@@ -60,6 +63,9 @@ static func from_dictionary(data: Dictionary) -> ChemicalDefinition:
 	chemical.safety = data.get("safety", {})
 	var display: Dictionary = data.get("display", {})
 	chemical.summary = str(display.get("summary", ""))
+	var simulation: Dictionary = data.get("simulation", {})
+	chemical.virtual_simulation_enabled = bool(simulation.get("enabled", false))
+	chemical.simulation_role = str(simulation.get("role", ""))
 	for key in data.keys():
 		if typeof(data[key]) == TYPE_DICTIONARY and data[key].has("status") and not DataValue.is_trusted(data, key):
 			chemical.unreviewed_fields.append(str(key))

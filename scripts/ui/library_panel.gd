@@ -12,19 +12,20 @@ signal object_focus_requested(object_id: String)
 const REFRESH_INTERVAL_S := 0.5
 const GROUP_GAP_PX := 6
 ## Display titles for the data categories; an unknown category shows its own name.
-const CHEMICAL_GROUP_TITLES := {"solvent": "Solvents", "salt": "Salts", "dilute acid": "Acids", "dilute base": "Bases"}
-const CHEMICAL_GROUP_ORDER: Array = ["solvent", "salt", "dilute acid", "dilute base"]
+const CHEMICAL_GROUP_TITLES := {"solvent": "Solvents", "salt": "Salts", "dilute acid": "Acids", "dilute base": "Bases", "virtual gas": "Virtual gases"}
+const CHEMICAL_GROUP_ORDER: Array = ["solvent", "salt", "dilute acid", "dilute base", "virtual gas"]
 const EQUIPMENT_GROUP_TITLES := {"vessel": "Glassware", "appliance": "Heating", "tool": "Instruments"}
 const EQUIPMENT_GROUP_ORDER: Array = ["vessel", "appliance", "tool"]
 ## Equipment whose style is listed here is a container for reagents, shown through the reagent cards.
 const HIDDEN_EQUIPMENT_STYLES: Array = ["bottle"]
 ## The classroom-facing Library deliberately exposes only this safe teaching subset.
-const CLASSROOM_CHEMICAL_IDS: Array[String] = ["water", "sodium_chloride"]
+const CLASSROOM_CHEMICAL_IDS: Array[String] = ["water", "sodium_chloride", "carbon_dioxide"]
 const CLASSROOM_EQUIPMENT_IDS: Array[String] = ["beaker_250ml", "erlenmeyer_flask_250ml", "test_tube_20ml", "thermometer_general", "dropper_3ml", "hot_plate_basic"]
 const SAFE_REFERENCE_COMPOUND_IDS: Array[String] = ["glucose", "sucrose", "starch"]
 const LEARNING_GUIDE_PATH := "res://data/learning/learning_guide.json"
 const TEACHER_PREVIEWS_PATH := "res://data/learning/teacher_previews.json"
 const REFERENCE_EXPLORER_SCRIPT := preload("res://scripts/ui/reference_explorer.gd")
+const EXPERIMENT_CATALOG_SCRIPT := preload("res://scripts/ui/experiment_catalog.gd")
 
 @export var subtitle_label: Label
 @export var content_box: VBoxContainer
@@ -39,6 +40,7 @@ var _curriculum_profile: Dictionary = {}
 var _guide_window: Window
 var _guide_rich_text: RichTextLabel
 var _reference_window: ReferenceExplorer
+var _experiment_catalog: ExperimentCatalog
 
 
 func bind(host: SimulationHost) -> void:
@@ -93,6 +95,15 @@ func _build() -> void:
 	guide_button.focus_mode = Control.FOCUS_NONE
 	guide_button.pressed.connect(_on_guide_button_pressed)
 	content_box.add_child(guide_button)
+
+	var experiments_button := Button.new()
+	experiments_button.text = "Safe experiment bank · all grades"
+	experiments_button.tooltip_text = "Browse the existing Prep 1–3 and Senior 1–2 conceptual experiment pack."
+	experiments_button.theme_type_variation = &"ToolButton"
+	experiments_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	experiments_button.focus_mode = Control.FOCUS_NONE
+	experiments_button.pressed.connect(_on_experiment_catalog_pressed)
+	content_box.add_child(experiments_button)
 
 	var classroom_chemicals: Array = []
 	for chemical_id in CLASSROOM_CHEMICAL_IDS:
@@ -163,6 +174,17 @@ func _add_safe_reference_materials_section(database: ContentDatabase) -> void:
 
 func _on_guide_button_pressed() -> void:
 	open_learning_guide(_curriculum_profile)
+
+
+func _on_experiment_catalog_pressed() -> void:
+	if _host == null:
+		return
+	if not is_instance_valid(_experiment_catalog):
+		_experiment_catalog = EXPERIMENT_CATALOG_SCRIPT.new() as ExperimentCatalog
+		add_child(_experiment_catalog)
+		_experiment_catalog.bind(_host.database)
+	_experiment_catalog.set_grade(str(_curriculum_profile.get("id", "prep1")))
+	_experiment_catalog.popup_centered(Vector2i(980, 760))
 
 
 func _on_reference_explorer_pressed() -> void:
@@ -348,13 +370,18 @@ func _add_heading(group_title: String, section: String) -> void:
 func _add_reagent_card(chemical: ChemicalDefinition) -> void:
 	var tint := chemical.solution_color if chemical.has_solution_color else chemical.color
 	var is_solid := chemical.state == "solid"
+	var icon_kind := LibraryIcon.Kind.REAGENT_LIQUID
+	if is_solid:
+		icon_kind = LibraryIcon.Kind.REAGENT_SOLID
+	elif chemical.state == "gas":
+		icon_kind = LibraryIcon.Kind.REAGENT_GAS
 	var card := LibraryCard.new()
 	content_box.add_child(card)
 	var subtitle := chemical.state.capitalize()
 	if chemical.formula_display != "":
 		subtitle = "%s  •  %s" % [chemical.formula_display, subtitle]
 	card.setup("reagent", chemical.id, chemical.display_name, subtitle, chemical.summary if chemical.summary != "" else chemical.display_name,
-		LibraryIcon.Kind.REAGENT_SOLID if is_solid else LibraryIcon.Kind.REAGENT_LIQUID, tint)
+		icon_kind, tint)
 	card.activated.connect(_on_card_activated)
 	_cards.append(card)
 
@@ -427,7 +454,7 @@ func _object_for(sim: LabSimulation, card: LibraryCard) -> String:
 		if card.kind == "equipment" and item.equipment_id == card.key:
 			return str(object_id)
 		if card.kind == "reagent" and item.vessel != null \
-				and (item.vessel.liquids.has(card.key) or item.vessel.solids.has(card.key)):
+				and (item.vessel.liquids.has(card.key) or item.vessel.solids.has(card.key) or item.vessel.gases.has(card.key)):
 			return str(object_id)
 	return ""
 
@@ -441,16 +468,20 @@ func _tag_for(sim: LabSimulation, card: LibraryCard) -> String:
 		return "Drag to add" if count == 0 else "On bench: %d  ·  drag to add another" % count
 	var liquid_ml := 0.0
 	var solid_g := 0.0
+	var gas_mol := 0.0
 	for item in sim.state.objects.values():
 		var vessel := (item as LabObject).vessel
 		if vessel == null:
 			continue
 		liquid_ml += float(vessel.liquids.get(card.key, 0.0))
 		solid_g += float(vessel.solids.get(card.key, 0.0))
+		gas_mol += float(vessel.gases.get(card.key, 0.0))
 	if liquid_ml > 0.0:
 		return "%s in stock" % UnitFormat.volume_ml(liquid_ml)
 	if solid_g > 0.0:
 		return "%s in stock" % UnitFormat.mass_g(solid_g)
+	if gas_mol > 0.0:
+		return "%.4f mol retained" % gas_mol
 	return "Not in stock"
 
 

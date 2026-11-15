@@ -11,7 +11,7 @@
     0.97,
     0.97,
     0.96,
-    1.0
+    1
   ],
   "color_status": "display",
   "solution_color": [
@@ -20,7 +20,7 @@
     0.97,
     0.38
   ],
-  "color_full_at_g_per_100ml": 1.0,
+  "color_full_at_g_per_100ml": 1,
   "density_g_ml": {
     "value": 2.165,
     "status": "reference",
@@ -28,13 +28,13 @@
     "source": "https://www.sciencemadness.org/smwiki/index.php/Sodium_chloride (fetched 2026-11-08)"
   },
   "melting_point_c": {
-    "value": 801.0,
+    "value": 801,
     "status": "reference",
     "unit": "°C",
     "source": "https://www.sciencemadness.org/smwiki/index.php/Sodium_chloride (fetched 2026-11-08)"
   },
   "boiling_point_c": {
-    "value": 1413.0,
+    "value": 1413,
     "status": "reference",
     "unit": "°C",
     "source": "https://www.sciencemadness.org/smwiki/index.php/Sodium_chloride (fetched 2026-11-08)"
@@ -54,7 +54,7 @@
       ],
       [
         20,
-        36.0
+        36
       ],
       [
         30,
@@ -102,5 +102,10 @@
   },
   "display": {
     "summary": "White crystalline salt that dissolves readily in water."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
   }
 }

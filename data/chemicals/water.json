@@ -22,21 +22,21 @@
     "source": "commonly quoted textbook value; check a primary source before citing"
   },
   "melting_point_c": {
-    "value": 0.0,
+    "value": 0,
     "status": "unverified_reference",
     "unit": "°C",
     "condition": "1 atm"
   },
   "boiling_point_c": {
-    "value": 100.0,
+    "value": 100,
     "status": "unverified_reference",
     "unit": "°C",
     "condition": "1 atm"
   },
   "is_aqueous_solvent": true,
   "acid_base": {
-    "h_plus_mol_per_l": 0.0,
-    "oh_minus_mol_per_l": 0.0
+    "h_plus_mol_per_l": 0,
+    "oh_minus_mol_per_l": 0
   },
   "label_lines": [
     "Water",
@@ -50,5 +50,10 @@
   },
   "display": {
     "summary": "The most common solvent in the laboratory."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
   }
 }

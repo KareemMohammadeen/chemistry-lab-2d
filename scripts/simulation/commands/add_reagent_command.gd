@@ -18,6 +18,8 @@ func validate(sim: LabSimulation) -> InteractionResult:
 	var equipment := sim.database.get_equipment(target.equipment_id)
 	if target.vessel == null or equipment == null or not equipment.is_vessel():
 		return InteractionResult.failure("Drop a classroom reagent onto a beaker, flask or test tube.")
+	if target.vessel.is_closed_system:
+		return InteractionResult.failure("This vessel is closed. Return it to the open-system model before adding liquid or solid.")
 	var chemical_id := str(context.payload.get("chemical_id", ""))
 	if not ALLOWED_REAGENTS.has(chemical_id):
 		return InteractionResult.failure("Only classroom water and sodium chloride can be added from the Library.")

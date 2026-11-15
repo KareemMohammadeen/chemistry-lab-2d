@@ -26,6 +26,8 @@ func validate(sim: LabSimulation) -> InteractionResult:
 		return InteractionResult.failure("The %s cannot be used for pouring." % source_equipment.display_name)
 	if target.vessel == null or not target_equipment.is_vessel():
 		return InteractionResult.failure("The %s cannot receive a liquid." % target_equipment.display_name)
+	if source.vessel.is_closed_system or target.vessel.is_closed_system:
+		return InteractionResult.failure("Open the virtual stopper before pouring between vessels.")
 	if not source.vessel.has_liquid():
 		if source.vessel.has_solids():
 			return InteractionResult.failure("The %s contains only solid, not liquid." % sim.object_label(source))

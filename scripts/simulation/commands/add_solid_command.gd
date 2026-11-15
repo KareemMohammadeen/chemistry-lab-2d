@@ -25,6 +25,8 @@ func validate(sim: LabSimulation) -> InteractionResult:
 		return InteractionResult.failure("The %s cannot be used to add a solid." % source_equipment.display_name)
 	if target.vessel == null or not target_equipment.is_vessel():
 		return InteractionResult.failure("The %s cannot receive a solid." % target_equipment.display_name)
+	if source.vessel.is_closed_system or target.vessel.is_closed_system:
+		return InteractionResult.failure("Open the virtual stopper before transferring a solid.")
 	if _solid_id(source.vessel).is_empty():
 		return InteractionResult.failure("The %s contains no solid." % sim.object_label(source))
 	return InteractionResult.success()

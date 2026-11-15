@@ -6,11 +6,19 @@
 - [ ] Run `tests/run_simulation_tests.gd` headless and fix failures.
 - [ ] Review every `placeholder` / `unverified_reference` value (CuSO4 solubility conversion, time constants, heater rates, glass mass).
 
+## Completed in Chemistry Engine v2 (pending Godot CI/runtime verification)
+- [x] Compact draggable sample figures on the infinite workbench; symbol labels and data-driven form hints.
+- [x] Virtual gas ledger, automatic closed-system state, trapped-air accounting, ideal-gas pressure estimate and configurable virtual pressure guard.
+- [x] Persist gas/system state and validate it before session restore.
+- [x] Refuse liquid/solid additions and pours while a virtual vessel is closed; provide a reversible Return to open system action.
+- [x] Qualitative magnesium observation model with white-flash effect and explicitly illustrative MgO product.
+- [x] Safe experiment-bank window for the five grade profiles; retain unverified curriculum alignment labels.
+
 ## Database follow-ups
 - [ ] Verify element values against a primary source (NIST/IUPAC); replace the Engineering ToolBox extraction.
 - [ ] Oxidation states, appearance and hazards for every element; subshell-level checks for 104-118.
 - [ ] Make more compounds playable (colour, solubility curve, reactions) and an in-app periodic table / compound browser.
-- [ ] Audit and expand executable reaction data (precipitation, acid-carbonate, displacement) only after checking balanced equations, conditions, equilibrium/stoichiometry and safety/provenance; do not activate the 118 visual-only element tokens.
+- [ ] Implement further reaction handlers (precipitation, acid-carbonate, displacement) only after checking balanced equations, conditions, equilibrium/stoichiometry and safety/provenance; descriptive reaction participants are not executable until a handler exists. Do not activate the 118 visual-only element tokens.
 
 ## Milestone 2 candidates
 - [x] Drag equipment from the Library to create additional movable vessels and instruments.

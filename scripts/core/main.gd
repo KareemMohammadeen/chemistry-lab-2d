@@ -51,6 +51,7 @@ func _ready() -> void:
 	add_child(_controller)
 	_controller.setup(_host, workspace, lab_interface)
 	lab_interface.library_item_dropped.connect(_controller.on_library_item_dropped)
+	lab_interface.periodic_sample_dropped.connect(workspace.add_reference_sample)
 	lab_interface.canvas_zoom_requested.connect(workspace.zoom_by)
 	lab_interface.canvas_reset_requested.connect(workspace.reset_view)
 	workspace.view_changed.connect(lab_interface.update_zoom_label)

@@ -1,3 +1,13 @@
+## Chemistry Engine v2 foundations (2026-11-15) - awaiting Godot verification
+- Reworked vessel state to keep an explicit virtual-gas ledger, closed/open-system flag and trapped-air amount; pressure is estimated with a simplified ideal-gas model using the remaining headspace.
+- Added a pressure guard at both command validation and the ReactionEngine gas-product entry point. Gas addition to an open vessel automatically seals it; liquid/solid additions and pours are rejected while sealed; a reversible Inspector action returns the model to open and clears retained gas.
+- Added session serialization and validation for gas amounts, closed-state consistency, trapped air and calculated pressure. Legacy sessions remain readable through safe defaults.
+- Reworked the 118 periodic-table tokens as compact movable sample figures on the infinite workbench: labelled metal cubes, selected powder/crystal forms, magnesium ribbon, liquid-drop and sealed gas-cylinder illustrations. The 118 remain visual-only and non-reactive.
+- Added a separate opt-in virtual carbon-dioxide Library item; it is not a real gas-handling feature.
+- Added a qualitative, observation-only magnesium visual model with a brief white flash and an illustrative white MgO product. It is not a procedure and does not calculate a real yield.
+- Added a Safe Experiment Bank window for all five grade profiles; the magnesium observation is suggested for Prep 2 but is not verified against the exact official textbook.
+- Added headless regression coverage for gas auto-sealing, pressure, vent/undo/redo, session round-trip and the magnesium visual-demo state. Godot 4.3 CI/runtime results are pending.
+
 # Changelog
 
 ## Infinite workbench and Library drag/drop (2026-11-14) - awaiting Godot verification
