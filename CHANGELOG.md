@@ -1,5 +1,13 @@
 # Changelog
 
+## Infinite workbench and Library drag/drop (2026-11-14) - awaiting Godot verification
+- Added an infinite, lab-styled work surface with a world-space grid, middle-mouse panning, cursor-anchored wheel zoom, zoom buttons, Center and Home reset.
+- Library equipment cards can be dragged onto the stage to spawn additional movable glassware and instruments.
+- Water and table-salt cards can be dragged onto a vessel to add classroom quantities directly, or onto open space to create a refillable virtual reagent bottle.
+- Added validated, undoable spawn and reagent-add commands; existing Mix, pour, heating, reaction and session systems remain the simulation authority.
+- Infinite placement accepts finite coordinates throughout the supported world range; reference-only periodic-table specimens remain non-reactive.
+- Added headless scenarios for spawning, far-world placement, direct reagent additions, mixing, and undo/redo. Godot runtime verification is still required.
+
 ## Session persistence, experiment log and optional audio (2026-11-14) - awaiting Godot verification
 - Added versioned JSON session save/load for the complete serialisable simulation state: simulation time, equipment locations, vessel contents, temperatures, observations and command history.
 - Validate session format, version, object/equipment references, quantities, capacities and relationships before replacing the live simulation; invalid files leave the current lab state unchanged.

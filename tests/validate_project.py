@@ -26,7 +26,7 @@ SNAKE = re.compile(r"^[a-z0-9_]+(\.[a-z0-9_]+)*$")
 ENGINE_NAMES = {"FontVariation",
     "Array", "AudioStream", "AudioStreamPlayer", "AudioStreamWAV", "Button", "ButtonGroup", "CanvasLayer", "CenterContainer", "Color", "ColorRect", "Container", "Control",
     "Dictionary", "FileAccess", "FileDialog", "GridContainer", "HSeparator", "HBoxContainer", "HSplitContainer", "Input", "InputEvent",
-    "InputEventKey", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventMouseButton", "InputMap", "ItemList",
+    "InputEventKey", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventMouseButton", "InputEventMouseMotion", "InputMap", "ItemList",
     "JSON", "Label", "MarginContainer", "MenuButton", "Node", "Node2D", "Object",
     "OS", "PackedColorArray", "PopupMenu", "PackedScene", "PackedStringArray", "PackedVector2Array", "PanelContainer", "Rect2",
     "RichTextLabel", "TabContainer",

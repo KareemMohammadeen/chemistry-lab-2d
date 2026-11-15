@@ -268,6 +268,68 @@ func _play_feedback(source_id: String, plan: Dictionary) -> void:
 	_select(str(plan["target"]) if str(plan["target"]) != "" and plan["kind"] != "place" else source_id)
 
 
+# ---------------------------------------------------------------- library drag/drop
+
+func on_library_item_dropped(payload: Dictionary, screen_position: Vector2) -> void:
+	if _host == null or _host.simulation == null or payload.is_empty():
+		return
+	var kind := str(payload.get("kind", ""))
+	var item_id := str(payload.get("id", ""))
+	var world_position := _workspace.screen_to_workspace(screen_position)
+	if kind == "equipment":
+		_spawn_library_equipment(item_id, world_position, {})
+	elif kind == "reagent":
+		_add_or_spawn_reagent(item_id, world_position)
+
+
+func _spawn_library_equipment(equipment_id: String, world_position: Vector2, contents: Dictionary) -> void:
+	var equipment := _host.database.get_equipment(equipment_id)
+	if equipment == null:
+		_say("That equipment is not available in the classroom Library.", &"warning")
+		return
+	var height := float(equipment.visual.get("height", 100.0))
+	var base_point := world_position + Vector2(0.0, height * 0.45)
+	var command := SpawnObjectCommand.new()
+	command.context = _make_context(&"spawn", "", "", {
+		"equipment_id": equipment_id, "position": base_point, "contents": contents
+	}, _pointer_data(world_position))
+	var result := _host.submit(command)
+	if not result.is_success:
+		_say(result.message, &"warning")
+		return
+	_select(command.created_object_id)
+	_say(result.message, &"info")
+
+
+func _add_or_spawn_reagent(chemical_id: String, world_position: Vector2) -> void:
+	var chemical := _host.database.get_chemical(chemical_id)
+	if chemical == null or chemical_id not in ["water", "sodium_chloride"]:
+		_say("Only the classroom water and table-salt materials can be added from this Library.", &"warning")
+		return
+	var target_id := _workspace.object_id_at(world_position)
+	if target_id != "":
+		var target := _host.simulation.state.get_object(target_id)
+		if target != null and target.vessel != null:
+			var amount := 50.0 if chemical.state == "liquid" else 5.0
+			var command := AddReagentCommand.new()
+			command.context = _make_context(&"add_reagent", target_id, "", {
+				"chemical_id": chemical_id, "amount": amount
+			}, _pointer_data(world_position))
+			var result := _host.submit(command)
+			if not result.is_success:
+				_say(result.message, &"warning")
+				return
+			_select(target_id)
+			_say(result.message, &"info")
+			return
+	var contents: Dictionary = {"liquids": {}, "solids": {}}
+	if chemical.state == "liquid":
+		contents["liquids"][chemical_id] = 400.0
+	else:
+		contents["solids"][chemical_id] = 80.0
+	_spawn_library_equipment("reagent_bottle_500ml", world_position, contents)
+
+
 # ---------------------------------------------------------------- inspector actions
 
 func _on_action_requested(action_id: StringName, payload: Dictionary) -> void:

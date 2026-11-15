@@ -38,6 +38,12 @@ var _drag_tilt_target: float = 0.0
 var _drop_preview_id: String = ""
 var _drop_preview_valid: bool = false
 var _drop_preview_surface_id: String = ""
+signal view_changed(zoom_percent: int)
+
+var _stage_rect: Rect2 = Rect2()
+var _base_zoom: float = 1.0
+var _zoom_factor: float = 1.0
+var _pan_active: bool = false
 
 
 func bind(host: SimulationHost) -> void:
@@ -154,15 +160,95 @@ func support_target_at(source_id: String, base_point: Vector2) -> String:
 	return ""
 
 
-## Scales and centres the whole laboratory inside the stage area left between the side panels.
-## `rect` is in screen (viewport) coordinates; laboratory pixels are not changed by this.
+## Fits the starting lab coordinate area into the stage once, then the operator can pan/zoom
+## freely. The original canvas only defines the starting camera view, not a placement boundary.
 func fit_to_rect(rect: Rect2) -> void:
 	if _host == null or _host.database == null or rect.size.x <= 0.0 or rect.size.y <= 0.0:
 		return
+	_stage_rect = rect
 	var canvas := _host.database.layout.canvas_size
-	var fit := minf(rect.size.x / canvas.x, rect.size.y / canvas.y)
-	scale = Vector2(fit, fit)
-	position = rect.position + (rect.size - canvas * fit) * 0.5
+	_base_zoom = maxf(minf(rect.size.x / canvas.x, rect.size.y / canvas.y), 0.01)
+	_zoom_factor = 1.0
+	scale = Vector2.ONE * _base_zoom
+	position = rect.position + (rect.size - canvas * _base_zoom) * 0.5
+	view_changed.emit(100)
+	queue_redraw()
+
+
+func screen_to_workspace(screen_position: Vector2) -> Vector2:
+	return get_global_transform_with_canvas().affine_inverse() * screen_position
+
+
+func update_stage_rect(rect: Rect2) -> void:
+	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
+		return
+	if _stage_rect.size.x > 0.0:
+		var screen_delta := rect.position - _stage_rect.position
+		position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta)
+	_stage_rect = rect
+	queue_redraw()
+
+
+func zoom_by(factor: float) -> void:
+	if _stage_rect.size.x > 0.0 and is_finite(factor) and factor > 0.0:
+		zoom_at_screen(_stage_rect.get_center(), factor)
+
+
+func zoom_at_screen(screen_position: Vector2, factor: float) -> void:
+	if not is_finite(factor) or factor <= 0.0:
+		return
+	var anchor := screen_to_workspace(screen_position)
+	var wanted := clampf(scale.x * factor, _base_zoom * 0.30, _base_zoom * 4.0)
+	if is_equal_approx(wanted, scale.x):
+		return
+	scale = Vector2.ONE * wanted
+	var after_screen := get_global_transform_with_canvas() * anchor
+	var screen_delta := screen_position - after_screen
+	position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta)
+	_zoom_factor = wanted / _base_zoom
+	view_changed.emit(roundi(_zoom_factor * 100.0))
+	queue_redraw()
+
+
+func reset_view() -> void:
+	if _stage_rect.size.x > 0.0:
+		fit_to_rect(_stage_rect)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if _stage_rect.size.x <= 0.0:
+		return
+	if event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.button_index == MOUSE_BUTTON_MIDDLE:
+			if mouse_event.pressed and _stage_rect.has_point(mouse_event.position):
+				_pan_active = true
+				Input.set_default_cursor_shape(Input.CURSOR_MOVE)
+			elif not mouse_event.pressed:
+				_pan_active = false
+				Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+				get_viewport().set_input_as_handled()
+			if _pan_active:
+				get_viewport().set_input_as_handled()
+			return
+		if mouse_event.pressed and _stage_rect.has_point(mouse_event.position):
+			if mouse_event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				zoom_at_screen(mouse_event.position, 1.12)
+				get_viewport().set_input_as_handled()
+			elif mouse_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				zoom_at_screen(mouse_event.position, 1.0 / 1.12)
+				get_viewport().set_input_as_handled()
+	elif event is InputEventMouseMotion and _pan_active:
+		var motion := event as InputEventMouseMotion
+		var screen_delta := motion.relative
+		position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta)
+		queue_redraw()
+		get_viewport().set_input_as_handled()
+	elif event is InputEventKey:
+		var key_event := event as InputEventKey
+		if key_event.pressed and not key_event.echo and key_event.keycode == KEY_HOME:
+			reset_view()
+			get_viewport().set_input_as_handled()
 
 
 func get_view_position(object_id: String) -> Vector2:
@@ -228,15 +314,59 @@ func _draw() -> void:
 	if _host == null or _host.database == null:
 		return
 	var layout := _host.database.layout
-	_draw_wall(layout)
-	_draw_wall_light(layout)
-	for surface in layout.surfaces:
-		if str(surface["kind"]) == "shelf":
-			_draw_shelf(surface)
-	_draw_bench(layout)
+	if layout.infinite_workbench:
+		_draw_infinite_workbench()
+	else:
+		_draw_wall(layout)
+		_draw_wall_light(layout)
+		for surface in layout.surfaces:
+			if str(surface["kind"]) == "shelf":
+				_draw_shelf(surface)
+			_draw_bench(layout)
 	if _drag_id != "":
 		_draw_drop_zones(layout)
 		_draw_drag_shadow()
+
+
+## Draws only the visible portion of a limitless dark-resin work surface.
+func _draw_infinite_workbench() -> void:
+	if _stage_rect.size.x <= 0.0:
+		return
+	var inverse := get_global_transform_with_canvas().affine_inverse()
+	var p1 := inverse * _stage_rect.position
+	var p2 := inverse * Vector2(_stage_rect.end.x, _stage_rect.position.y)
+	var p3 := inverse * Vector2(_stage_rect.position.x, _stage_rect.end.y)
+	var p4 := inverse * _stage_rect.end
+	var left := minf(minf(p1.x, p2.x), minf(p3.x, p4.x))
+	var right := maxf(maxf(p1.x, p2.x), maxf(p3.x, p4.x))
+	var top := minf(minf(p1.y, p2.y), minf(p3.y, p4.y))
+	var bottom := maxf(maxf(p1.y, p2.y), maxf(p3.y, p4.y))
+	var bounds := Rect2(Vector2(left, top), Vector2(right - left, bottom - top)).grow(160.0)
+	draw_rect(bounds, LabColors.BENCH_TOP.darkened(0.26))
+	var step := 80.0
+	var x := floorf(bounds.position.x / step) * step
+	while x <= bounds.end.x:
+		var major_x := int(round(x / (step * 5.0))) % 2 == 0
+		var grid_tint_x := LabColors.BENCH_GRID
+		grid_tint_x.a = 0.24 if major_x else 0.11
+		draw_line(Vector2(x, bounds.position.y), Vector2(x, bounds.end.y),
+			grid_tint_x, 1.0 if major_x else 0.7)
+		x += step
+	var y := floorf(bounds.position.y / step) * step
+	while y <= bounds.end.y:
+		var major_y := int(round(y / (step * 5.0))) % 2 == 0
+		var grid_tint_y := LabColors.BENCH_GRID
+		grid_tint_y.a = 0.24 if major_y else 0.11
+		draw_line(Vector2(bounds.position.x, y), Vector2(bounds.end.x, y),
+			grid_tint_y, 1.0 if major_y else 0.7)
+		y += step
+	var mark_x := floorf(bounds.position.x / 400.0) * 400.0
+	while mark_x <= bounds.end.x:
+		var mark_y := floorf(bounds.position.y / 400.0) * 400.0
+		while mark_y <= bounds.end.y:
+			draw_circle(Vector2(mark_x, mark_y), 2.0, Color(LabColors.ACCENT, 0.26))
+			mark_y += 400.0
+		mark_x += 400.0
 
 
 static func _ellipse(center: Vector2, radius_x: float, radius_y: float) -> PackedVector2Array:
@@ -351,6 +481,11 @@ func _draw_drag_shadow() -> void:
 
 
 func _draw_drop_zones(layout: LabLayout) -> void:
+	if layout.infinite_workbench:
+		draw_circle(_drag_anchor, 20.0, Color(LabColors.ACCENT, 0.18), false, 2.0)
+		draw_line(_drag_anchor + Vector2(-30.0, 0.0), _drag_anchor + Vector2(30.0, 0.0), Color(LabColors.ACCENT, 0.48), 1.0)
+		draw_line(_drag_anchor + Vector2(0.0, -30.0), _drag_anchor + Vector2(0.0, 30.0), Color(LabColors.ACCENT, 0.48), 1.0)
+		return
 	for surface in layout.surfaces:
 		var margin := float(surface["accept_margin"])
 		var rect := Rect2(float(surface["x_min"]) - margin, float(surface["y_min"]) - DROP_BAND_HALF_HEIGHT - margin * 0.5,

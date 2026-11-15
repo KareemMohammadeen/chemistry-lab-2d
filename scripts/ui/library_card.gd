@@ -82,8 +82,25 @@ func _restyle() -> void:
 		theme_type_variation = &"CardPanel"
 
 
+func _get_drag_data(_at_position: Vector2) -> Variant:
+	if kind != "equipment" and kind != "reagent":
+		return null
+	var preview := PanelContainer.new()
+	preview.theme_type_variation = &"CardPanelActive"
+	preview.custom_minimum_size = Vector2(190.0, 54.0)
+	var preview_label := Label.new()
+	preview_label.text = tooltip_text if not tooltip_text.is_empty() else key.replace("_", " ").capitalize()
+	preview_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	preview_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	preview_label.custom_minimum_size = Vector2(180.0, 46.0)
+	preview.add_child(preview_label)
+	set_drag_preview(preview)
+	return {"kind": kind, "id": key}
+
+
 func _on_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+	# Activate on release so Godot can cross its drag threshold first.
+	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		activated.emit(self)
 		accept_event()
 
