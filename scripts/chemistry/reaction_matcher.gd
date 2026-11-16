@@ -19,7 +19,7 @@ func _init(database: ContentDatabase, registry: ReactionRegistryV3) -> void:
 	_registry = registry
 
 
-func match(reaction_id: String, vessel: VesselState) -> ReactionResult:
+func match_reaction(reaction_id: String, vessel: VesselState) -> ReactionResult:
 	var result := ReactionResult.new()
 	result.reaction_id = reaction_id
 
