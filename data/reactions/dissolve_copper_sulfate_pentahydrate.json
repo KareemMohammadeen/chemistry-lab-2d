@@ -24,13 +24,15 @@
       "chemical_id": "water",
       "coefficient": 1,
       "phase": "liquid",
-      "minimum_amount": 0.000001
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
     },
     {
       "chemical_id": "copper_sulfate_pentahydrate",
       "coefficient": 1,
       "phase": "solid",
-      "minimum_amount": 0.000001
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
     }
   ],
   "products": [
