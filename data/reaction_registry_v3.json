@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "safety_scope": "virtual_only_classroom_model",
+  "description": "Explicit allowlist for the first Reaction Engine V3 handlers. Disabled entries are reference-only until a dedicated handler is implemented and reviewed.",
+  "handlers": {
+    "dissolution_v1": {
+      "reaction_type": "dissolution",
+      "execution_mode": "existing_continuous_handler",
+      "enabled": true
+    },
+    "neutralisation_v1": {
+      "reaction_type": "neutralisation",
+      "execution_mode": "existing_continuous_handler",
+      "enabled": true
+    },
+    "boiling_observation_v1": {
+      "reaction_type": "boiling",
+      "execution_mode": "observation_only",
+      "enabled": false
+    },
+    "visual_demo_observation_v1": {
+      "reaction_type": "visual_demo",
+      "execution_mode": "observation_only",
+      "enabled": false
+    }
+  },
+  "reactions": [
+    {
+      "id": "dissolve_sodium_chloride",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "dissolve_copper_sulfate_pentahydrate",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "neutralisation_strong_acid_strong_base",
+      "handler_id": "neutralisation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "boil_water",
+      "handler_id": "boiling_observation_v1",
+      "enabled": false,
+      "safety_scope": "virtual_only_classroom_model",
+      "disabled_reason": "A dedicated Reaction Engine handler is not implemented yet."
+    },
+    {
+      "id": "magnesium_combustion_virtual_demo",
+      "handler_id": "visual_demo_observation_v1",
+      "enabled": false,
+      "safety_scope": "virtual_only_classroom_model",
+      "disabled_reason": "This remains a separate qualitative visual demonstration, not a generic executable reaction."
+    }
+  ]
+}
