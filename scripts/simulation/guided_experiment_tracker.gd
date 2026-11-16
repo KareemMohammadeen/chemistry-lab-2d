@@ -30,7 +30,7 @@ static func evaluate(experiment: Dictionary, history: Array, start_index: int, s
 		if step_type == "action":
 			var expected_command: String = str(step.get("command", ""))
 			var expected_interaction: String = str(step.get("interaction_id", ""))
-			if not ALLOWED_COMMANDS.has(expected_command) or expected_interaction.is_empty():
+			if not ALLOWED_COMMANDS.has(expected_command) or not ALLOWED_COMMANDS.has(expected_interaction):
 				return _result(completed, steps.size(), active_vessel_id, false, "The activity contains an unsupported action.")
 			var source_chemical_id: String = str(step.get("source_contains_chemical_id", ""))
 			var target_chemical_id: String = str(step.get("target_contains_chemical_id", ""))
