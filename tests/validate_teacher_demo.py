@@ -85,6 +85,7 @@ def main() -> int:
     assert guided.get("experiments"), "Guided experiment list must not be empty"
     for activity in guided["experiments"]:
         assert activity.get("enabled") is True
+        assert activity.get("safety_scope") == "virtual_only_classroom_model"
         assert activity.get("alignment_status") == "suggested_not_verified_against_official_textbook"
         for step in activity.get("steps", []):
             if step.get("type") == "action":
