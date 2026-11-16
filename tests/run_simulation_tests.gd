@@ -37,6 +37,7 @@ func _initialize() -> void:
 	_test_pour_moves_dissolved_substance()
 	_test_reference_data()
 	_test_gas_closed_system_and_magnesium_demo()
+	_test_guided_experiment_progress()
 	_test_save_load_session()
 
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
@@ -322,6 +323,43 @@ func _test_gas_closed_system_and_magnesium_demo() -> void:
 	_check(_host.undo().is_success, "undo the qualitative magnesium demonstration")
 	beaker = _find("beaker_250ml")
 	_check(not beaker.vessel.solids.has("magnesium_oxide"), "undo removes the illustrative demo product")
+
+
+func _test_guided_experiment_progress() -> void:
+	_fresh()
+	print("-- guided virtual experiment progress")
+	var pack: Dictionary = JsonDataLoader.load_dictionary("res://data/learning/guided_experiments.json")
+	var activities: Array = pack.get("experiments", [])
+	_check(activities.size() == 1, "the guided activity pack loads one approved classroom activity")
+	if activities.is_empty():
+		return
+	var activity: Dictionary = activities[0]
+	var start_index: int = _host.commands.history.size()
+	var progress: Dictionary = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(int(progress.get("progress", -1)) == 0, "guided tracking begins at step zero")
+
+	var beaker := _find("beaker_250ml")
+	var water_bottle := _find("reagent_bottle_500ml", "water")
+	var salt_bottle := _find("reagent_bottle_500ml", "sodium_chloride")
+	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
+		{"amount_ml": 50.0}, "perform the guided virtual water transfer")
+	progress = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(int(progress.get("progress", -1)) == 1, "the accepted water transfer completes guided step one")
+
+	_expect_success(AddSolidCommand.new(), &"add_solid", salt_bottle.id, beaker.id,
+		{"amount_g": 5.0}, "perform the guided virtual salt addition")
+	progress = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(int(progress.get("progress", -1)) == 2, "the salt addition to the same beaker completes step two")
+
+	_expect_success(MixCommand.new(), &"mix", beaker.id, "", {},
+		"perform the guided virtual mixing action")
+	progress = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(int(progress.get("progress", -1)) == 3, "the accepted mixing action completes step three")
+
+	_run_seconds(30.0)
+	progress = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(bool(progress.get("complete", false)) and int(progress.get("progress", -1)) == 4,
+		"the final observation condition completes after the model dissolves enough salt")
 
 
 func _test_save_load_session() -> void:
