@@ -383,6 +383,7 @@ def check_reaction_registry():
         errors.append("reaction registry: entries must exactly cover the reaction definition files")
 
     phase_names = {"liquid", "solid", "dissolved", "gas"}
+    phase_units = {"liquid": "mL", "solid": "g", "dissolved": "g", "gas": "mol"}
     for entry in entries:
         if not isinstance(entry, dict):
             continue
@@ -430,8 +431,13 @@ def check_reaction_registry():
                     continue
                 if chemical.get("simulation", {}).get("enabled") is not True:
                     errors.append(f"reaction registry: '{reaction_id}' includes a non-playable chemical '{chemical_id}'")
-                if participant.get("phase") not in phase_names:
+                phase = participant.get("phase")
+                if phase not in phase_names:
                     errors.append(f"reaction registry: '{reaction_id}' has an unsupported phase for '{chemical_id}'")
+                elif participant.get("minimum_amount_unit") != phase_units[phase]:
+                    errors.append(
+                        f"reaction registry: '{reaction_id}' requires {phase_units[phase]} for {phase} participant '{chemical_id}'"
+                    )
                 minimum = participant.get("minimum_amount", 0.000001)
                 if not isinstance(minimum, (int, float)) or not math.isfinite(minimum) or minimum <= 0:
                     errors.append(f"reaction registry: '{reaction_id}' has an invalid minimum amount for '{chemical_id}'")
