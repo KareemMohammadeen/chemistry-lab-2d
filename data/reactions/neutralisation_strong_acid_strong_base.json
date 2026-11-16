@@ -19,5 +19,32 @@
     "basic": "There is more base than acid, so the mixture is still basic."
   },
   "explanation": "Hydrogen ions (H⁺) from the acid and hydroxide ions (OH⁻) from the base combine to form water. Whichever is in excess decides whether the mixture ends up acidic or basic.",
-  "level": "high_school"
+  "level": "high_school",
+  "reactants": [
+    {
+      "chemical_id": "hydrochloric_acid_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001
+    },
+    {
+      "chemical_id": "sodium_hydroxide_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid"
+    },
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 1,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
 }
