@@ -26,6 +26,7 @@ const LEARNING_GUIDE_PATH := "res://data/learning/learning_guide.json"
 const TEACHER_PREVIEWS_PATH := "res://data/learning/teacher_previews.json"
 const REFERENCE_EXPLORER_SCRIPT := preload("res://scripts/ui/reference_explorer.gd")
 const EXPERIMENT_CATALOG_SCRIPT := preload("res://scripts/ui/experiment_catalog.gd")
+const GUIDED_EXPERIMENT_SCRIPT := preload("res://scripts/ui/guided_experiment_window.gd")
 
 @export var subtitle_label: Label
 @export var content_box: VBoxContainer
@@ -41,6 +42,7 @@ var _guide_window: Window
 var _guide_rich_text: RichTextLabel
 var _reference_window: ReferenceExplorer
 var _experiment_catalog: ExperimentCatalog
+var _guided_experiment_window: GuidedExperimentWindow
 
 
 func bind(host: SimulationHost) -> void:
@@ -104,6 +106,15 @@ func _build() -> void:
 	experiments_button.focus_mode = Control.FOCUS_NONE
 	experiments_button.pressed.connect(_on_experiment_catalog_pressed)
 	content_box.add_child(experiments_button)
+
+	var guided_button := Button.new()
+	guided_button.text = "Start guided virtual experiment"
+	guided_button.tooltip_text = "Track a safe, software-only water-and-salt learning activity step by step."
+	guided_button.theme_type_variation = &"ToolButton"
+	guided_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	guided_button.focus_mode = Control.FOCUS_NONE
+	guided_button.pressed.connect(_on_guided_experiment_pressed)
+	content_box.add_child(guided_button)
 
 	var classroom_chemicals: Array = []
 	for chemical_id in CLASSROOM_CHEMICAL_IDS:
@@ -185,6 +196,16 @@ func _on_experiment_catalog_pressed() -> void:
 		_experiment_catalog.bind(_host.database)
 	_experiment_catalog.set_grade(str(_curriculum_profile.get("id", "prep1")))
 	_experiment_catalog.popup_centered(Vector2i(980, 760))
+
+
+func _on_guided_experiment_pressed() -> void:
+	if _host == null:
+		return
+	if not is_instance_valid(_guided_experiment_window):
+		_guided_experiment_window = GUIDED_EXPERIMENT_SCRIPT.new() as GuidedExperimentWindow
+		add_child(_guided_experiment_window)
+		_guided_experiment_window.bind(_host)
+	_guided_experiment_window.popup_centered(Vector2i(780, 660))
 
 
 func _on_reference_explorer_pressed() -> void:
