@@ -19,7 +19,7 @@ Status:
 
 ## P1 — Chemistry engine and scientific correctness
 
-- [ ] Design Reaction Engine V3 as a validated, data-driven reaction interpreter; define supported reaction types and explicit capability limits.
+- [x] Define the V3 foundation: explicit registry, handler allowlist, read-only participant/condition matcher and shared result envelope.
 - [ ] Make a new reaction executable only when its handler, balanced equation, participant identities, phases, units, conditions, conservation checks, safety status and sources all validate.
 - [ ] Add reviewed virtual handlers in small increments (for example, selected precipitation or displacement models); do not treat descriptive JSON participants as executable chemistry.
 - [ ] Add deterministic tests for limiting quantities, insufficient reactants, product ledgers, mass/mole accounting, invalid definitions, undo/redo and save/load.
