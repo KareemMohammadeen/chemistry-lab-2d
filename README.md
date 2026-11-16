@@ -47,6 +47,9 @@ The **Session** menu in the top bar can save the current virtual-lab state to a 
 
 The Reaction Engine is data-driven and keeps reference data separate from playable teaching materials. Its documented chemistry handlers include dissolution of sodium chloride and copper sulfate pentahydrate, strong acid/base neutralisation, and water boiling. A qualitative magnesium visual demonstration is registered separately as a virtual-only observation model; its output amount is illustrative, not a calculated yield.
 
+## Guided virtual experiments
+The Library includes **Start guided virtual experiment**. The first activity tracks a software-only water-and-sodium-chloride lesson: it checks the accepted pour, solid-addition and mix actions in order, then waits for the simulation's dissolved-salt observation condition before marking the activity complete. Progress is based on the command log and current virtual vessel state; blocked or unrelated actions do not count. The activity is a starter example, not a complete curriculum pack, and its grade alignment is still marked as suggested pending direct textbook review.
+
 ## Tests
 - Static (no engine): `python3 tests/validate_project.py`
 - Simulation scenarios (needs Godot, headless):
