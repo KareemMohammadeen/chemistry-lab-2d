@@ -373,6 +373,11 @@ func _test_save_load_session() -> void:
 		{"chemical_id": "carbon_dioxide", "amount_mol": 0.001}, "seal the session with a retained virtual gas")
 	var expected_state: Dictionary = _sim().capture_snapshot()
 	var expected_history_size := _host.commands.history.size()
+	var report_text := LabReport.build_markdown(_sim(), _host.commands)
+	_check(report_text.contains("# Chemistry Lab Report") and report_text.contains("## Objects"),
+		"Markdown report includes the current laboratory snapshot")
+	_check(report_text.contains("## Actions") and report_text.contains("closed system"),
+		"Markdown report includes the action log and closed-vessel state")
 	var save_result := LabSessionStore.save_to_path(_sim(), _host.commands, SESSION_TEST_PATH)
 	_check(bool(save_result.get("ok", false)), "session save succeeds: %s" % str(save_result.get("message", "")))
 
