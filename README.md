@@ -83,9 +83,11 @@ See [docs/TEACHER_PRESENTATION.md](docs/TEACHER_PRESENTATION.md) for a concise t
 demo flow, curriculum evidence status and scientific sources.
 
 ## Status
-Written without access to a Godot binary: everything has been statically checked but **not yet run in the engine**.
-See `NEXT_SESSION.md` for the in-engine checklist. Many numeric values are marked `placeholder` in the data and
-must be reviewed before teaching use (`docs/CHEMISTRY_REQUIREMENTS.md`).
+A previous GitHub Actions attempt successfully imported the project with Godot 4.3, but the associated headless
+simulation run was cancelled. The latest guided-experiment changes still need a fresh headless run and in-editor
+verification. See `NEXT_SESSION.md` and `docs/TESTING.md`. Numeric values marked `placeholder`,
+`derived` or `unverified_reference` must be reviewed before presenting them as authoritative
+(`docs/CHEMISTRY_REQUIREMENTS.md`).
 
 
 ## Material samples and virtual gas systems
