@@ -6,7 +6,7 @@
   "solute": "sodium_chloride",
   "tier": "stoichiometric_with_timescale",
   "time_constant_s": {
-    "value": 8.0,
+    "value": 8,
     "status": "placeholder",
     "unit": "s",
     "source": "teaching-pace timescale, not a measured rate"
@@ -18,5 +18,27 @@
     "completed": "All the salt has dissolved. The solution stays colourless."
   },
   "explanation": "Water molecules surround the sodium ions (Na⁺) and chloride ions (Cl⁻) and pull them out of the crystal. Dissolved ions are colourless, so the liquid looks the same as before.",
-  "level": "middle_school"
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001
+    },
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 1,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
 }
