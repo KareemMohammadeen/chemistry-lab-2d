@@ -18,7 +18,7 @@ godot --headless --path . -s tests/run_simulation_tests.gd
 Drives the real commands: setup, refused actions and their reasons, the water + copper sulfate demo (blue solution,
 observations, inspector content), undo/redo, neutralisation (pH, heat), heating with the hot plate and thermometer,
 conservation of dissolved salt when pouring, gas auto-sealing and pressure, opening/closing the virtual vessel, the magnesium
-observation-only visual model, and session save/load of gas/system state including invalid-file refusal and log restoration.
+observation-only visual model, guided water/salt activity progress from first accepted action through its dissolution condition, and session save/load of gas/system state including invalid-file refusal and log restoration.
 Exit code 0 means all checks passed.
 
 ## 3. In-engine checklist (not yet performed)
@@ -48,6 +48,7 @@ Exit code 0 means all checks passed.
 - [ ] Open **Experiment Log**: confirm accepted and refused commands plus chemistry observations appear in time order.
 - [ ] Toggle **Sound effects** off and on; confirm no sounds play while muted and actions still work.
 - [ ] Confirm sample tokens remain read-only visual references; they cannot enter chemistry commands.
+- [ ] Open **Start guided virtual experiment**, start tracking, complete the water/salt virtual actions in one beaker, and confirm progress updates only after accepted actions and the dissolved-mass condition.
 Record results in CHANGELOG.md.
 
 
