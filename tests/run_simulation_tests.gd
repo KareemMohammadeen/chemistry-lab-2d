@@ -337,6 +337,14 @@ func _test_guided_experiment_progress() -> void:
 	var start_index: int = _host.commands.history.size()
 	var progress: Dictionary = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
 	_check(int(progress.get("progress", -1)) == 0, "guided tracking begins at step zero")
+	var unsafe_activity: Dictionary = activity.duplicate(true)
+	unsafe_activity["safety_scope"] = "real_world_procedure"
+	var refused_scope: Dictionary = GuidedExperimentTracker.evaluate(unsafe_activity, _host.commands.history, start_index, _sim())
+	_check(not str(refused_scope.get("error", "")).is_empty(), "guided tracker refuses activities outside the virtual-only safety scope")
+	var unsafe_interaction: Dictionary = activity.duplicate(true)
+	unsafe_interaction["steps"][0]["interaction_id"] = "unapproved_action"
+	var refused_interaction: Dictionary = GuidedExperimentTracker.evaluate(unsafe_interaction, _host.commands.history, start_index, _sim())
+	_check(not str(refused_interaction.get("error", "")).is_empty(), "guided tracker refuses unapproved interaction identifiers")
 
 	var beaker := _find("beaker_250ml")
 	var water_bottle := _find("reagent_bottle_500ml", "water")
