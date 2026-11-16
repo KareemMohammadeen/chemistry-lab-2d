@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "description": "Data-driven reaction definitions for the virtual chemistry simulation.",
+  "safety_scope": "virtual_only_classroom_model",
+  "reactions": []
+}
