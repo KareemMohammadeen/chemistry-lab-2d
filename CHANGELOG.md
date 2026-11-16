@@ -1,3 +1,11 @@
+## Guided virtual experiment v1 (2026-11-16) - awaiting Godot verification
+- Added a JSON-defined water-and-sodium-chloride guided activity with ordered accepted-action checks and a final dissolved-mass condition.
+- Added a restricted tracker that evaluates only the approved classroom commands (pour, add_solid and mix), the water/sodium-chloride virtual material subset and supported vessel types.
+- Added a Library entry point and progress window; the guide observes the existing command history and simulation state rather than issuing commands itself.
+- Added a headless regression scenario, static validation for the guided activity data, and a manual editor checklist.
+- The first activity is a starter implementation only. Full grade-by-grade guided lesson content, replay, teacher/student restriction controls and generic reaction execution remain open roadmap items.
+- Godot 4.3 CI/editor verification is pending.
+
 ## Chemistry Engine v2 foundations (2026-11-15) - awaiting Godot verification
 - Reworked vessel state to keep an explicit virtual-gas ledger, closed/open-system flag and trapped-air amount; pressure is estimated with a simplified ideal-gas model using the remaining headspace.
 - Added a pressure guard at both command validation and the ReactionEngine gas-product entry point. Gas addition to an open vessel automatically seals it; liquid/solid additions and pours are rejected while sealed; a reversible Inspector action returns the model to open and clears retained gas.
