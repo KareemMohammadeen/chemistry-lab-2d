@@ -9,6 +9,12 @@ const PHASE_LEDGER_KEYS := {
 	"dissolved": "dissolved",
 	"gas": "gases",
 }
+const PHASE_AMOUNT_UNITS := {
+	"liquid": "mL",
+	"solid": "g",
+	"dissolved": "g",
+	"gas": "mol",
+}
 
 var _database: ContentDatabase
 var _registry: ReactionRegistryV3
@@ -85,6 +91,13 @@ func match_reaction(reaction_id: String, vessel: VesselState) -> ReactionResult:
 			result.errors.append("Reaction participant '%s' has unsupported phase '%s'." % [chemical_id, phase])
 			continue
 
+		var expected_unit: String = str(PHASE_AMOUNT_UNITS[phase])
+		var amount_unit := str(participant.get("minimum_amount_unit", ""))
+		if amount_unit != expected_unit:
+			result.status = ReactionResult.Status.INVALID
+			result.errors.append("Reaction participant '%s' requires minimum_amount_unit '%s' for phase '%s'." % [chemical_id, expected_unit, phase])
+			continue
+
 		var minimum_value: Variant = participant.get("minimum_amount", VesselState.EPSILON)
 		if (typeof(minimum_value) != TYPE_INT and typeof(minimum_value) != TYPE_FLOAT) \
 				or not is_finite(float(minimum_value)) or float(minimum_value) <= 0.0:
@@ -100,6 +113,7 @@ func match_reaction(reaction_id: String, vessel: VesselState) -> ReactionResult:
 			"phase": phase,
 			"available_amount": available_amount,
 			"required_amount": minimum_amount,
+			"required_unit": amount_unit,
 			"coefficient": float(participant.get("coefficient", 1.0)),
 		}
 		if available_amount + VesselState.EPSILON >= minimum_amount:
