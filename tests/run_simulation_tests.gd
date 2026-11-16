@@ -392,7 +392,7 @@ func _test_reaction_registry_and_matcher() -> void:
 	_expect_success(AddSolidCommand.new(), &"add_solid", salt_bottle.id, beaker.id,
 		{"amount_g": 5.0}, "prepare the matcher with virtual table salt")
 	var before_match: Dictionary = _sim().capture_snapshot()
-	var matched: ReactionResult = matcher.match("dissolve_sodium_chloride", beaker.vessel)
+	var matched: ReactionResult = matcher.match_reaction("dissolve_sodium_chloride", beaker.vessel)
 	_check(matched.status == ReactionResult.Status.MATCHED, "matcher recognises water and solid sodium chloride in the same vessel")
 	_check(matched.matched_reactants.size() == 2 and matched.missing_reactants.is_empty(),
 		"matched result records both required participants")
@@ -408,7 +408,7 @@ func _test_reaction_registry_and_matcher() -> void:
 	water_bottle = _find("reagent_bottle_500ml", "water")
 	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
 		{"amount_ml": 50.0}, "prepare a vessel with water only")
-	var missing: ReactionResult = matcher.match("dissolve_sodium_chloride", beaker.vessel)
+	var missing: ReactionResult = matcher.match_reaction("dissolve_sodium_chloride", beaker.vessel)
 	_check(missing.status == ReactionResult.Status.NOT_MATCHED and missing.missing_reactants.size() == 1,
 		"matcher reports the missing solid when the solvent is present")
 
@@ -420,14 +420,14 @@ func _test_reaction_registry_and_matcher() -> void:
 		{"amount_ml": 50.0}, "prepare the dilute acid participant in the virtual model")
 	_expect_success(PourCommand.new(), &"pour", base.id, flask.id,
 		{"amount_ml": 50.0}, "prepare the dilute base participant in the virtual model")
-	var neutralisation: ReactionResult = matcher.match("neutralisation_strong_acid_strong_base", flask.vessel)
+	var neutralisation: ReactionResult = matcher.match_reaction("neutralisation_strong_acid_strong_base", flask.vessel)
 	_check(neutralisation.status == ReactionResult.Status.MATCHED,
 		"matcher recognises the registered acid/base participant pair")
 
-	var demo: ReactionResult = matcher.match("magnesium_combustion_virtual_demo", flask.vessel)
+	var demo: ReactionResult = matcher.match_reaction("magnesium_combustion_virtual_demo", flask.vessel)
 	_check(demo.status == ReactionResult.Status.REJECTED,
 		"matcher refuses a disabled, observation-only visual demonstration")
-	var unknown: ReactionResult = matcher.match("not_a_real_reaction", flask.vessel)
+	var unknown: ReactionResult = matcher.match_reaction("not_a_real_reaction", flask.vessel)
 	_check(unknown.status == ReactionResult.Status.REJECTED,
 		"matcher refuses unknown reaction identifiers")
 
