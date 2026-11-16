@@ -38,6 +38,7 @@ func _initialize() -> void:
 	_test_reference_data()
 	_test_gas_closed_system_and_magnesium_demo()
 	_test_guided_experiment_progress()
+	_test_reaction_registry_and_matcher()
 	_test_save_load_session()
 
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
@@ -368,6 +369,67 @@ func _test_guided_experiment_progress() -> void:
 	progress = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
 	_check(bool(progress.get("complete", false)) and int(progress.get("progress", -1)) == 4,
 		"the final observation condition completes after the model dissolves enough salt")
+
+
+func _test_reaction_registry_and_matcher() -> void:
+	_fresh()
+	print("-- Reaction Engine V3 registry, matcher and result model")
+	var registry: ReactionRegistryV3 = _host.database.reaction_registry
+	_check(registry != null, "the content database loads the V3 reaction registry")
+	if registry == null:
+		return
+	_check(registry.is_enabled("dissolve_sodium_chloride"), "the reviewed sodium-chloride dissolution handler is allowlisted")
+	_check(registry.is_enabled("neutralisation_strong_acid_strong_base"), "the existing neutralisation handler is allowlisted")
+	_check(not registry.is_enabled("boil_water"), "boiling stays disabled until a dedicated reaction handler exists")
+	_check(not registry.is_enabled("magnesium_combustion_virtual_demo"), "the magnesium visual demo cannot be enabled as a generic reaction")
+
+	var matcher := ReactionMatcher.new(_host.database, registry)
+	var beaker := _find("beaker_250ml")
+	var water_bottle := _find("reagent_bottle_500ml", "water")
+	var salt_bottle := _find("reagent_bottle_500ml", "sodium_chloride")
+	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
+		{"amount_ml": 50.0}, "prepare the matcher with virtual water")
+	_expect_success(AddSolidCommand.new(), &"add_solid", salt_bottle.id, beaker.id,
+		{"amount_g": 5.0}, "prepare the matcher with virtual table salt")
+	var before_match: Dictionary = _sim().capture_snapshot()
+	var matched: ReactionResult = matcher.match("dissolve_sodium_chloride", beaker.vessel)
+	_check(matched.status == ReactionResult.Status.MATCHED, "matcher recognises water and solid sodium chloride in the same vessel")
+	_check(matched.matched_reactants.size() == 2 and matched.missing_reactants.is_empty(),
+		"matched result records both required participants")
+	_check(_sim().capture_snapshot() == before_match, "matching is read-only and does not mutate vessel state")
+	_check(matched.consumed.is_empty() and matched.produced.is_empty(),
+		"the readiness result does not pretend to consume reactants or create products")
+	var result_snapshot: Dictionary = matched.to_dictionary()
+	(result_snapshot["matched_reactants"] as Array).clear()
+	_check(matched.matched_reactants.size() == 2, "serialized result collections are independent copies")
+
+	_fresh()
+	beaker = _find("beaker_250ml")
+	water_bottle = _find("reagent_bottle_500ml", "water")
+	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
+		{"amount_ml": 50.0}, "prepare a vessel with water only")
+	var missing: ReactionResult = matcher.match("dissolve_sodium_chloride", beaker.vessel)
+	_check(missing.status == ReactionResult.Status.NOT_MATCHED and missing.missing_reactants.size() == 1,
+		"matcher reports the missing solid when the solvent is present")
+
+	_fresh()
+	var flask := _find("erlenmeyer_flask_250ml")
+	var acid := _find("reagent_bottle_500ml", "hydrochloric_acid_0_1m")
+	var base := _find("reagent_bottle_500ml", "sodium_hydroxide_0_1m")
+	_expect_success(PourCommand.new(), &"pour", acid.id, flask.id,
+		{"amount_ml": 50.0}, "prepare the dilute acid participant in the virtual model")
+	_expect_success(PourCommand.new(), &"pour", base.id, flask.id,
+		{"amount_ml": 50.0}, "prepare the dilute base participant in the virtual model")
+	var neutralisation: ReactionResult = matcher.match("neutralisation_strong_acid_strong_base", flask.vessel)
+	_check(neutralisation.status == ReactionResult.Status.MATCHED,
+		"matcher recognises the registered acid/base participant pair")
+
+	var demo: ReactionResult = matcher.match("magnesium_combustion_virtual_demo", flask.vessel)
+	_check(demo.status == ReactionResult.Status.REJECTED,
+		"matcher refuses a disabled, observation-only visual demonstration")
+	var unknown: ReactionResult = matcher.match("not_a_real_reaction", flask.vessel)
+	_check(unknown.status == ReactionResult.Status.REJECTED,
+		"matcher refuses unknown reaction identifiers")
 
 
 func _test_save_load_session() -> void:
