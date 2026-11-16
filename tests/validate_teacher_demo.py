@@ -76,6 +76,28 @@ def main() -> int:
     mapped_prep2 = next(item for item in grade_pack["grade_experiments"] if item["grade_id"] == "prep2")
     assert magnesium_demo["id"] in mapped_prep2["experiment_ids"], "Prep 2 experiment bank mapping missing magnesium demo."
 
+    # Guided activities are restricted to a small, virtual-only classroom command set.
+    guided = read_json(ROOT / "data/learning/guided_experiments.json")
+    assert guided.get("safety_scope") == "virtual_only_classroom_model"
+    allowed_commands = {"pour", "add_solid", "mix"}
+    allowed_materials = {"water", "sodium_chloride"}
+    allowed_vessels = {"beaker_250ml", "erlenmeyer_flask_250ml", "test_tube_20ml"}
+    assert guided.get("experiments"), "Guided experiment list must not be empty"
+    for activity in guided["experiments"]:
+        assert activity.get("enabled") is True
+        assert activity.get("alignment_status") == "suggested_not_verified_against_official_textbook"
+        for step in activity.get("steps", []):
+            if step.get("type") == "action":
+                assert step.get("command") in allowed_commands
+                assert step.get("interaction_id") in allowed_commands
+                assert step.get("source_contains_chemical_id", step.get("target_contains_chemical_id", "water")) in allowed_materials
+                assert step.get("target_equipment_id", "beaker_250ml") in allowed_vessels
+            elif step.get("type") == "condition":
+                assert step.get("condition") == "minimum_dissolved_g"
+                assert step.get("chemical_id") in allowed_materials
+            else:
+                raise AssertionError("Unsupported guided activity step type")
+
     source_ids = {item.get("id") for item in guide.get("sources", [])}
     required_sources = {
         "openstax_dissolution",
