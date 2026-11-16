@@ -1,3 +1,13 @@
+## Reaction Engine V3 foundation (2026-11-16) - awaiting Godot verification
+- Added a versioned, explicit reaction registry outside the legacy reaction-definition directory; registry entries validate reaction IDs, handler/type mappings, enable flags and virtual-only scope.
+- Added a read-only matcher for approved chemical participants and phase-aware vessel ledgers, including bounded virtual quantity requirements and temperature comparisons.
+- Added a structured result envelope with matched/missing participants, status, observations, output ledgers and error/warning fields.
+- Connected the registry to ContentDatabase and explicitly ignore the short-lived legacy registry JSON if it appears inside `data/reactions/`.
+- Added participant metadata for the current dissolution and neutralisation definitions, plus static schema checks and headless matcher/result scenarios.
+- Only the existing dissolution and neutralisation handlers are enabled. Boiling and the magnesium visual demo remain disabled for generic matching.
+- This is not yet a generic reaction executor: matching is read-only and does not consume reactants, produce products, or prove mass/charge conservation.
+- Godot runtime and editor verification are pending.
+
 ## Guided virtual experiment v1 (2026-11-16) - awaiting Godot verification
 - Added a JSON-defined water-and-sodium-chloride guided activity with ordered accepted-action checks and a final dissolved-mass condition.
 - Added a restricted tracker that evaluates only the approved classroom commands (pour, add_solid and mix), the water/sodium-chloride virtual material subset and supported vessel types.
