@@ -396,6 +396,22 @@ func _test_reaction_registry_and_matcher() -> void:
 	_check(matched.status == ReactionResult.Status.MATCHED, "matcher recognises water and solid sodium chloride in the same vessel")
 	_check(matched.matched_reactants.size() == 2 and matched.missing_reactants.is_empty(),
 		"matched result records both required participants")
+	_check(str(matched.matched_reactants[0].get("required_unit", "")) == "mL",
+		"liquid requirements report millilitres")
+	_check(str(matched.matched_reactants[1].get("required_unit", "")) == "g",
+		"solid requirements report grams")
+
+	var salt_definition: ReactionDefinition = _host.database.reactions.get("dissolve_sodium_chloride") as ReactionDefinition
+	var original_reactants: Array = salt_definition.reactants.duplicate(true)
+	var wrong_unit_reactants: Array = original_reactants.duplicate(true)
+	var wrong_unit_participant: Dictionary = wrong_unit_reactants[0]
+	wrong_unit_participant["minimum_amount_unit"] = "g"
+	wrong_unit_reactants[0] = wrong_unit_participant
+	salt_definition.reactants = wrong_unit_reactants
+	var wrong_unit_result: ReactionResult = matcher.match_reaction("dissolve_sodium_chloride", beaker.vessel)
+	_check(wrong_unit_result.status == ReactionResult.Status.INVALID,
+		"matcher rejects a threshold unit that conflicts with its participant phase")
+	salt_definition.reactants = original_reactants
 	_check(_sim().capture_snapshot() == before_match, "matching is read-only and does not mutate vessel state")
 	_check(matched.consumed.is_empty() and matched.produced.is_empty(),
 		"the readiness result does not pretend to consume reactants or create products")
