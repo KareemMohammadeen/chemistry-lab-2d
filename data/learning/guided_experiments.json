@@ -44,11 +44,12 @@
           "type": "condition",
           "condition": "minimum_dissolved_g",
           "chemical_id": "sodium_chloride",
-          "minimum_g": 1.0,
+          "minimum_g": 1,
           "prompt": "Wait for the model to dissolve at least 1 g of the salt, then inspect the vessel.",
           "success": "The model confirms that at least 1 g of salt has dissolved."
         }
-      ]
+      ],
+      "safety_scope": "virtual_only_classroom_model"
     }
   ]
 }
