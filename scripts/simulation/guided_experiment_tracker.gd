@@ -10,7 +10,7 @@ const ALLOWED_VESSELS: Array[String] = ["beaker_250ml", "erlenmeyer_flask_250ml"
 
 static func evaluate(experiment: Dictionary, history: Array, start_index: int, sim: LabSimulation) -> Dictionary:
 	var steps_value: Variant = experiment.get("steps", [])
-	if not bool(experiment.get("enabled", false)) or str(experiment.get("safety_scope", "virtual_only_classroom_model")) != "virtual_only_classroom_model":
+	if not bool(experiment.get("enabled", false)) or str(experiment.get("safety_scope", "")) != "virtual_only_classroom_model":
 		return _result(0, 0, "", false, "This activity is not enabled for the virtual classroom model.")
 	if typeof(steps_value) != TYPE_ARRAY:
 		return _result(0, 0, "", false, "The activity step list is invalid.")
