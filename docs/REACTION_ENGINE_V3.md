@@ -26,6 +26,7 @@ The matcher is a read-only readiness check. It verifies:
 3. Every reactant names a known, explicitly virtual-enabled chemical.
 4. The required phase exists in the vessel ledger (`liquid`, `solid`, `dissolved` or `gas`).
 5. The required model quantity is present.
+   - Threshold units must match the phase ledger: liquid uses `mL`, solid/dissolved use `g`, and gas uses `mol`. Missing or mismatched units are invalid definitions.
 6. Any supported condition is satisfied.
 
 The first supported condition is a numeric `temperature_c` comparison (`gte`, `lte` or `eq`). Unknown conditions are rejected instead of being silently ignored. Reference-element participants are rejected: periodic-table specimens remain visual references, not reagents.
