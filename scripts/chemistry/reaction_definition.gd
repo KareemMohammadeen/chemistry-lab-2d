@@ -49,12 +49,12 @@ static func from_dictionary(data: Dictionary) -> ReactionDefinition:
 	reaction.level = str(data.get("level", ""))
 	reaction.time_constant_s = DataValue.number(data, "time_constant_s", 10.0)
 	reaction.enthalpy_kj_per_mol = DataValue.number(data, "enthalpy_kj_per_mol", 0.0)
-	reaction.observations = data.get("observations", {})
-	reaction.reactants = data.get("reactants", [])
-	reaction.products = data.get("products", [])
-	reaction.conditions = data.get("conditions", [])
+	reaction.observations = data.get("observations", {}) if typeof(data.get("observations", {})) == TYPE_DICTIONARY else {}
+	reaction.reactants = _as_array(data.get("reactants", []))
+	reaction.products = _as_array(data.get("products", []))
+	reaction.conditions = _as_array(data.get("conditions", []))
 	reaction.safety_status = str(data.get("safety_status", ""))
-	reaction.source_ids = data.get("source_ids", [])
+	reaction.source_ids = _as_array(data.get("source_ids", []))
 	reaction.virtual_only = bool(data.get("virtual_only", false))
 	reaction.product_solid_id = str(data.get("product_solid_id", ""))
 	reaction.illustrative_output_g = DataValue.number(data, "illustrative_output_g", 0.0)
@@ -66,3 +66,9 @@ static func from_dictionary(data: Dictionary) -> ReactionDefinition:
 
 func observation(key: String) -> String:
 	return str(observations.get(key, ""))
+
+
+static func _as_array(value: Variant) -> Array:
+	if typeof(value) == TYPE_ARRAY:
+		return value
+	return []
