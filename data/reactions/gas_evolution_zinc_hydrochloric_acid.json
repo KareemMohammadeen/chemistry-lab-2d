@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "id": "gas_evolution_zinc_hydrochloric_acid",
+  "type": "gas_evolution",
+  "name": "Gas evolution from zinc and hydrochloric acid",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "Zn(s) + 2 HCl(aq) → ZnCl2 + H2(g)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "Bubbles of gas form as the metal reacts with the acid.",
+    "completed": "Hydrogen gas is released from the mixture.",
+    "gas": "Hydrogen bubbles are rising through the liquid."
+  },
+  "explanation": "The metal displaces hydrogen from the acid in a safe classroom model, producing hydrogen gas and a dissolved salt.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "zinc",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    },
+    {
+      "chemical_id": "hydrochloric_acid_0_1m",
+      "coefficient": 2,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "zinc_chloride",
+      "coefficient": 1,
+      "phase": "dissolved"
+    },
+    {
+      "chemical_id": "hydrogen_gas",
+      "coefficient": 1,
+      "phase": "gas"
+    }
+  ],
+  "conditions": []
+}
