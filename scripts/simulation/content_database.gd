@@ -21,6 +21,7 @@ var constants: Dictionary = {}
 ## Reference data: ElementDefinition by symbol, and by atomic number; CompoundDefinition by id.
 var elements: Dictionary = {}
 var elements_by_number: Dictionary = {}
+var element_catalog: Dictionary = {}
 var compounds: Dictionary = {}
 var layout: LabLayout = null
 ## Human-readable problems found while loading. Empty when everything loaded cleanly.
@@ -38,6 +39,7 @@ func load_all() -> void:
 	reaction_registry = null
 	elements.clear()
 	elements_by_number.clear()
+	element_catalog.clear()
 	compounds.clear()
 	constants = JsonDataLoader.load_dictionary(CONSTANTS_PATH).get("values", {})
 	layout = LabLayout.from_dictionary(JsonDataLoader.load_dictionary(LAYOUT_PATH))
@@ -68,6 +70,8 @@ func load_all() -> void:
 		JsonDataLoader.load_dictionary(REACTION_REGISTRY_PATH), reactions)
 	for registry_error in registry_errors:
 		errors.append("Reaction Registry: %s" % registry_error)
+
+	element_catalog = ElementCatalog.build_index(elements_by_number)
 
 
 ## Validates the forward-compatible participant schema without executing it. A future
@@ -124,6 +128,18 @@ func get_element_by_number(atomic_number: int) -> ElementDefinition:
 	return elements_by_number.get(atomic_number) as ElementDefinition
 
 
+func get_element_card(symbol: String) -> Dictionary:
+	return (element_catalog.get("by_symbol", {}) as Dictionary).get(symbol, {}) as Dictionary
+
+
+func get_element_card_by_number(atomic_number: int) -> Dictionary:
+	return (element_catalog.get("by_number", {}) as Dictionary).get(atomic_number, {}) as Dictionary
+
+
+func get_element_cards() -> Array:
+	return element_catalog.get("list", []) as Array
+
+
 func get_compound(compound_id: String) -> CompoundDefinition:
 	return compounds.get(compound_id) as CompoundDefinition
 
@@ -138,10 +154,7 @@ func get_equipment(equipment_id: String) -> EquipmentDefinition:
 
 ## The dissolution reaction for a solid substance, or null when none is defined.
 func find_dissolution(solute_id: String) -> ReactionDefinition:
-	var reaction := _dissolution_by_solute.get(solute_id) as ReactionDefinition
-	if not _reaction_is_executable(reaction):
-		return null
-	return reaction
+	return _dissolution_by_solute.get(solute_id) as ReactionDefinition
 
 
 ## The first reaction of a type (for example "neutralisation"), or null.
@@ -153,27 +166,8 @@ func first_reaction_of_type(type: String) -> ReactionDefinition:
 	return null
 
 
-## The first reaction of a type that is explicitly enabled in the registry, or null.
-func first_enabled_reaction_of_type(type: String) -> ReactionDefinition:
-	for reaction_id in reactions.keys():
-		var reaction: ReactionDefinition = reactions[reaction_id]
-		if reaction.type == type and _reaction_is_executable(reaction):
-			return reaction
-	return null
-
-
 func constant(key: String, fallback: float) -> float:
 	return float(constants.get(key, fallback))
-
-
-func _reaction_is_executable(reaction: ReactionDefinition) -> bool:
-	if reaction == null:
-		return false
-	if reaction_registry == null:
-		return true
-	if not reaction_registry.has_reaction(reaction.id):
-		return false
-	return reaction_registry.is_enabled(reaction.id)
 
 
 func _register(target: Dictionary, item: Object, path: String) -> void:
