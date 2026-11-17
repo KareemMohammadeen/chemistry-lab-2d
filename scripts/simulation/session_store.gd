@@ -177,8 +177,19 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 					return "A saved vessel has an invalid %s ledger." % bucket
 				for chemical_key in (amounts as Dictionary).keys():
 					var chemical_id := str(chemical_key)
-					if database.get_chemical(chemical_id) == null:
+					var chemical := database.get_chemical(chemical_id)
+					if chemical == null:
 						return "The session refers to unknown simulated chemical '%s'." % chemical_id
+					var expected_state := ""
+					match bucket:
+						"liquids":
+							expected_state = "liquid"
+						"solids":
+							expected_state = "solid"
+						"dissolved":
+							expected_state = "solid"
+					if not expected_state.is_empty() and chemical.state != expected_state:
+						return "A saved vessel contains '%s' in the wrong phase bucket." % chemical_id
 					var amount: Variant = amounts[chemical_key]
 					if not _is_finite_number(amount) or float(amount) < 0.0:
 						return "A saved amount for '%s' is invalid." % chemical_id
