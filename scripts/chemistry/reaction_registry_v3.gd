@@ -11,6 +11,13 @@ const EXECUTABLE_REACTION_TYPES := {
 	"dissolution": true,
 	"neutralisation": true,
 	"boiling": true,
+	"gas_evolution": true,
+	"precipitation": true,
+	"acid_carbonate": true,
+	"single_displacement": true,
+	"double_displacement": true,
+	"combustion": true,
+	"phase_change": true,
 }
 
 var entries: Dictionary = {}
