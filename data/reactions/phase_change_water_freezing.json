@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "id": "phase_change_water_freezing",
+  "type": "phase_change",
+  "name": "Freezing of water",
+  "tier": "qualitative",
+  "equation": "H2O(l) → H2O(s)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "The liquid cools and begins turning into solid ice.",
+    "completed": "Water has frozen into solid ice."
+  },
+  "explanation": "This virtual model shows a change of state from liquid water to solid water.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "ice",
+      "coefficient": 1,
+      "phase": "solid"
+    }
+  ],
+  "conditions": []
+}
