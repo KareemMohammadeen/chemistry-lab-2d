@@ -26,6 +26,8 @@ var appearance: String = ""
 var hazards: String = ""
 var description: String = ""
 var radioactive: bool = false
+## Data-defined preferred drawing form: cube, powder, ribbon, gas_cylinder, liquid_drop, crystal.
+var sample_form: String = ""
 
 
 static func from_dictionary(data: Dictionary) -> ElementDefinition:
@@ -57,6 +59,7 @@ static func from_dictionary(data: Dictionary) -> ElementDefinition:
 	element.hazards = str(data.get("hazards", "")) if data.get("hazards") != null else ""
 	element.description = str(data.get("description", ""))
 	element.radioactive = bool(data.get("radioactive", false))
+	element.sample_form = str(data.get("sample_form", ""))
 	return element
 
 

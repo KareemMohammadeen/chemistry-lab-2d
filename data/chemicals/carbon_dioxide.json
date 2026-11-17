@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "id": "carbon_dioxide",
+  "name": "Carbon dioxide",
+  "short_name": "Carbon dioxide",
+  "formula": "CO2",
+  "formula_display": "CO₂",
+  "state": "gas",
+  "category": "virtual gas",
+  "color": [0.82, 0.90, 0.94, 0.75],
+  "color_status": "display",
+  "density_g_ml": {"value": 0.00198, "status": "unverified_reference", "unit": "g/mL", "condition": "reference only; not used by the simulation"},
+  "boiling_point_c": {"value": -78.5, "status": "unverified_reference", "unit": "°C", "condition": "sublimation reference; not used by the simulation"},
+  "is_aqueous_solvent": false,
+  "acid_base": {"h_plus_mol_per_l": 0.0, "oh_minus_mol_per_l": 0.0},
+  "label_lines": ["Carbon dioxide", "CO₂"],
+  "safety": {
+    "status": "reference_only",
+    "summary": "Gas reference for a sealed, software-only teaching model. This record does not authorise real-world handling or use.",
+    "storage": "Not applicable: virtual sample only.",
+    "source": "Educational boundary written for the Chemistry Lab simulation."
+  },
+  "display": {
+    "summary": "A colourless molecular gas. In this software, a small virtual sample is retained inside an automatically sealed model vessel."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "virtual_gas",
+    "max_virtual_addition_mol": 0.002,
+    "note": "Software-only classroom representation. No real gas cylinder, pressure equipment or handling procedure is represented."
+  }
+}

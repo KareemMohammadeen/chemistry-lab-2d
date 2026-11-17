@@ -13,7 +13,7 @@ var _symbol: String = ""
 func setup(data: Dictionary) -> void:
 	_profile = profile_for(data)
 	_symbol = str(data.get("symbol", "?"))
-	custom_minimum_size = Vector2(132.0, 112.0)
+	custom_minimum_size = Vector2(116.0, 92.0)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	queue_redraw()
 
@@ -22,17 +22,27 @@ func setup(data: Dictionary) -> void:
 ## fall back to a conceptual atom model instead of inventing a physical sample.
 static func profile_for(data: Dictionary) -> Dictionary:
 	var symbol := str(data.get("symbol", "?"))
-	var state := str(data.get("state_at_stp", "")).to_lower()
+	var raw_state: Variant = data.get("state_at_stp", "")
+	var state := str(raw_state.get("value", "")) if typeof(raw_state) == TYPE_DICTIONARY else str(raw_state)
+	state = state.to_lower()
 	var category := str(data.get("category", "")).to_lower()
 	var atomic_number := int(data.get("atomic_number", 0))
 	var hazards := str(data.get("hazards", "")).strip_edges()
 	var restricted := bool(data.get("radioactive", false)) or not hazards.is_empty()
 	var form := "unknown_atom"
-
-	if state == "gas":
-		form = "gas_atom" if MONATOMIC_GASES.has(symbol) or category == "noble gas" else "gas_molecule"
-	elif state == "liquid":
+	var sample_form := str(data.get("sample_form", "")).to_lower()
+	if sample_form == "ribbon" or symbol == "Mg":
+		form = "solid_ribbon"
+	elif sample_form == "powder" or symbol in ["S", "P"]:
+		form = "solid_powder"
+	elif sample_form in ["gas_cylinder", "sealed_gas_cylinder"] or state == "gas":
+		form = "gas_cylinder"
+	elif sample_form in ["liquid", "liquid_drop"] or state == "liquid":
 		form = "liquid"
+	elif sample_form == "cube":
+		form = "solid_metal"
+	elif sample_form == "crystal":
+		form = "solid_crystal"
 	elif state == "solid":
 		form = "solid_metal" if _is_metal_category(category) else "solid_crystal"
 
@@ -42,12 +52,14 @@ static func profile_for(data: Dictionary) -> Dictionary:
 			form_label = "SOLID · METALLIC SPECIMEN"
 		"solid_crystal":
 			form_label = "SOLID · CRYSTAL / MINERAL MODEL"
+		"solid_powder":
+			form_label = "SOLID · POWDER SAMPLE MODEL"
+		"solid_ribbon":
+			form_label = "SOLID · METALLIC RIBBON MODEL"
 		"liquid":
 			form_label = "LIQUID · CONTAINED DROP MODEL"
-		"gas_molecule":
-			form_label = "GAS · DIATOMIC MOLECULE MODEL"
-		"gas_atom":
-			form_label = "GAS · MONATOMIC PARTICLE MODEL"
+		"gas_cylinder":
+			form_label = "GAS · SEALED DISPLAY CYLINDER"
 	if restricted:
 		form_label += " · SEALED VIRTUAL DISPLAY"
 
@@ -94,23 +106,38 @@ func _draw() -> void:
 	var center := size * 0.5
 	match str(_profile.get("form", "unknown_atom")):
 		"solid_metal":
-			_draw_metal_cube(center, tint)
+			if _symbol == "Mg":
+				_draw_magnesium_ribbon(center, tint)
+			else:
+				_draw_metal_cube(center, tint)
 		"solid_crystal":
 			if _symbol == "C":
 				_draw_graphite(center, tint)
 			else:
 				_draw_crystal_cluster(center, tint)
+			_draw_symbol_tag(center, tint, _symbol)
+		"solid_powder":
+			_draw_powder_sample(center, tint)
+		"solid_ribbon":
+			_draw_magnesium_ribbon(center, tint)
 		"liquid":
 			_draw_liquid(center, tint)
-		"gas_molecule":
-			_draw_diatomic_molecule(center, tint)
-		"gas_atom":
-			_draw_monatomic_particle(center, tint)
+		"gas_cylinder":
+			_draw_gas_sample_cylinder(center, tint)
 		_:
 			_draw_conceptual_atom(center, tint)
+			_draw_symbol_tag(center, tint, _symbol)
 	if bool(_profile.get("restricted", false)):
 		_draw_sealed_display_frame()
 	draw_rect(Rect2(Vector2(1.0, 1.0), size - Vector2(2.0, 2.0)), Color("#365064"), false, 1.2, true)
+
+
+func _draw_symbol_tag(center: Vector2, tint: Color, symbol: String) -> void:
+	var tag := Rect2(center + Vector2(-20.0, 20.0), Vector2(40.0, 20.0))
+	draw_rect(tag, Color(0.04, 0.09, 0.13, 0.78), true)
+	draw_rect(tag, Color(tint.lightened(0.35), 0.8), false, 1.0)
+	draw_string(ThemeDB.fallback_font, tag.position + Vector2(0.0, 15.0), symbol,
+		HORIZONTAL_ALIGNMENT_CENTER, tag.size.x, 13, Color("#F8FBFD"))
 
 
 func _draw_metal_cube(center: Vector2, tint: Color) -> void:
@@ -133,6 +160,61 @@ func _draw_metal_cube(center: Vector2, tint: Color) -> void:
 		top[0], top[1], side[2], front[2], front[3], top[3], top[0]
 	]), tint.lightened(0.55), 2.0, true)
 	draw_line(center + Vector2(-25.0, -10.0), center + Vector2(-5.0, 1.0), Color(1.0, 1.0, 1.0, 0.32), 2.0, true)
+	draw_string(ThemeDB.fallback_font, center + Vector2(-21.0, 24.0), _symbol,
+		HORIZONTAL_ALIGNMENT_CENTER, 42.0, 16, Color("#F8FBFD"))
+
+
+func _draw_magnesium_ribbon(center: Vector2, tint: Color) -> void:
+	var back := PackedVector2Array([
+		center + Vector2(-43.0, 21.0), center + Vector2(-31.0, -20.0),
+		center + Vector2(32.0, -32.0), center + Vector2(41.0, -16.0),
+		center + Vector2(-22.0, -5.0), center + Vector2(-30.0, 29.0)
+	])
+	draw_colored_polygon(back, tint.darkened(0.22))
+	draw_polyline(back, tint.lightened(0.45), 1.7, true)
+	var front := PackedVector2Array([
+		center + Vector2(-42.0, 12.0), center + Vector2(-32.0, -25.0),
+		center + Vector2(28.0, -36.0), center + Vector2(37.0, -21.0),
+		center + Vector2(-25.0, -10.0), center + Vector2(-31.0, 21.0)
+	])
+	draw_colored_polygon(front, tint.lightened(0.18))
+	draw_polyline(front, tint.lightened(0.58), 1.5, true)
+	draw_line(center + Vector2(-21.0, -13.0), center + Vector2(25.0, -22.0), Color(1.0, 1.0, 1.0, 0.55), 1.8, true)
+	draw_string(ThemeDB.fallback_font, center + Vector2(-12.0, 38.0), "Mg",
+		HORIZONTAL_ALIGNMENT_CENTER, 24.0, 14, Color("#F8FBFD"))
+
+
+func _draw_powder_sample(center: Vector2, tint: Color) -> void:
+	var base := PackedVector2Array()
+	for index in range(32):
+		var angle := TAU * float(index) / 32.0
+		base.append(center + Vector2(cos(angle) * 43.0, 20.0 + sin(angle) * 14.0))
+	draw_colored_polygon(base, Color("#263440"))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-40.0, 18.0), center + Vector2(-28.0, 1.0),
+		center + Vector2(-12.0, -7.0), center + Vector2(9.0, -3.0),
+		center + Vector2(29.0, 4.0), center + Vector2(40.0, 18.0)
+	]), tint)
+	for index in range(28):
+		var x := (fposmod(float(index) * 0.618, 1.0) - 0.5) * 76.0
+		var y := 7.0 + fposmod(float(index) * 0.371, 1.0) * 19.0
+		draw_circle(center + Vector2(x, y), 1.2 + float(index % 3) * 0.4, tint.lightened(0.2))
+	draw_string(ThemeDB.fallback_font, center + Vector2(-12.0, -15.0), _symbol,
+		HORIZONTAL_ALIGNMENT_CENTER, 24.0, 14, Color("#1C2B33"))
+
+
+func _draw_gas_sample_cylinder(center: Vector2, tint: Color) -> void:
+	var body := Rect2(center + Vector2(-23.0, -31.0), Vector2(46.0, 68.0))
+	draw_style_box(LabTheme.box(Color("#AFC1CA"), Color("#536D7B"), 2, 13, 3, 3), body)
+	draw_rect(Rect2(center.x - 15.0, center.y - 39.0, 30.0, 9.0), LabColors.METAL)
+	draw_rect(Rect2(center.x - 7.0, center.y - 47.0, 14.0, 8.0), LabColors.METAL.lightened(0.2))
+	draw_rect(Rect2(center.x - 13.0, center.y - 15.0, 26.0, 30.0), Color(tint, 0.28))
+	draw_line(center + Vector2(-15.0, -23.0), center + Vector2(-15.0, 27.0), Color(1.0, 1.0, 1.0, 0.65), 2.6, true)
+	var gas_label := _symbol
+	if DIATOMIC_GASES.has(_symbol):
+		gas_label += "₂"
+	draw_string(ThemeDB.fallback_font, center + Vector2(-16.0, 6.0), gas_label,
+		HORIZONTAL_ALIGNMENT_CENTER, 32.0, 14, Color("#16242D"))
 
 
 func _draw_crystal_cluster(center: Vector2, tint: Color) -> void:
@@ -183,6 +265,8 @@ func _draw_liquid(center: Vector2, tint: Color) -> void:
 		draw_circle(center + Vector2(0.0, 11.0), 29.0, tint.darkened(0.16))
 		draw_circle(center + Vector2(-8.0, 2.0), 18.0, tint)
 		draw_circle(center + Vector2(-14.0, -5.0), 6.0, Color(1.0, 1.0, 1.0, 0.28))
+	draw_string(ThemeDB.fallback_font, center + Vector2(-17.0, 39.0), _symbol,
+		HORIZONTAL_ALIGNMENT_CENTER, 34.0, 14, Color("#24303A"))
 
 
 func _draw_diatomic_molecule(center: Vector2, tint: Color) -> void:

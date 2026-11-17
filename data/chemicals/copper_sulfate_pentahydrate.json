@@ -11,7 +11,7 @@
     0.16,
     0.42,
     0.86,
-    1.0
+    1
   ],
   "color_status": "display",
   "solution_color": [
@@ -20,7 +20,7 @@
     0.95,
     0.78
   ],
-  "color_full_at_g_per_100ml": 8.0,
+  "color_full_at_g_per_100ml": 8,
   "density_g_ml": {
     "value": 2.286,
     "status": "reference",
@@ -63,5 +63,10 @@
   },
   "display": {
     "summary": "Blue crystals. Dissolving them in water gives a blue solution."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
   }
 }

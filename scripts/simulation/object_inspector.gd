@@ -62,6 +62,9 @@ static func _describe_vessel(sim: LabSimulation, item: LabObject, equipment: Equ
 	var ph := AcidBase.compute_ph(vessel, db)
 	if not is_nan(ph):
 		rows.append({"label": "pH (calculated)", "value": "%.1f" % ph})
+	rows.append({"label": "System", "value": "Closed · gas retained" if vessel.is_closed_system else "Open"})
+	if vessel.is_closed_system:
+		rows.append({"label": "Pressure (model)", "value": "%.1f kPa" % vessel.pressure_kpa(db.constant("ambient_pressure_kpa", 101.325))})
 
 	var contents: Array = data["contents"]
 	var chemical_ids: Array = []
@@ -70,6 +73,12 @@ static func _describe_vessel(sim: LabSimulation, item: LabObject, equipment: Equ
 		contents.append({"name": _name_of(liquid, str(chemical_id)),
 			"amount": UnitFormat.volume_ml(float(vessel.liquids[chemical_id])), "detail": ""})
 		chemical_ids.append(str(chemical_id))
+	for gas_id in vessel.gases.keys():
+		var gas := db.get_chemical(str(gas_id))
+		contents.append({"name": _name_of(gas, str(gas_id)),
+			"amount": "%.4f mol" % float(vessel.gases[gas_id]), "detail": "retained gas"})
+		chemical_ids.append(str(gas_id))
+
 	var solute_ids: Array = []
 	for chemical_id in vessel.solids.keys():
 		solute_ids.append(str(chemical_id))
@@ -112,6 +121,10 @@ static func _describe_vessel(sim: LabSimulation, item: LabObject, equipment: Equ
 		actions.append({"id": "mix", "label": "Mix", "hint": "Stir the contents."})
 	if equipment.supports("heat"):
 		actions.append({"id": "heat", "label": "Heat", "hint": "Switch the hot plate under this vessel on or off."})
+	if vessel.is_closed_system:
+		actions.append({"id": "vent_system", "label": "Return to open system", "hint": "Clear the retained virtual-gas ledger and return the model to ambient pressure."})
+	if db.reactions.has("magnesium_combustion_virtual_demo"):
+		actions.append({"id": "run_demo", "label": "Show magnesium model", "hint": "Play the qualitative, observation-only white-light and white-product demonstration."})
 
 	if equipment.supports("pour"):
 		var use_grams := not vessel.has_liquid() and vessel.has_solids()
@@ -153,8 +166,16 @@ static func _state_text(sim: LabSimulation, item: LabObject, equipment: Equipmen
 			parts.append("Solution")
 		else:
 			parts.append("Contains liquid")
-	else:
+	elif vessel.has_solids():
 		parts.append("Contains solid")
+	elif vessel.has_gas():
+		parts.append("Contains virtual gas")
+	else:
+		parts.append("No liquid or solid contents")
+	if vessel.has_gas():
+		parts.append("contains retained gas")
+	if vessel.is_closed_system:
+		parts.append("closed system")
 	if vessel.stir_time_left_s > 0.0:
 		parts.append("being stirred")
 	if item.supported_by != "":

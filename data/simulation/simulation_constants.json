@@ -1,29 +1,35 @@
 {
   "version": 1,
   "values": {
-    "ambient_temperature_c": 22.0,
+    "ambient_temperature_c": 22,
     "fixed_step_s": 0.1,
     "max_steps_per_frame": 8,
     "speeds": [
-      1.0,
-      2.0,
-      4.0
+      1,
+      2,
+      4
     ],
     "specific_heat_water_j_per_g_k": 4.184,
     "specific_heat_glass_j_per_g_k": 0.84,
     "ambient_loss_w_per_k": 0.3,
-    "stir_time_constant_divisor": 4.0,
-    "stir_duration_s": 10.0,
+    "stir_time_constant_divisor": 4,
+    "stir_duration_s": 10,
     "colour_observation_threshold": 0.15,
     "boil_margin_c": 0.5,
     "neutral_ph_tolerance_fraction": 0.001,
-    "temperature_hot_label_c": 60.0
+    "temperature_hot_label_c": 60,
+    "ambient_pressure_kpa": 101.325,
+    "max_virtual_pressure_kpa": 300,
+    "virtual_gas_addition_moles": 0.002
   },
   "status": {
     "specific_heat_water_j_per_g_k": "unverified_reference",
     "specific_heat_glass_j_per_g_k": "placeholder",
     "ambient_loss_w_per_k": "placeholder",
     "stir_time_constant_divisor": "placeholder",
-    "stir_duration_s": "placeholder"
+    "stir_duration_s": "placeholder",
+    "ambient_pressure_kpa": "reference",
+    "max_virtual_pressure_kpa": "safety_limit_for_virtual_model",
+    "virtual_gas_addition_moles": "virtual_demo_limit_not_a_real_world_quantity"
   }
 }

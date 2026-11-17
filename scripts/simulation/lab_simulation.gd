@@ -147,6 +147,10 @@ func _main_content_id(vessel: VesselState) -> String:
 	return best_id
 
 
+func record_observation(object_id: String, entry: Dictionary) -> void:
+	_record_observation(object_id, entry)
+
+
 func _record_observation(object_id: String, entry: Dictionary) -> void:
 	var item := state.get_object(object_id)
 	if item == null or item.vessel == null:

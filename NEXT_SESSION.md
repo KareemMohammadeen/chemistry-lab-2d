@@ -1,12 +1,14 @@
 # Next Session
 
-1. Open branch `codex/infinite-workbench-equipment-spawn` in Godot 4.3+ and reload the project once if class names are unknown.
-2. Verify Library drag-and-drop: spawn extra beakers / flasks / instruments; add water and sodium chloride directly to vessels; create stock bottles by dropping a reagent onto open space.
-3. Verify the Inspector Mix action starts stirring and accelerates the documented dissolution simulation.
-4. Exercise the infinite workbench: middle-mouse pan, wheel zoom around the cursor, zoom buttons, Center / Home, and object placement far beyond the original canvas bounds.
-5. Run `python3 tests/validate_project.py`, `python3 tests/validate_curriculum.py`, `python3 tests/validate_teacher_demo.py`, and `godot --headless --path . -s tests/run_simulation_tests.gd`.
-6. Confirm undo/redo, session save/load, pouring, heating, reference-only periodic-table tokens, and the existing safety boundary still behave as expected.
+1. Open branch feature/chemistry-engine-v2 in Godot 4.3+ and import the project.
+2. Verify the 118 sample tokens: Fe/Cu cubes with symbols, sulfur/phosphorus powder forms, magnesium ribbon, liquid drops, sealed gas display cylinders, and conceptual unknown-state atoms. Confirm they pan/zoom with the infinite workbench and remain non-reactive.
+3. Drag the virtual carbon-dioxide Library card onto a vessel; verify automatic stopper, retained gas, pressure row and gas content in the Inspector.
+4. Verify that liquid/solid additions and pouring are refused while closed; use Return to open system, then retry. Check Undo/Redo for gas add and open/close state.
+5. Save a closed vessel session, change the scene, and reopen it; check gas amount, trapped air, closed state and pressure are restored. Verify invalid gas ledgers are rejected without replacing the live session.
+6. Open Safe experiment bank and select each of Prep 1, Prep 2, Prep 3, Senior 1 and Senior 2. Verify evidence-status labels. Select a vessel and run the magnesium observation-only model; check white flash, white MgO illustration, Experiment Log and Undo.
+7. Run all validators and Godot headless scenarios from docs/TESTING.md.
+8. Check the normal water + salt, copper sulfate dissolution, neutralisation, heating, pouring and session regression flows.
 
-Key entry points: `scripts/interaction/interaction_controller.gd`, `scripts/ui/lab_workspace.gd`, `scripts/ui/library_card.gd`, `scripts/simulation/commands/spawn_object_command.gd`, `scripts/simulation/commands/add_reagent_command.gd`.
+Key entry points: scripts/simulation/vessel_state.gd, scripts/chemistry/reaction_engine.gd, scripts/simulation/session_store.gd, scripts/ui/element_visual.gd, scripts/ui/lab_workspace.gd, scripts/ui/experiment_catalog.gd.
 
-**Important:** the new controls and scenes have not yet been opened or tested in the Godot engine.
+Important: static checks and the GitHub Godot workflow must pass before considering the implementation verified. In-engine drag/pan/zoom, the stopper/flash visuals, and UI layout still require manual inspection.

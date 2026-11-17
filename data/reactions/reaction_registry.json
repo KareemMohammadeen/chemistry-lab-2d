@@ -1,6 +1,14 @@
 {
-  "version": 1,
-  "description": "Data-driven reaction definitions for the virtual chemistry simulation.",
-  "safety_scope": "virtual_only_classroom_model",
-  "reactions": []
+  "reactions": [
+    {
+      "id": "dissolve_sodium_chloride",
+      "type": "dissolution",
+      "enabled": true
+    },
+    {
+      "id": "dissolve_copper_sulfate_pentahydrate",
+      "type": "dissolution",
+      "enabled": true
+    }
+  ]
 }

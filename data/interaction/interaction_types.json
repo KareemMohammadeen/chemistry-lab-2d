@@ -55,6 +55,21 @@
       "id": "add_reagent",
       "label": "Add classroom reagent",
       "mode": "instant"
+    },
+    {
+      "id": "add_gas",
+      "label": "Add virtual gas",
+      "mode": "instant"
+    },
+    {
+      "id": "vent_system",
+      "label": "Return to open system",
+      "mode": "instant"
+    },
+    {
+      "id": "run_virtual_demo",
+      "label": "Run qualitative virtual demonstration",
+      "mode": "instant"
     }
   ]
 }

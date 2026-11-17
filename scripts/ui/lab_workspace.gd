@@ -44,15 +44,30 @@ var _stage_rect: Rect2 = Rect2()
 var _base_zoom: float = 1.0
 var _zoom_factor: float = 1.0
 var _pan_active: bool = false
+var _flash_overlay: ColorRect
+var _flash_left_s: float = 0.0
 
 
 func bind(host: SimulationHost) -> void:
 	_host = host
 	EventBus.object_selected.connect(_on_object_selected)
+	_host.simulation.observation_added.connect(_on_observation_added)
+	_flash_overlay = ColorRect.new()
+	_flash_overlay.name = "VirtualDemoFlash"
+	_flash_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_flash_overlay.color = Color(1.0, 1.0, 1.0, 0.0)
+	_flash_overlay.z_index = 3000
+	_flash_overlay.visible = false
+	add_child(_flash_overlay)
 	queue_redraw()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if _flash_left_s > 0.0:
+		_flash_left_s = maxf(_flash_left_s - delta, 0.0)
+		_update_flash_overlay()
+	elif _flash_overlay != null and _flash_overlay.visible:
+		_flash_overlay.visible = false
 	if _host == null or _host.simulation == null:
 		return
 	var sim := _host.simulation
@@ -249,6 +264,34 @@ func _unhandled_input(event: InputEvent) -> void:
 		if key_event.pressed and not key_event.echo and key_event.keycode == KEY_HOME:
 			reset_view()
 			get_viewport().set_input_as_handled()
+
+
+## Adds a compact read-only element specimen under the workbench transform so it pans and zooms with the lab.
+func add_reference_sample(payload: Dictionary, screen_position: Vector2) -> void:
+	if payload.is_empty():
+		return
+	var specimen := ElementSpecimen.new()
+	specimen.setup(payload)
+	add_child(specimen)
+	specimen.position = screen_to_workspace(screen_position) - specimen.size * 0.5
+	specimen.z_index = 1200
+
+
+func _on_observation_added(_object_id: String, entry: Dictionary) -> void:
+	if str(entry.get("effect_id", "")) == "white_flash":
+		_flash_left_s = 0.18
+		_update_flash_overlay()
+
+
+func _update_flash_overlay() -> void:
+	if _flash_overlay == null or _stage_rect.size.x <= 0.0:
+		return
+	var top_left := screen_to_workspace(_stage_rect.position)
+	var bottom_right := screen_to_workspace(_stage_rect.end)
+	_flash_overlay.position = top_left
+	_flash_overlay.size = bottom_right - top_left
+	_flash_overlay.color = Color(1.0, 1.0, 1.0, 0.42 * clampf(_flash_left_s / 0.18, 0.0, 1.0))
+	_flash_overlay.visible = _flash_left_s > 0.0
 
 
 func get_view_position(object_id: String) -> Vector2:

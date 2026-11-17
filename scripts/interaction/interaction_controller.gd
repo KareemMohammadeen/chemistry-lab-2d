@@ -303,10 +303,26 @@ func _spawn_library_equipment(equipment_id: String, world_position: Vector2, con
 
 func _add_or_spawn_reagent(chemical_id: String, world_position: Vector2) -> void:
 	var chemical := _host.database.get_chemical(chemical_id)
-	if chemical == null or chemical_id not in ["water", "sodium_chloride"]:
-		_say("Only the classroom water and table-salt materials can be added from this Library.", &"warning")
+	if chemical == null or chemical_id not in ["water", "sodium_chloride", "carbon_dioxide"]:
+		_say("Only approved virtual classroom materials can be added from this Library.", &"warning")
 		return
 	var target_id := _workspace.object_id_at(world_position)
+	if chemical.state == "gas":
+		var gas_target := _host.simulation.state.get_object(target_id)
+		if gas_target == null or gas_target.vessel == null:
+			_say("Drop the virtual gas card directly onto a beaker, flask or test tube.", &"warning")
+			return
+		var gas_command := AddGasCommand.new()
+		gas_command.context = _make_context(&"add_gas", target_id, "", {
+			"chemical_id": chemical_id, "amount_mol": 0.002
+		}, _pointer_data(world_position))
+		var gas_result := _host.submit(gas_command)
+		if not gas_result.is_success:
+			_say(gas_result.message, &"warning")
+			return
+		_select(target_id)
+		_say(gas_result.message, &"info")
+		return
 	if target_id != "":
 		var target := _host.simulation.state.get_object(target_id)
 		if target != null and target.vessel != null:
@@ -342,6 +358,10 @@ func _on_action_requested(action_id: StringName, payload: Dictionary) -> void:
 			_run_simple(&"heat", HeatCommand.new(), {"power": "toggle"})
 		&"set_heater":
 			_run_simple(&"heat", HeatCommand.new(), payload)
+		&"vent_system":
+			_run_simple(&"vent_system", VentSystemCommand.new(), {})
+		&"run_demo":
+			_run_simple(&"run_virtual_demo", RunVirtualDemoCommand.new(), {})
 		&"amount_changed":
 			_amounts["%s:%s" % [_selected_id, str(payload.get("unit", "mL"))]] = float(payload.get("value", 0.0))
 

@@ -6,6 +6,7 @@ extends RefCounted
 
 const CHEMICALS_DIR := "res://data/chemicals"
 const REACTIONS_DIR := "res://data/reactions"
+const REACTION_REGISTRY_PATH := "res://data/reaction_registry_v3.json"
 const EQUIPMENT_DIR := "res://data/equipment"
 const ELEMENTS_PATH := "res://data/elements/elements.json"
 const COMPOUNDS_DIR := "res://data/compounds"
@@ -14,6 +15,7 @@ const LAYOUT_PATH := "res://data/lab/layout.json"
 
 var chemicals: Dictionary = {}
 var reactions: Dictionary = {}
+var reaction_registry: ReactionRegistryV3
 var equipment: Dictionary = {}
 var constants: Dictionary = {}
 ## Reference data: ElementDefinition by symbol, and by atomic number; CompoundDefinition by id.
@@ -34,6 +36,7 @@ func load_all() -> void:
 	reactions.clear()
 	equipment.clear()
 	_dissolution_by_solute.clear()
+	reaction_registry = null
 	elements.clear()
 	elements_by_number.clear()
 	element_catalog.clear()
@@ -47,6 +50,10 @@ func load_all() -> void:
 		var item := EquipmentDefinition.from_dictionary(JsonDataLoader.load_dictionary(path))
 		_register(equipment, item, path)
 	for path in JsonDataLoader.list_json_files(REACTIONS_DIR):
+		# Older builds briefly stored registry metadata beside reaction definitions. Ignore it:
+		# this folder is reserved for actual ReactionDefinition JSON files.
+		if path.get_file() == "reaction_registry.json":
+			continue
 		var reaction := ReactionDefinition.from_dictionary(JsonDataLoader.load_dictionary(path))
 		_register(reactions, reaction, path)
 	_load_reference_data()
@@ -56,8 +63,47 @@ func load_all() -> void:
 			_dissolution_by_solute[reaction.solute] = reaction
 			if not chemicals.has(reaction.solute):
 				errors.append("Reaction '%s' refers to unknown chemical '%s'." % [reaction.id, reaction.solute])
-	
+		_validate_reaction_metadata(reaction)
+
+	reaction_registry = ReactionRegistryV3.new()
+	var registry_errors: PackedStringArray = reaction_registry.load_from_dictionary(
+		JsonDataLoader.load_dictionary(REACTION_REGISTRY_PATH), reactions)
+	for registry_error in registry_errors:
+		errors.append("Reaction Registry: %s" % registry_error)
+
 	element_catalog = ElementCatalog.build_index(elements_by_number)
+
+
+## Validates the forward-compatible participant schema without executing it. A future
+## reaction handler must still opt in by type and pass its own condition/safety checks.
+func _validate_reaction_metadata(reaction: ReactionDefinition) -> void:
+	for participant_group in [
+		{"name": "reactants", "entries": reaction.reactants},
+		{"name": "products", "entries": reaction.products},
+	]:
+		var entries: Variant = participant_group["entries"]
+		if typeof(entries) != TYPE_ARRAY:
+			errors.append("Reaction '%s' has invalid %s metadata." % [reaction.id, participant_group["name"]])
+			continue
+		for participant_value in entries:
+			if typeof(participant_value) != TYPE_DICTIONARY:
+				errors.append("Reaction '%s' contains an invalid participant." % reaction.id)
+				continue
+			var participant: Dictionary = participant_value
+			var coefficient: Variant = participant.get("coefficient", 1)
+			if (typeof(coefficient) != TYPE_INT and typeof(coefficient) != TYPE_FLOAT) \
+					or not is_finite(float(coefficient)) or float(coefficient) <= 0.0:
+				errors.append("Reaction '%s' has an invalid participant coefficient." % reaction.id)
+			var chemical_id := str(participant.get("chemical_id", ""))
+			var element_symbol := str(participant.get("reference_element_symbol", ""))
+			if chemical_id.is_empty() and element_symbol.is_empty():
+				errors.append("Reaction '%s' participant must name a chemical or reference element." % reaction.id)
+			if not chemical_id.is_empty() and get_chemical(chemical_id) == null:
+				errors.append("Reaction '%s' refers to unknown chemical '%s'." % [reaction.id, chemical_id])
+			if not element_symbol.is_empty() and get_element(element_symbol) == null:
+				errors.append("Reaction '%s' refers to unknown reference element '%s'." % [reaction.id, element_symbol])
+	if reaction.type == "visual_demo" and (not reaction.virtual_only or reaction.safety_status != "virtual_observation_only"):
+		errors.append("Visual demo '%s' must be marked virtual-only and observation-only." % reaction.id)
 
 
 func _load_reference_data() -> void:

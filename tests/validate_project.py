@@ -14,6 +14,7 @@ Checks:
 Exit code is non-zero if any check fails.
 """
 import json
+import math
 import posixpath
 import re
 import sys
@@ -320,6 +321,142 @@ def check_json():
     warnings.append(f"data: {count} placeholder value(s) still need a reviewed source (see docs/CHEMISTRY_REQUIREMENTS.md)")
 
 
+
+
+def check_reaction_registry():
+    """Validate the explicit Reaction Engine V3 allowlist and its supported participants."""
+    path = ROOT / "data/reaction_registry_v3.json"
+    if not path.exists():
+        errors.append("reaction registry: data/reaction_registry_v3.json is missing")
+        return
+    try:
+        registry = _load("data/reaction_registry_v3.json")
+    except (OSError, json.JSONDecodeError) as exc:
+        errors.append(f"reaction registry: could not read registry ({exc})")
+        return
+
+    if registry.get("version") != 1:
+        errors.append("reaction registry: unsupported registry version")
+    if registry.get("safety_scope") != "virtual_only_classroom_model":
+        errors.append("reaction registry: missing virtual-only classroom safety scope")
+
+    handler_types = {
+        "dissolution_v1": "dissolution",
+        "neutralisation_v1": "neutralisation",
+        "boiling_observation_v1": "boiling",
+        "visual_demo_observation_v1": "visual_demo",
+    }
+    executable_handlers = {"dissolution_v1", "neutralisation_v1"}
+    handlers = registry.get("handlers", {})
+    if not isinstance(handlers, dict):
+        errors.append("reaction registry: handlers must be an object")
+        handlers = {}
+    for handler_id, handler in handlers.items():
+        if handler_id not in handler_types or not isinstance(handler, dict):
+            errors.append(f"reaction registry: unsupported handler '{handler_id}'")
+            continue
+        if handler.get("reaction_type") != handler_types[handler_id]:
+            errors.append(f"reaction registry: handler '{handler_id}' has the wrong reaction type")
+        if not isinstance(handler.get("enabled"), bool):
+            errors.append(f"reaction registry: handler '{handler_id}' must declare a boolean enabled value")
+
+    chemical_files = {
+        item.stem: _load(rel(item))
+        for item in (ROOT / "data/chemicals").glob("*.json")
+    }
+    definition_files = {
+        item.stem: _load(rel(item))
+        for item in (ROOT / "data/reactions").glob("*.json")
+        if item.name != "reaction_registry.json"
+    }
+
+    entries = registry.get("reactions", [])
+    if not isinstance(entries, list):
+        errors.append("reaction registry: reactions must be an array")
+        return
+    ids = [item.get("id") for item in entries if isinstance(item, dict)]
+    if len(ids) != len(entries):
+        errors.append("reaction registry: every entry must be an object")
+    if len(ids) != len(set(ids)):
+        errors.append("reaction registry: reaction ids must be unique")
+    if set(ids) != set(definition_files):
+        errors.append("reaction registry: entries must exactly cover the reaction definition files")
+
+    phase_names = {"liquid", "solid", "dissolved", "gas"}
+    phase_units = {"liquid": "mL", "solid": "g", "dissolved": "g", "gas": "mol"}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        reaction_id = str(entry.get("id", ""))
+        definition = definition_files.get(reaction_id)
+        handler_id = str(entry.get("handler_id", ""))
+        handler = handlers.get(handler_id, {})
+        enabled = entry.get("enabled")
+        if not isinstance(enabled, bool):
+            errors.append(f"reaction registry: '{reaction_id}' must have a boolean enabled value")
+            continue
+        if entry.get("safety_scope") != "virtual_only_classroom_model":
+            errors.append(f"reaction registry: '{reaction_id}' is outside the virtual-only scope")
+        if definition is None:
+            continue
+        if handler_id not in handler_types:
+            errors.append(f"reaction registry: '{reaction_id}' uses an unsupported handler")
+            continue
+        if definition.get("type") != handler_types[handler_id]:
+            errors.append(f"reaction registry: '{reaction_id}' type does not match its handler")
+        if enabled and (
+            handler_id not in executable_handlers
+            or not handler.get("enabled")
+            or handler.get("execution_mode") == "observation_only"
+        ):
+            errors.append(f"reaction registry: '{reaction_id}' enables a non-executable handler")
+        if definition.get("type") == "visual_demo" and enabled:
+            errors.append(f"reaction registry: visual demo '{reaction_id}' cannot be a generic executable reaction")
+
+        if enabled:
+            reactants = definition.get("reactants", [])
+            if not isinstance(reactants, list) or not reactants:
+                errors.append(f"reaction registry: enabled reaction '{reaction_id}' needs reactants")
+                continue
+            for participant in reactants:
+                if not isinstance(participant, dict):
+                    errors.append(f"reaction registry: '{reaction_id}' has a malformed reactant")
+                    continue
+                if participant.get("reference_element_symbol"):
+                    errors.append(f"reaction registry: '{reaction_id}' cannot use a visual-only element reference")
+                chemical_id = participant.get("chemical_id")
+                chemical = chemical_files.get(chemical_id)
+                if chemical is None:
+                    errors.append(f"reaction registry: '{reaction_id}' refers to unknown chemical '{chemical_id}'")
+                    continue
+                if chemical.get("simulation", {}).get("enabled") is not True:
+                    errors.append(f"reaction registry: '{reaction_id}' includes a non-playable chemical '{chemical_id}'")
+                phase = participant.get("phase")
+                if phase not in phase_names:
+                    errors.append(f"reaction registry: '{reaction_id}' has an unsupported phase for '{chemical_id}'")
+                elif participant.get("minimum_amount_unit") != phase_units[phase]:
+                    errors.append(
+                        f"reaction registry: '{reaction_id}' requires {phase_units[phase]} for {phase} participant '{chemical_id}'"
+                    )
+                minimum = participant.get("minimum_amount", 0.000001)
+                if not isinstance(minimum, (int, float)) or not math.isfinite(minimum) or minimum <= 0:
+                    errors.append(f"reaction registry: '{reaction_id}' has an invalid minimum amount for '{chemical_id}'")
+
+        products = definition.get("products", [])
+        if not isinstance(products, list):
+            errors.append(f"reaction registry: '{reaction_id}' products must be an array")
+            continue
+        for product in products:
+            if not isinstance(product, dict):
+                errors.append(f"reaction registry: '{reaction_id}' has a malformed product")
+                continue
+            chemical_id = product.get("chemical_id")
+            if chemical_id not in chemical_files:
+                errors.append(f"reaction registry: '{reaction_id}' product refers to unknown chemical '{chemical_id}'")
+            if product.get("phase") not in phase_names:
+                errors.append(f"reaction registry: '{reaction_id}' product has an unsupported phase")
+
+
 def check_element_visual_coverage():
     """Ensure all 118 catalogue elements receive a safe visual representation."""
     visual_path = ROOT / "scripts/ui/element_visual.gd"
@@ -334,7 +471,7 @@ def check_element_visual_coverage():
     visual = visual_path.read_text(encoding="utf-8")
     specimen = specimen_path.read_text(encoding="utf-8")
     card = card_path.read_text(encoding="utf-8")
-    required_modes = {"solid_metal", "solid_crystal", "liquid", "gas_molecule", "gas_atom", "unknown_atom"}
+    required_modes = {"solid_metal", "solid_crystal", "solid_powder", "solid_ribbon", "liquid", "gas_cylinder", "unknown_atom"}
     for mode in required_modes:
         if f'"{mode}"' not in visual:
             errors.append(f"element visuals: missing renderer for {mode}")
@@ -367,13 +504,17 @@ def check_element_visual_coverage():
         errors.append(f"element visuals: expected 118 element entries, got {len(elements)}")
         return
     covered = set()
+    allowed_sample_forms = {"cube", "powder", "ribbon", "gas_cylinder", "liquid_drop", "crystal", "conceptual_atom"}
     for element in elements:
         symbol = element.get("symbol", "")
+        sample_form = element.get("sample_form", "")
+        if sample_form not in allowed_sample_forms:
+            errors.append(f"element visuals: {symbol} has unknown or missing sample_form '{sample_form}'")
         state_entry = element.get("state_at_stp")
         state = state_entry.get("value", "") if isinstance(state_entry, dict) else ""
         category = str(element.get("category", "")).lower()
         if state == "gas":
-            covered.add("gas_atom" if category == "noble gas" or symbol in {"He", "Ne", "Ar", "Kr", "Xe", "Rn"} else "gas_molecule")
+            covered.add("gas_cylinder")
         elif state == "liquid":
             covered.add("liquid")
         elif state == "solid":
@@ -384,8 +525,10 @@ def check_element_visual_coverage():
     missing = covered - required_modes
     if missing:
         errors.append(f"element visuals: catalogue states have no renderer: {sorted(missing)}")
-    if "SEALED VIRTUAL SPECIMEN" not in specimen or "NOT A REAGENT" not in specimen:
-        errors.append("element visuals: specimen UI must clearly state virtual-only/non-reagent status")
+    if "NOT A REAGENT" not in specimen:
+        errors.append("element visuals: specimen UI must clearly state non-reagent status")
+    if "visual reference only" not in specimen.lower():
+        errors.append("element visuals: specimen UI must clearly state visual-reference status")
 
 
 def main():
@@ -397,6 +540,7 @@ def main():
     check_variant_inference()
     check_scene_exports()
     check_json()
+    check_reaction_registry()
     check_element_visual_coverage()
     for w in warnings:
         print("WARN ", w)

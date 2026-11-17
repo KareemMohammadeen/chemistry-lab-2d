@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "id": "magnesium_combustion_virtual_demo",
+  "type": "visual_demo",
+  "name": "Magnesium combustion: qualitative observation model",
+  "tier": "qualitative_visual_only",
+  "equation": "2 Mg(s) + O₂(g) → 2 MgO(s)",
+  "level": "middle_school",
+  "grade_suggestion": "prep2",
+  "curriculum_alignment_status": "suggested_not_verified_against_official_textbook",
+  "virtual_only": true,
+  "safety_status": "virtual_observation_only",
+  "reactants": [
+    {
+      "reference_element_symbol": "Mg",
+      "coefficient": 2,
+      "phase": "solid"
+    },
+    {
+      "reference_element_symbol": "O",
+      "coefficient": 1,
+      "phase": "gas"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "magnesium_oxide",
+      "coefficient": 2,
+      "phase": "solid"
+    }
+  ],
+  "conditions": [
+    "qualitative_visual_model"
+  ],
+  "source_ids": [],
+  "product_solid_id": "magnesium_oxide",
+  "illustrative_output_g": 0.5,
+  "visual_effect": "white_flash",
+  "observations": {
+    "summary": "The virtual model shows a brief brilliant white light. A white magnesium oxide powder remains as the model's product."
+  },
+  "explanation": "This is a qualitative, software-only model of magnesium reacting with oxygen to form magnesium oxide. The displayed product amount is illustrative, not a calculated yield. It deliberately does not model a real procedure, ignition setup, temperatures or handling instructions.",
+  "limitations": [
+    "The periodic-table magnesium specimen is a visual reference, not a reagent.",
+    "The model shows the reaction concept and observations only.",
+    "No real-world experimental procedure is provided."
+  ]
+}

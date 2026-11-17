@@ -17,7 +17,8 @@ godot --headless --path . -s tests/run_simulation_tests.gd
 ```
 Drives the real commands: setup, refused actions and their reasons, the water + copper sulfate demo (blue solution,
 observations, inspector content), undo/redo, neutralisation (pH, heat), heating with the hot plate and thermometer,
-conservation of dissolved salt when pouring, and session save/load including invalid-file refusal and log restoration.
+conservation of dissolved salt when pouring, gas auto-sealing and pressure, opening/closing the virtual vessel, the magnesium
+observation-only visual model, guided water/salt activity progress from first accepted action through its dissolution condition, and session save/load of gas/system state including invalid-file refusal and log restoration.
 Exit code 0 means all checks passed.
 
 ## 3. In-engine checklist (not yet performed)
@@ -29,6 +30,10 @@ Exit code 0 means all checks passed.
 - [ ] Drag a beaker card from the Library onto the stage; it creates another movable beaker.
 - [ ] Drag water and sodium-chloride cards directly onto a beaker; verify 50 mL and 5 g are added, then press Mix.
 - [ ] Drag a reagent card onto open workbench space; verify a refillable bottle is created.
+- [ ] Drag the CO2 virtual-gas card onto a vessel; verify it auto-seals, retains a model amount, and displays a pressure estimate.
+- [ ] While sealed, confirm pouring and liquid/solid additions are refused; Return to open system clears the virtual gas ledger.
+- [ ] Check gas auto-seal / vent Undo and Redo, then save and restore a closed-system session.
+- [ ] Open the Safe experiment bank for all five grades; run the qualitative magnesium observation model and verify white flash, MgO product, log entry and Undo.
 - [ ] Middle-drag to pan, mouse-wheel to zoom around the cursor, and use Center / Home to restore the initial view.
 - [ ] Place equipment far beyond the original 1600×900 canvas; it remains on the infinite workbench.
 - [ ] Drag the Water bottle onto the beaker: tilt, stream, level rises smoothly; Inspector shows 50 mL (default amount).
@@ -42,6 +47,8 @@ Exit code 0 means all checks passed.
 - [ ] Open **Session**: Save an experiment, change the bench, then reopen the saved file; check positions, contents, temperatures and observations are restored.
 - [ ] Open **Experiment Log**: confirm accepted and refused commands plus chemistry observations appear in time order.
 - [ ] Toggle **Sound effects** off and on; confirm no sounds play while muted and actions still work.
+- [ ] Confirm sample tokens remain read-only visual references; they cannot enter chemistry commands.
+- [ ] Open **Start guided virtual experiment**, start tracking, complete the water/salt virtual actions in one beaker, and confirm progress updates only after accepted actions and the dissolved-mass condition.
 Record results in CHANGELOG.md.
 
 

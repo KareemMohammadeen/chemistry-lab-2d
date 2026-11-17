@@ -2,6 +2,7 @@ extends Node
 
 const WELCOME_OVERLAY_SCRIPT := preload("res://scripts/ui/welcome_overlay.gd")
 const LAB_AUDIO_SCRIPT := preload("res://scripts/core/lab_audio.gd")
+const LAB_REPORT_SCRIPT := preload("res://scripts/core/lab_report.gd")
 ## Composition root. Builds the content database, the simulation host and the interaction
 ## controller and hands them to the views. It contains no laboratory logic of its own.
 
@@ -51,6 +52,7 @@ func _ready() -> void:
 	add_child(_controller)
 	_controller.setup(_host, workspace, lab_interface)
 	lab_interface.library_item_dropped.connect(_controller.on_library_item_dropped)
+	lab_interface.periodic_sample_dropped.connect(workspace.add_reference_sample)
 	lab_interface.canvas_zoom_requested.connect(workspace.zoom_by)
 	lab_interface.canvas_reset_requested.connect(workspace.reset_view)
 	workspace.view_changed.connect(lab_interface.update_zoom_label)
@@ -86,14 +88,25 @@ func _process(_delta: float) -> void:
 		_last_stage_rect = rect
 
 
-
 func _on_save_session_requested(path: String) -> void:
 	if _host == null or _host.simulation == null:
 		lab_interface.show_message("The laboratory is not ready to save.", &"warning")
 		return
 	var result := LabSessionStore.save_to_path(_host.simulation, _host.commands, path)
-	lab_interface.show_message(str(result.get("message", "Save failed.")),
-		&"info" if bool(result.get("ok", false)) else &"warning")
+	if not bool(result.get("ok", false)):
+		lab_interface.show_message(str(result.get("message", "Save failed.")), &"warning")
+		return
+	var report_result := LAB_REPORT_SCRIPT.save_to_path(_host.simulation, _host.commands, path)
+	if bool(report_result.get("ok", false)):
+		lab_interface.show_message("%s %s" % [
+			str(result.get("message", "Session saved.")),
+			str(report_result.get("message", "Lab report exported.")),
+		], &"info")
+	else:
+		lab_interface.show_message("%s Report export failed: %s" % [
+			str(result.get("message", "Session saved.")),
+			str(report_result.get("message", "Could not write the report.")),
+		], &"warning")
 
 
 func _on_load_session_requested(path: String) -> void:

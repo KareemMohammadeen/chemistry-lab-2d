@@ -36,6 +36,9 @@ func _initialize() -> void:
 	_test_heating_and_thermometer()
 	_test_pour_moves_dissolved_substance()
 	_test_reference_data()
+	_test_gas_closed_system_and_magnesium_demo()
+	_test_guided_experiment_progress()
+	_test_reaction_registry_and_matcher()
 	_test_save_load_session()
 
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
@@ -261,6 +264,190 @@ func _test_reference_data() -> void:
 
 
 
+func _test_gas_closed_system_and_magnesium_demo() -> void:
+	_fresh()
+	print("-- virtual gas, closed system and magnesium observation model")
+	var beaker := _find("beaker_250ml")
+	var ambient_pressure := _host.database.constant("ambient_pressure_kpa", 101.325)
+	_expect_success(AddGasCommand.new(), &"add_gas", beaker.id, "",
+		{"chemical_id": "carbon_dioxide", "amount_mol": 0.002}, "add an approved virtual carbon-dioxide sample")
+	_check(beaker.vessel.is_closed_system, "adding virtual gas automatically closes the vessel")
+	_check(absf(float(beaker.vessel.gases.get("carbon_dioxide", 0.0)) - 0.002) < 0.000001,
+		"the vessel retains the gas amount in moles")
+	_check(beaker.vessel.pressure_kpa(ambient_pressure) > ambient_pressure,
+		"the simplified model reports pressure above ambient after retaining gas")
+
+	var data := ObjectInspector.inspect(_sim(), beaker.id)
+	_check(data["rows"].any(func(row: Dictionary) -> bool: return str(row.get("label", "")) == "Pressure (model)"),
+		"the Inspector displays the closed-vessel pressure estimate")
+	var gas_contents: bool = false
+	for content_row in data["contents"]:
+		if str(content_row.get("detail", "")) == "retained gas":
+			gas_contents = true
+	_check(gas_contents, "the Inspector lists the retained gas and its amount")
+	var action_ids: Array = []
+	for action in data["actions"]:
+		action_ids.append(str(action["id"]))
+	_check(action_ids.has("vent_system"), "the closed-vessel Inspector offers a return-to-open-system action")
+
+	_check(_host.undo().is_success, "undo the gas addition")
+	beaker = _find("beaker_250ml")
+	_check(not beaker.vessel.is_closed_system and not beaker.vessel.has_gas(),
+		"undo restores the vessel to open with no retained gas")
+	_check(_host.redo().is_success, "redo the gas addition")
+	beaker = _find("beaker_250ml")
+	_check(beaker.vessel.is_closed_system and beaker.vessel.has_gas(),
+		"redo restores the closed vessel and gas ledger")
+
+	_expect_success(VentSystemCommand.new(), &"vent_system", beaker.id, "",
+		{}, "return the virtual vessel to the open-system model")
+	_check(not beaker.vessel.is_closed_system and not beaker.vessel.has_gas(),
+		"opening clears retained gas and returns to ambient conditions")
+	_check(_host.undo().is_success, "undo the system-opening action")
+	beaker = _find("beaker_250ml")
+	_check(beaker.vessel.is_closed_system and beaker.vessel.has_gas(),
+		"undo restores the previously closed gas state")
+
+	_fresh()
+	beaker = _find("beaker_250ml")
+	_expect_success(RunVirtualDemoCommand.new(), &"run_virtual_demo", beaker.id, "",
+		{}, "run the qualitative magnesium observation model")
+	_check(float(beaker.vessel.solids.get("magnesium_oxide", 0.0)) > 0.0,
+		"the virtual demonstration creates a white magnesium-oxide product")
+	var demo_observed := false
+	for observation in beaker.vessel.observations:
+		if str(observation.get("effect_id", "")) == "white_flash":
+			demo_observed = true
+	_check(demo_observed, "the magnesium observation records the white-light visual effect")
+	_expect_failure(RunVirtualDemoCommand.new(), &"run_virtual_demo", beaker.id, "",
+		{}, "the same one-time visual demo cannot be duplicated in a vessel")
+	_check(_host.undo().is_success, "undo the qualitative magnesium demonstration")
+	beaker = _find("beaker_250ml")
+	_check(not beaker.vessel.solids.has("magnesium_oxide"), "undo removes the illustrative demo product")
+
+
+func _test_guided_experiment_progress() -> void:
+	_fresh()
+	print("-- guided virtual experiment progress")
+	var pack: Dictionary = JsonDataLoader.load_dictionary("res://data/learning/guided_experiments.json")
+	var activities: Array = pack.get("experiments", [])
+	_check(activities.size() == 1, "the guided activity pack loads one approved classroom activity")
+	if activities.is_empty():
+		return
+	var activity: Dictionary = activities[0]
+	var start_index: int = _host.commands.history.size()
+	var progress: Dictionary = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(int(progress.get("progress", -1)) == 0, "guided tracking begins at step zero")
+	var unsafe_activity: Dictionary = activity.duplicate(true)
+	unsafe_activity["safety_scope"] = "real_world_procedure"
+	var refused_scope: Dictionary = GuidedExperimentTracker.evaluate(unsafe_activity, _host.commands.history, start_index, _sim())
+	_check(not str(refused_scope.get("error", "")).is_empty(), "guided tracker refuses activities outside the virtual-only safety scope")
+	var unsafe_interaction: Dictionary = activity.duplicate(true)
+	unsafe_interaction["steps"][0]["interaction_id"] = "unapproved_action"
+	var refused_interaction: Dictionary = GuidedExperimentTracker.evaluate(unsafe_interaction, _host.commands.history, start_index, _sim())
+	_check(not str(refused_interaction.get("error", "")).is_empty(), "guided tracker refuses unapproved interaction identifiers")
+
+	var beaker := _find("beaker_250ml")
+	var water_bottle := _find("reagent_bottle_500ml", "water")
+	var salt_bottle := _find("reagent_bottle_500ml", "sodium_chloride")
+	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
+		{"amount_ml": 50.0}, "perform the guided virtual water transfer")
+	progress = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(int(progress.get("progress", -1)) == 1, "the accepted water transfer completes guided step one")
+
+	_expect_success(AddSolidCommand.new(), &"add_solid", salt_bottle.id, beaker.id,
+		{"amount_g": 5.0}, "perform the guided virtual salt addition")
+	progress = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(int(progress.get("progress", -1)) == 2, "the salt addition to the same beaker completes step two")
+
+	_expect_success(MixCommand.new(), &"mix", beaker.id, "", {},
+		"perform the guided virtual mixing action")
+	progress = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(int(progress.get("progress", -1)) == 3, "the accepted mixing action completes step three")
+
+	_run_seconds(30.0)
+	progress = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
+	_check(bool(progress.get("complete", false)) and int(progress.get("progress", -1)) == 4,
+		"the final observation condition completes after the model dissolves enough salt")
+
+
+func _test_reaction_registry_and_matcher() -> void:
+	_fresh()
+	print("-- Reaction Engine V3 registry, matcher and result model")
+	var registry: ReactionRegistryV3 = _host.database.reaction_registry
+	_check(registry != null, "the content database loads the V3 reaction registry")
+	if registry == null:
+		return
+	_check(registry.is_enabled("dissolve_sodium_chloride"), "the reviewed sodium-chloride dissolution handler is allowlisted")
+	_check(registry.is_enabled("neutralisation_strong_acid_strong_base"), "the existing neutralisation handler is allowlisted")
+	_check(not registry.is_enabled("boil_water"), "boiling stays disabled until a dedicated reaction handler exists")
+	_check(not registry.is_enabled("magnesium_combustion_virtual_demo"), "the magnesium visual demo cannot be enabled as a generic reaction")
+
+	var matcher := ReactionMatcher.new(_host.database, registry)
+	var beaker := _find("beaker_250ml")
+	var water_bottle := _find("reagent_bottle_500ml", "water")
+	var salt_bottle := _find("reagent_bottle_500ml", "sodium_chloride")
+	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
+		{"amount_ml": 50.0}, "prepare the matcher with virtual water")
+	_expect_success(AddSolidCommand.new(), &"add_solid", salt_bottle.id, beaker.id,
+		{"amount_g": 5.0}, "prepare the matcher with virtual table salt")
+	var before_match: Dictionary = _sim().capture_snapshot()
+	var matched: ReactionResult = matcher.match_reaction("dissolve_sodium_chloride", beaker.vessel)
+	_check(matched.status == ReactionResult.Status.MATCHED, "matcher recognises water and solid sodium chloride in the same vessel")
+	_check(matched.matched_reactants.size() == 2 and matched.missing_reactants.is_empty(),
+		"matched result records both required participants")
+	_check(str(matched.matched_reactants[0].get("required_unit", "")) == "mL",
+		"liquid requirements report millilitres")
+	_check(str(matched.matched_reactants[1].get("required_unit", "")) == "g",
+		"solid requirements report grams")
+
+	var salt_definition: ReactionDefinition = _host.database.reactions.get("dissolve_sodium_chloride") as ReactionDefinition
+	var original_reactants: Array = salt_definition.reactants.duplicate(true)
+	var wrong_unit_reactants: Array = original_reactants.duplicate(true)
+	var wrong_unit_participant: Dictionary = wrong_unit_reactants[0]
+	wrong_unit_participant["minimum_amount_unit"] = "g"
+	wrong_unit_reactants[0] = wrong_unit_participant
+	salt_definition.reactants = wrong_unit_reactants
+	var wrong_unit_result: ReactionResult = matcher.match_reaction("dissolve_sodium_chloride", beaker.vessel)
+	_check(wrong_unit_result.status == ReactionResult.Status.INVALID,
+		"matcher rejects a threshold unit that conflicts with its participant phase")
+	salt_definition.reactants = original_reactants
+	_check(_sim().capture_snapshot() == before_match, "matching is read-only and does not mutate vessel state")
+	_check(matched.consumed.is_empty() and matched.produced.is_empty(),
+		"the readiness result does not pretend to consume reactants or create products")
+	var result_snapshot: Dictionary = matched.to_dictionary()
+	(result_snapshot["matched_reactants"] as Array).clear()
+	_check(matched.matched_reactants.size() == 2, "serialized result collections are independent copies")
+
+	_fresh()
+	beaker = _find("beaker_250ml")
+	water_bottle = _find("reagent_bottle_500ml", "water")
+	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
+		{"amount_ml": 50.0}, "prepare a vessel with water only")
+	var missing: ReactionResult = matcher.match_reaction("dissolve_sodium_chloride", beaker.vessel)
+	_check(missing.status == ReactionResult.Status.NOT_MATCHED and missing.missing_reactants.size() == 1,
+		"matcher reports the missing solid when the solvent is present")
+
+	_fresh()
+	var flask := _find("erlenmeyer_flask_250ml")
+	var acid := _find("reagent_bottle_500ml", "hydrochloric_acid_0_1m")
+	var base := _find("reagent_bottle_500ml", "sodium_hydroxide_0_1m")
+	_expect_success(PourCommand.new(), &"pour", acid.id, flask.id,
+		{"amount_ml": 50.0}, "prepare the dilute acid participant in the virtual model")
+	_expect_success(PourCommand.new(), &"pour", base.id, flask.id,
+		{"amount_ml": 50.0}, "prepare the dilute base participant in the virtual model")
+	var neutralisation: ReactionResult = matcher.match_reaction("neutralisation_strong_acid_strong_base", flask.vessel)
+	_check(neutralisation.status == ReactionResult.Status.MATCHED,
+		"matcher recognises the registered acid/base participant pair")
+
+	var demo: ReactionResult = matcher.match_reaction("magnesium_combustion_virtual_demo", flask.vessel)
+	_check(demo.status == ReactionResult.Status.REJECTED,
+		"matcher refuses a disabled, observation-only visual demonstration")
+	var unknown: ReactionResult = matcher.match_reaction("not_a_real_reaction", flask.vessel)
+	_check(unknown.status == ReactionResult.Status.REJECTED,
+		"matcher refuses unknown reaction identifiers")
+
+
 func _test_save_load_session() -> void:
 	_fresh()
 	print("-- session save and load")
@@ -268,8 +455,15 @@ func _test_save_load_session() -> void:
 	var water_bottle := _find("reagent_bottle_500ml", "water")
 	_expect_success(PourCommand.new(), &"pour", water_bottle.id, beaker.id,
 		{"amount_ml": 50.0}, "prepare a session with 50 mL of water")
+	_expect_success(AddGasCommand.new(), &"add_gas", beaker.id, "",
+		{"chemical_id": "carbon_dioxide", "amount_mol": 0.001}, "seal the session with a retained virtual gas")
 	var expected_state: Dictionary = _sim().capture_snapshot()
 	var expected_history_size := _host.commands.history.size()
+	var report_text := LabReport.build_markdown(_sim(), _host.commands)
+	_check(report_text.contains("# Chemistry Lab Report") and report_text.contains("## Objects"),
+		"Markdown report includes the current laboratory snapshot")
+	_check(report_text.contains("## Actions") and report_text.contains("closed system"),
+		"Markdown report includes the action log and closed-vessel state")
 	var save_result := LabSessionStore.save_to_path(_sim(), _host.commands, SESSION_TEST_PATH)
 	_check(bool(save_result.get("ok", false)), "session save succeeds: %s" % str(save_result.get("message", "")))
 
@@ -281,6 +475,10 @@ func _test_save_load_session() -> void:
 	_check(bool(load_result.get("ok", false)), "session load succeeds: %s" % str(load_result.get("message", "")))
 	beaker = _find("beaker_250ml")
 	_near(beaker.vessel.liquid_volume_ml(), 50.0, "loading restores vessel contents")
+	_check(beaker.vessel.is_closed_system and beaker.vessel.has_gas(),
+		"loading restores the closed-system state and retained gas ledger")
+	_check(beaker.vessel.pressure_kpa() > _host.database.constant("ambient_pressure_kpa", 101.325),
+		"loading restores the calculated virtual pressure")
 	_check(_sim().capture_snapshot() == expected_state, "loading restores the complete simulation snapshot")
 	_check(_host.commands.history.size() == expected_history_size, "loading restores the experiment action log")
 	_check(not _host.commands.can_undo() and not _host.commands.can_redo(),
@@ -314,7 +512,7 @@ func _find(equipment_id: String, content_id: String = "") -> LabObject:
 			continue
 		if content_id == "":
 			return item
-		if item.vessel != null and (item.vessel.liquids.has(content_id) or item.vessel.solids.has(content_id)):
+		if item.vessel != null and (item.vessel.liquids.has(content_id) or item.vessel.solids.has(content_id) or item.vessel.gases.has(content_id)):
 			return item
 	return null
 

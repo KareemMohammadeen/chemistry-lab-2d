@@ -1,3 +1,32 @@
+## Reaction Engine V3 foundation (2026-11-16) - awaiting Godot verification
+- Added a versioned, explicit reaction registry outside the legacy reaction-definition directory; registry entries validate reaction IDs, handler/type mappings, enable flags and virtual-only scope.
+- Added a read-only matcher for approved chemical participants and phase-aware vessel ledgers, including bounded virtual quantity requirements and temperature comparisons.
+- Added a structured result envelope with matched/missing participants, status, observations, output ledgers and error/warning fields.
+- Connected the registry to ContentDatabase and explicitly ignore the short-lived legacy registry JSON if it appears inside `data/reactions/`.
+- Added participant metadata for the current dissolution and neutralisation definitions, plus static schema checks and headless matcher/result scenarios.
+- Added explicit threshold units to reactants (`mL` for liquid, `g` for solid/dissolved, `mol` for gas); the matcher and static validator reject phase/unit mismatches.
+- Only the existing dissolution and neutralisation handlers are enabled. Boiling and the magnesium visual demo remain disabled for generic matching.
+- This is not yet a generic reaction executor: matching is read-only and does not consume reactants, produce products, or prove mass/charge conservation.
+- Godot runtime and editor verification are pending.
+
+## Guided virtual experiment v1 (2026-11-16) - awaiting Godot verification
+- Added a JSON-defined water-and-sodium-chloride guided activity with ordered accepted-action checks and a final dissolved-mass condition.
+- Added a restricted tracker that evaluates only the approved classroom commands (pour, add_solid and mix), the water/sodium-chloride virtual material subset and supported vessel types.
+- Added a Library entry point and progress window; the guide observes the existing command history and simulation state rather than issuing commands itself.
+- Added a headless regression scenario, static validation for the guided activity data, and a manual editor checklist.
+- The first activity is a starter implementation only. Full grade-by-grade guided lesson content, replay, teacher/student restriction controls and generic reaction execution remain open roadmap items.
+- Godot 4.3 CI/editor verification is pending.
+
+## Chemistry Engine v2 foundations (2026-11-15) - awaiting Godot verification
+- Reworked vessel state to keep an explicit virtual-gas ledger, closed/open-system flag and trapped-air amount; pressure is estimated with a simplified ideal-gas model using the remaining headspace.
+- Added a pressure guard at both command validation and the ReactionEngine gas-product entry point. Gas addition to an open vessel automatically seals it; liquid/solid additions and pours are rejected while sealed; a reversible Inspector action returns the model to open and clears retained gas.
+- Added session serialization and validation for gas amounts, closed-state consistency, trapped air and calculated pressure. Legacy sessions remain readable through safe defaults.
+- Reworked the 118 periodic-table tokens as compact movable sample figures on the infinite workbench: labelled metal cubes, selected powder/crystal forms, magnesium ribbon, liquid-drop and sealed gas-cylinder illustrations. The 118 remain visual-only and non-reactive.
+- Added a separate opt-in virtual carbon-dioxide Library item; it is not a real gas-handling feature.
+- Added a qualitative, observation-only magnesium visual model with a brief white flash and an illustrative white MgO product. It is not a procedure and does not calculate a real yield.
+- Added a Safe Experiment Bank window for all five grade profiles; the magnesium observation is suggested for Prep 2 but is not verified against the exact official textbook.
+- Added headless regression coverage for gas auto-sealing, pressure, vent/undo/redo, session round-trip and the magnesium visual-demo state. Godot 4.3 CI/runtime results are pending.
+
 # Changelog
 
 ## Infinite workbench and Library drag/drop (2026-11-14) - awaiting Godot verification

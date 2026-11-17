@@ -15,6 +15,7 @@ signal save_session_requested(path: String)
 signal load_session_requested(path: String)
 signal sound_enabled_changed(enabled: bool)
 signal library_item_dropped(payload: Dictionary, screen_position: Vector2)
+signal periodic_sample_dropped(payload: Dictionary, screen_position: Vector2)
 signal canvas_zoom_requested(factor: float)
 signal canvas_reset_requested
 
@@ -202,18 +203,10 @@ func _on_periodic_element_dropped(element_data: Dictionary, drop_position: Vecto
 	var symbol := str(element_data.get("symbol", ""))
 	if symbol.is_empty():
 		return
-	var specimen := ElementSpecimen.new()
-	specimen.setup(element_data)
-	var stagger := Vector2(float(_specimen_count % 5) * 14.0, float(_specimen_count % 4) * 10.0)
-	specimen.position = drop_position - SPECIMEN_CELL * 0.5 + stagger
-	var maximum := Vector2(maxf(stage_slot.size.x - SPECIMEN_CELL.x, 0.0), maxf(stage_slot.size.y - SPECIMEN_CELL.y, 0.0))
-	specimen.position = specimen.position.clamp(Vector2(SPECIMEN_MARGIN, SPECIMEN_MARGIN), Vector2(
-		maxf(SPECIMEN_MARGIN, maximum.x - SPECIMEN_MARGIN), maxf(SPECIMEN_MARGIN, maximum.y - SPECIMEN_MARGIN)))
-	specimen.z_index = 10
-	stage_slot.add_child(specimen)
-	_specimen_count += 1
-	var label := "visual sample token" if bool(element_data.get("display_only_sample", false)) else "reference-only token"
-	_show_toast("%s added to the workbench as a %s. It cannot be mixed or reacted." % [str(element_data.get("name", symbol)), label], &"info")
+	var screen_position := stage_slot.get_global_transform_with_canvas() * drop_position
+	periodic_sample_dropped.emit(element_data.duplicate(true), screen_position)
+	var profile := ElementVisual.profile_for(element_data)
+	_show_toast("%s sample added to the workbench. This is a visual reference, not a reactive reagent." % str(element_data.get("name", symbol)), &"info")
 
 
 

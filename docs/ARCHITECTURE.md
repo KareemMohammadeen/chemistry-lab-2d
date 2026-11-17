@@ -28,17 +28,20 @@
 | Data | `data/` | describe content with provenance | contain code |
 
 ## Key objects
-- `ContentDatabase`: loads all JSON (chemicals, equipment, reactions, constants, layout) once; read-only afterwards.
+- `ContentDatabase`: loads chemicals, equipment, reaction definitions, the explicit V3 registry, constants and layout once; read-only afterwards.
+- `ReactionRegistryV3`: checks unique reaction IDs, allowed handler/type mappings, enable flags and the virtual-only scope.
+- `ReactionMatcher` / `ReactionResult`: read-only participant/condition matching and a structured result envelope; neither consumes nor creates materials.
 - `LabState` / `LabObject` / `VesselState`: the serialisable truth. A vessel is a ledger: millilitres per liquid id,
   grams per solid id, grams dissolved per id. pH and colour are derived, never stored.
 - `LabSimulation`: spawns objects from a setup, steps the world, snapshots/restores state, forwards observations.
 - `SimulationHost` (Node): the only thing that advances time (fixed step 0.1 s, speed 1x/2x/4x, pause).
 - `CommandStack`: executes `LabCommand`s; every attempt (also refused ones) is logged with a reason. Undo and redo
   restore full snapshots (chemistry is not reversible by inverse operations). The log is the base for replay and reports.
-- `ReactionEngine`: per step, per vessel: dissolution (first order toward the temperature-dependent solubility cap,
-  stirring speeds it up), strong acid/base neutralisation (heat released once per mole), observations with explanations.
+- `ReactionEngine`: the per-step chemistry authority. It drives enabled continuous reactions from the registry and currently handles
+  dissolution (first order toward the temperature-dependent solubility cap, stirring speeds it up), strong acid/base neutralisation
+  (heat released once per mole), and boiling observations/temperature clamp through the same registered-reaction path.
 - `HeatSystem`: lumped-body model; hot plate ramps to its setpoint; vessels on it exchange heat without overshoot;
-  boiling clamps at the water boiling point.
+  the boiling temperature clamp remains here, while the boiling observation itself comes from the chemistry executor.
 - `ObjectInspector`: builds the Inspector content as plain data (rows, contents, observations, safety, actions).
 - Views: `LabWorkspace` (background, view per object, hit testing, drag), `EquipmentView` (`_draw()` per equipment style,
   smooth liquid level and colour), `StreamOverlay` (tilt and stream while pouring; display only).
@@ -53,6 +56,4 @@ inserted; a vessel pours liquid (or adds solid if it holds only solid); otherwis
 the bench: `place` (surface). Anywhere else (or over the interface): refused with a reason, the object returns.
 
 ## Extending
-New equipment: add `data/equipment/<id>.json` (profile, interaction points, interactions). New chemical or reaction:
-add JSON. New action: add a command, an entry in `interaction_types.json`, an inspector action. No existing class
-should need to learn about the new item by name.
+New equipment: add `data/equipment/<id>.json` (profile, interaction points, interactions). New reaction definitions need a matching explicit entry in `data/reaction_registry_v3.json`; the V3 matcher is read-only until a validated executor is added. New chemical or reaction: add JSON. New action: add a command, an entry in `interaction_types.json`, an inspector action. No existing class should need to learn about the new item by name. See `docs/REACTION_ENGINE_V3.md` for the registry, matcher and result contract.

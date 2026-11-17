@@ -6,7 +6,7 @@
   "solute": "copper_sulfate_pentahydrate",
   "tier": "stoichiometric_with_timescale",
   "time_constant_s": {
-    "value": 15.0,
+    "value": 15,
     "status": "placeholder",
     "unit": "s",
     "source": "teaching-pace timescale, not a measured rate"
@@ -18,5 +18,29 @@
     "completed": "All the copper sulfate has dissolved. The solution is a uniform blue."
   },
   "explanation": "In water, each copper(II) ion (Cu²⁺) is surrounded by water molecules. These hydrated copper ions absorb light from the red end of the spectrum, so the solution looks blue. The more copper sulfate is dissolved, the deeper the blue.",
-  "level": "high_school"
+  "level": "high_school",
+  "reactants": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "copper_sulfate_pentahydrate",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "copper_sulfate_pentahydrate",
+      "coefficient": 1,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
 }

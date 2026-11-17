@@ -3,7 +3,7 @@ extends Control
 ## The small picture on a Library card: a reagent bottle filled with the substance's colour, or
 ## a silhouette of a piece of equipment drawn from its vessel profile. Display only.
 
-enum Kind { REAGENT_LIQUID, REAGENT_SOLID, VESSEL, DROPPER, THERMOMETER, HOT_PLATE }
+enum Kind { REAGENT_LIQUID, REAGENT_SOLID, REAGENT_GAS, VESSEL, DROPPER, THERMOMETER, HOT_PLATE }
 
 const ICON_SIZE := Vector2(52.0, 60.0)
 const MARGIN_PX := 4.0
@@ -32,6 +32,8 @@ func _draw() -> void:
 	match kind:
 		Kind.REAGENT_LIQUID, Kind.REAGENT_SOLID:
 			_draw_reagent()
+		Kind.REAGENT_GAS:
+			_draw_gas_cylinder()
 		Kind.VESSEL:
 			_draw_profile(false)
 		Kind.DROPPER:
@@ -118,3 +120,13 @@ func _draw_hot_plate() -> void:
 	draw_rect(Rect2(slab.position.x + 4.0, slab.position.y - 5.0, slab.size.x - 8.0, 5.0), LabColors.HEAT.darkened(0.2))
 	draw_circle(Vector2(slab.position.x + 12.0, slab.get_center().y), 4.5, LabColors.TEXT_ON_DARK)
 	draw_circle(Vector2(slab.end.x - 12.0, slab.get_center().y), 3.0, LabColors.ACCENT)
+
+
+func _draw_gas_cylinder() -> void:
+	var center_x := size.x * 0.5
+	var body := Rect2(center_x - 15.0, 12.0, 30.0, 42.0)
+	draw_style_box(LabTheme.box(Color("#B7C7CF"), Color("#59717E"), 2, 8, 3, 3), body)
+	draw_rect(Rect2(center_x - 7.0, 6.0, 14.0, 8.0), LabColors.METAL)
+	draw_rect(Rect2(center_x - 4.0, 2.0, 8.0, 5.0), LabColors.METAL.lightened(0.2))
+	draw_rect(Rect2(center_x - 11.0, 25.0, 22.0, 17.0), Color(tint, 0.28))
+	draw_string(ThemeDB.fallback_font, Vector2(center_x - 10.0, 37.0), "CO₂", HORIZONTAL_ALIGNMENT_CENTER, 20.0, 11, Color("#16242D"))
