@@ -138,20 +138,33 @@ func get_equipment(equipment_id: String) -> EquipmentDefinition:
 
 ## The dissolution reaction for a solid substance, or null when none is defined.
 func find_dissolution(solute_id: String) -> ReactionDefinition:
-	return _dissolution_by_solute.get(solute_id) as ReactionDefinition
+	var reaction := _dissolution_by_solute.get(solute_id) as ReactionDefinition
+	if not _reaction_is_executable(reaction):
+		return null
+	return reaction
 
 
 ## The first reaction of a type (for example "neutralisation"), or null.
 func first_reaction_of_type(type: String) -> ReactionDefinition:
 	for reaction_id in reactions.keys():
 		var reaction: ReactionDefinition = reactions[reaction_id]
-		if reaction.type == type:
+		if reaction.type == type and _reaction_is_executable(reaction):
 			return reaction
 	return null
 
 
 func constant(key: String, fallback: float) -> float:
 	return float(constants.get(key, fallback))
+
+
+func _reaction_is_executable(reaction: ReactionDefinition) -> bool:
+	if reaction == null:
+		return false
+	if reaction_registry == null:
+		return true
+	if not reaction_registry.has_reaction(reaction.id):
+		return false
+	return reaction_registry.is_enabled(reaction.id)
 
 
 func _register(target: Dictionary, item: Object, path: String) -> void:
