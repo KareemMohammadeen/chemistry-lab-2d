@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "id": "single_displacement_magnesium_hydrochloric_acid",
+  "type": "single_displacement",
+  "name": "Single displacement: magnesium and hydrochloric acid",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "Mg(s) + 2 HCl(aq) → MgCl2 + H2(g)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "The metal reacts and hydrogen gas is released.",
+    "completed": "Magnesium has displaced hydrogen from the acid.",
+    "gas": "Hydrogen gas is bubbling out of the mixture."
+  },
+  "explanation": "Magnesium is more reactive than hydrogen, so it can replace hydrogen in the acid and produce a salt plus hydrogen gas.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "magnesium",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    },
+    {
+      "chemical_id": "hydrochloric_acid_0_1m",
+      "coefficient": 2,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "magnesium_chloride",
+      "coefficient": 1,
+      "phase": "dissolved"
+    },
+    {
+      "chemical_id": "hydrogen_gas",
+      "coefficient": 1,
+      "phase": "gas"
+    }
+  ],
+  "conditions": []
+}
