@@ -1,7 +1,7 @@
 extends SceneTree
 ## Headless coverage for the generic reaction executor. This verifies that the new
-## ReactionEngine entry point can execute registered dissolution and neutralisation
-## reactions without relying on the GUI.
+## ReactionEngine entry point can execute registered dissolution, neutralisation and
+## boiling reactions without relying on the GUI.
 
 const SETUP_PATH := "res://data/setups/first_demo.json"
 
@@ -14,10 +14,27 @@ func _initialize() -> void:
 	_content = ContentDatabase.new()
 	_content.load_all()
 	_check(_content.errors.is_empty(), "content loads without errors: %s" % str(_content.errors))
+	_test_boiling_executor()
 	_test_dissolution_executor()
 	_test_neutralisation_executor()
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
 	quit(1 if _failures > 0 else 0)
+
+
+func _test_boiling_executor() -> void:
+	print("-- generic executor: boiling")
+	var sim := LabSimulation.new(_content)
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.temperature_c = 105.0
+	vessel.add_liquid("water", 100.0)
+	var result := sim.engine.execute_registered_reaction("boil_water", vessel)
+	_check(result.status == ReactionResult.Status.EXECUTED, "boiling executor returns EXECUTED")
+	_check(result.observations.size() > 0, "boiling executor returns observations")
+	_check(result.effects.size() > 0, "boiling executor returns visual effects")
+	_check(is_equal_approx(vessel.temperature_c, 100.0), "boiling clamps the vessel at the water boiling point")
+	_check(_contains_observation(result.observations, "boiling"), "boiling observation is recorded by the executor")
+	_check(_contains_effect(result.effects, "boiling_bubbles"), "boiling exposes bubble feedback")
 
 
 func _test_dissolution_executor() -> void:
@@ -78,6 +95,20 @@ func _find(sim: LabSimulation, equipment_id: String, chemical_id: String = "") -
 		if item.vessel.liquids.has(chemical_id) or item.vessel.solids.has(chemical_id) or item.vessel.dissolved.has(chemical_id) or item.vessel.gases.has(chemical_id):
 			return item
 	return null
+
+
+func _contains_observation(entries: Array, key: String) -> bool:
+	for entry in entries:
+		if typeof(entry) == TYPE_DICTIONARY and str((entry as Dictionary).get("key", "")) == key:
+			return true
+	return false
+
+
+func _contains_effect(entries: Array, effect_id: String) -> bool:
+	for entry in entries:
+		if typeof(entry) == TYPE_DICTIONARY and str((entry as Dictionary).get("effect_id", "")) == effect_id:
+			return true
+	return false
 
 
 func _check(condition: bool, label: String) -> void:
