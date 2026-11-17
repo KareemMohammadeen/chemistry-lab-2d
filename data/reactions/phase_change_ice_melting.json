@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "id": "phase_change_ice_melting",
+  "type": "phase_change",
+  "name": "Melting of ice",
+  "tier": "qualitative",
+  "equation": "H2O(s) → H2O(l)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "The solid begins to melt into liquid water.",
+    "completed": "Ice has melted into liquid water."
+  },
+  "explanation": "This virtual model shows a change of state from solid water to liquid water.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "ice",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid"
+    }
+  ],
+  "conditions": []
+}
