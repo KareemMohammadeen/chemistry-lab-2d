@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "dissolve_calcium_chloride",
+  "type": "dissolution",
+  "name": "Dissolving calcium chloride in water",
+  "solute": "calcium_chloride",
+  "tier": "stoichiometric_with_timescale",
+  "time_constant_s": {
+    "value": 7,
+    "status": "placeholder",
+    "unit": "s",
+    "source": "teaching-pace timescale, not a measured rate"
+  },
+  "observations": {
+    "started": "The white crystals begin to dissolve.",
+    "colour": "",
+    "saturated": "No more calcium chloride dissolves: the solution is saturated and crystals remain at the bottom.",
+    "completed": "All the calcium chloride has dissolved. The solution stays colourless."
+  },
+  "explanation": "Water molecules separate the ions in the crystal and spread them through the liquid.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "calcium_chloride",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "calcium_chloride",
+      "coefficient": 1,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
+}
