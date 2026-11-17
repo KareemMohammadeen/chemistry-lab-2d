@@ -34,8 +34,10 @@ static func evaluate(experiment: Dictionary, history: Array, start_index: int, s
 				return _result(completed, steps.size(), active_vessel_id, false, "The activity contains an unsupported action.")
 			var source_chemical_id: String = str(step.get("source_contains_chemical_id", ""))
 			var target_chemical_id: String = str(step.get("target_contains_chemical_id", ""))
-			if (not source_chemical_id.is_empty() and not ALLOWED_CHEMICALS.has(source_chemical_id)) or (not target_chemical_id.is_empty() and not ALLOWED_CHEMICALS.has(target_chemical_id)):
-				return _result(completed, steps.size(), active_vessel_id, false, "The activity refers to a material outside the approved classroom subset.")
+			if not source_chemical_id.is_empty() and not ALLOWED_CHEMICALS.has(source_chemical_id):
+				return _result(completed, steps.size(), active_vessel_id, false, "The activity refers to a source material outside the approved classroom subset.")
+			if not target_chemical_id.is_empty() and not ALLOWED_CHEMICALS.has(target_chemical_id):
+				return _result(completed, steps.size(), active_vessel_id, false, "The activity refers to a target material outside the approved classroom subset.")
 
 			var matched_index: int = -1
 			for history_index in range(cursor, history.size()):
