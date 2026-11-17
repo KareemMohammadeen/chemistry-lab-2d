@@ -148,6 +148,15 @@ func find_dissolution(solute_id: String) -> ReactionDefinition:
 func first_reaction_of_type(type: String) -> ReactionDefinition:
 	for reaction_id in reactions.keys():
 		var reaction: ReactionDefinition = reactions[reaction_id]
+		if reaction.type == type:
+			return reaction
+	return null
+
+
+## The first reaction of a type that is explicitly enabled in the registry, or null.
+func first_enabled_reaction_of_type(type: String) -> ReactionDefinition:
+	for reaction_id in reactions.keys():
+		var reaction: ReactionDefinition = reactions[reaction_id]
 		if reaction.type == type and _reaction_is_executable(reaction):
 			return reaction
 	return null
