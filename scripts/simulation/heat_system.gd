@@ -77,13 +77,8 @@ static func _step_vessel(state: LabState, db: ContentDatabase, item: LabObject, 
 	if vessel.is_closed_system:
 		var pressure_limit := db.constant("max_virtual_pressure_kpa", 300.0)
 		vessel.temperature_c = minf(vessel.temperature_c, vessel.max_temperature_c_for_pressure_limit(pressure_limit))
-	if is_boiling(vessel, db) and not vessel.fired_observations.has("boiling"):
-		var reaction := db.first_reaction_of_type("boiling")
-		if reaction != null:
-			vessel.fired_observations["boiling"] = true
-			events.append({"object_id": item.id, "entry": {
-				"key": "boiling", "kind": "phase_change",
-				"text": reaction.observation("boiling"), "explanation": reaction.explanation}})
+	# Boiling observations are now emitted by the generic reaction executor so the chemistry
+	# layer owns the event. HeatSystem only keeps the thermal clamp.
 
 
 ## Moves a temperature toward another by conduction, never past it.
