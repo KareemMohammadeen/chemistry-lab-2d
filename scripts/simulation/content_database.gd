@@ -19,6 +19,7 @@ var constants: Dictionary = {}
 ## Reference data: ElementDefinition by symbol, and by atomic number; CompoundDefinition by id.
 var elements: Dictionary = {}
 var elements_by_number: Dictionary = {}
+var element_catalog: Dictionary = {}
 var compounds: Dictionary = {}
 var layout: LabLayout = null
 ## Human-readable problems found while loading. Empty when everything loaded cleanly.
@@ -35,6 +36,7 @@ func load_all() -> void:
 	_dissolution_by_solute.clear()
 	elements.clear()
 	elements_by_number.clear()
+	element_catalog.clear()
 	compounds.clear()
 	constants = JsonDataLoader.load_dictionary(CONSTANTS_PATH).get("values", {})
 	layout = LabLayout.from_dictionary(JsonDataLoader.load_dictionary(LAYOUT_PATH))
@@ -54,6 +56,8 @@ func load_all() -> void:
 			_dissolution_by_solute[reaction.solute] = reaction
 			if not chemicals.has(reaction.solute):
 				errors.append("Reaction '%s' refers to unknown chemical '%s'." % [reaction.id, reaction.solute])
+	
+	element_catalog = ElementCatalog.build_index(elements_by_number)
 
 
 func _load_reference_data() -> void:
@@ -76,6 +80,18 @@ func get_element(symbol: String) -> ElementDefinition:
 
 func get_element_by_number(atomic_number: int) -> ElementDefinition:
 	return elements_by_number.get(atomic_number) as ElementDefinition
+
+
+func get_element_card(symbol: String) -> Dictionary:
+	return (element_catalog.get("by_symbol", {}) as Dictionary).get(symbol, {}) as Dictionary
+
+
+func get_element_card_by_number(atomic_number: int) -> Dictionary:
+	return (element_catalog.get("by_number", {}) as Dictionary).get(atomic_number, {}) as Dictionary
+
+
+func get_element_cards() -> Array:
+	return element_catalog.get("list", []) as Array
 
 
 func get_compound(compound_id: String) -> CompoundDefinition:
