@@ -22,6 +22,11 @@
       "reaction_type": "visual_demo",
       "execution_mode": "observation_only",
       "enabled": false
+    },
+    "acid_carbonate_v1": {
+      "reaction_type": "acid_carbonate",
+      "execution_mode": "generic_pipeline",
+      "enabled": true
     }
   },
   "reactions": [
@@ -76,6 +81,12 @@
     {
       "id": "neutralisation_nitric_acid_sodium_hydroxide",
       "handler_id": "neutralisation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "acid_carbonate_hydrochloric_sodium_bicarbonate",
+      "handler_id": "acid_carbonate_v1",
       "enabled": true,
       "safety_scope": "virtual_only_classroom_model"
     },
