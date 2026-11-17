@@ -20,10 +20,28 @@ func _init(content: ContentDatabase) -> void:
 ## {key, kind, text, explanation} for things that just became noticeable.
 func step_vessel(vessel: VesselState, dt: float, extra_heat_capacity_j_per_k: float) -> Array:
 	var events: Array = []
-	_step_dissolution(vessel, dt, events)
-	_step_neutralisation(vessel, extra_heat_capacity_j_per_k, events)
+	for result in execute_step_reactions(vessel, extra_heat_capacity_j_per_k):
+		events.append_array(result.observations)
 	vessel.stir_time_left_s = maxf(vessel.stir_time_left_s - dt, 0.0)
 	return events
+
+
+## Executes every enabled step reaction for one vessel and returns the per-reaction results.
+## Visual demos stay manual because they are user-triggered, not ambient simulation steps.
+func execute_step_reactions(vessel: VesselState, extra_heat_capacity_j_per_k: float = 0.0) -> Array:
+	var results: Array = []
+	if _db == null or vessel == null:
+		return results
+	var reaction_ids: Array = _db.reactions.keys()
+	reaction_ids.sort()
+	for reaction_id in reaction_ids:
+		var reaction := _db.reactions.get(reaction_id) as ReactionDefinition
+		if reaction == null or reaction.virtual_only or reaction.type == "visual_demo":
+			continue
+		var result := execute_registered_reaction(str(reaction_id), vessel, extra_heat_capacity_j_per_k)
+		if result.status == ReactionResult.Status.EXECUTED or result.status == ReactionResult.Status.MATCHED:
+			results.append(result)
+	return results
 
 
 func _step_dissolution(vessel: VesselState, dt: float, events: Array) -> void:
@@ -212,6 +230,13 @@ func execute_registered_reaction(reaction_id: String, vessel: VesselState,
 			return _execute_dissolution_reaction(reaction, vessel)
 		"neutralisation":
 			return _execute_neutralisation_reaction(reaction, vessel, extra_heat_capacity_j_per_k)
+		"boiling":
+			return _execute_boiling_reaction(reaction, vessel)
+		"visual_demo":
+			result.status = ReactionResult.Status.REJECTED
+			result.message = "Visual demos are user-triggered, not ambient simulation steps."
+			result.errors.append(result.message)
+			return result
 		_:
 			result.status = ReactionResult.Status.REJECTED
 			result.message = "No executor exists for reaction type '%s'." % reaction.type
@@ -329,6 +354,40 @@ func _execute_neutralisation_reaction(reaction: ReactionDefinition, vessel: Vess
 	return result
 
 
+func _execute_boiling_reaction(reaction: ReactionDefinition, vessel: VesselState) -> ReactionResult:
+	var result := ReactionResult.new()
+	result.reaction_id = reaction.id
+	result.reaction_name = reaction.display_name
+	result.reaction_type = reaction.type
+	var chemical := _db.get_chemical(reaction.substance)
+	if chemical == null or chemical.state != "liquid" or not chemical.is_aqueous_solvent:
+		result.status = ReactionResult.Status.REJECTED
+		result.message = "The boiling process needs a liquid solvent that can boil in the virtual model."
+		result.errors.append(result.message)
+		return result
+	if AcidBase.aqueous_volume_ml(vessel, _db) <= 0.0:
+		result.status = ReactionResult.Status.NOT_MATCHED
+		result.message = "Boiling is only defined for an aqueous vessel in this model."
+		return result
+	var boiling_point := chemical.boiling_point_c
+	if is_nan(boiling_point):
+		boiling_point = HeatSystem.boiling_point_c(_db)
+	if vessel.temperature_c < boiling_point - _db.constant("boil_margin_c", 0.5):
+		result.status = ReactionResult.Status.NOT_MATCHED
+		result.message = "The vessel is not yet at its boiling point."
+		return result
+	var before_temperature := vessel.temperature_c
+	vessel.temperature_c = minf(vessel.temperature_c, boiling_point)
+	result.temperature_delta_c = vessel.temperature_c - before_temperature
+	_append_state_observation(result, vessel, "boiling", "boiling", "phase_change",
+		reaction.observation("boiling"), reaction.explanation, "boiling_bubbles")
+	result.effects = [{"effect_id": "boiling_bubbles", "kind": "phase_change", "intensity": 1.0,
+		"reaction_id": reaction.id}]
+	result.status = ReactionResult.Status.EXECUTED
+	result.message = reaction.observation("boiling")
+	return result
+
+
 func _append_result_observation(result: ReactionResult, vessel: VesselState, key: String,
 		kind: String, text: String, explanation: String, effect_id: String = "") -> void:
 	if text.is_empty() or vessel.fired_observations.has(key):
@@ -337,7 +396,6 @@ func _append_result_observation(result: ReactionResult, vessel: VesselState, key
 	var entry := {"key": key, "kind": kind, "text": text, "explanation": explanation}
 	if not effect_id.is_empty():
 		entry["effect_id"] = effect_id
-	vessel.add_observation(entry)
 	result.observations.append(entry.duplicate(true))
 	if not effect_id.is_empty():
 		result.effects.append({"effect_id": effect_id, "kind": kind, "intensity": 1.0, "source": key})
@@ -353,7 +411,6 @@ func _append_state_observation(result: ReactionResult, vessel: VesselState, key:
 	var entry := {"key": key, "kind": kind, "text": text, "explanation": explanation}
 	if not effect_id.is_empty():
 		entry["effect_id"] = effect_id
-	vessel.add_observation(entry)
 	result.observations.append(entry.duplicate(true))
 	if not effect_id.is_empty():
 		result.effects.append({"effect_id": effect_id, "kind": kind, "intensity": 1.0, "source": key})
