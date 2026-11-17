@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "id": "ice",
+  "name": "Ice",
+  "short_name": "Ice",
+  "formula": "H2O(s)",
+  "formula_display": "H₂O(s)",
+  "state": "solid",
+  "category": "phase change material",
+  "color": [0.92, 0.97, 1.0, 1.0],
+  "color_status": "display",
+  "density_g_ml": {
+    "value": 0.92,
+    "status": "reference",
+    "unit": "g/mL",
+    "source": "Educational classroom reference value used for the simulation"
+  },
+  "label_lines": ["Ice", "H2O(s)"],
+  "safety": {
+    "status": "reference_only",
+    "summary": "A simple classroom phase-change material used only for virtual demonstrations.",
+    "storage": "Frozen state in the model.",
+    "source": "Educational virtual-model placeholder."
+  },
+  "display": {
+    "summary": "A solid phase of water used in safe classroom phase-change examples."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
