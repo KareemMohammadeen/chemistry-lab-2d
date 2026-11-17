@@ -16,7 +16,7 @@
     "boiling_observation_v1": {
       "reaction_type": "boiling",
       "execution_mode": "observation_only",
-      "enabled": false
+      "enabled": true
     },
     "visual_demo_observation_v1": {
       "reaction_type": "visual_demo",
@@ -46,9 +46,8 @@
     {
       "id": "boil_water",
       "handler_id": "boiling_observation_v1",
-      "enabled": false,
-      "safety_scope": "virtual_only_classroom_model",
-      "disabled_reason": "A dedicated Reaction Engine handler is not implemented yet."
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
     },
     {
       "id": "magnesium_combustion_virtual_demo",
