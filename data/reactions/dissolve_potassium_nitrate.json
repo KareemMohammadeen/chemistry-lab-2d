@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "dissolve_potassium_nitrate",
+  "type": "dissolution",
+  "name": "Dissolving potassium nitrate in water",
+  "solute": "potassium_nitrate",
+  "tier": "stoichiometric_with_timescale",
+  "time_constant_s": {
+    "value": 9,
+    "status": "placeholder",
+    "unit": "s",
+    "source": "teaching-pace timescale, not a measured rate"
+  },
+  "observations": {
+    "started": "The white crystals begin to dissolve.",
+    "colour": "",
+    "saturated": "No more potassium nitrate dissolves: the solution is saturated and crystals remain at the bottom.",
+    "completed": "All the potassium nitrate has dissolved. The solution stays colourless."
+  },
+  "explanation": "Water molecules pull the potassium and nitrate ions out of the crystal and spread them through the liquid.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "potassium_nitrate",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "potassium_nitrate",
+      "coefficient": 1,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
+}
