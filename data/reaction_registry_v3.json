@@ -115,6 +115,12 @@
       "safety_scope": "virtual_only_classroom_model"
     },
     {
+      "id": "neutralisation_hydrochloric_sodium_hydroxide",
+      "handler_id": "neutralisation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
       "id": "acid_carbonate_hydrochloric_sodium_bicarbonate",
       "handler_id": "acid_carbonate_v1",
       "enabled": true,
@@ -139,6 +145,12 @@
       "safety_scope": "virtual_only_classroom_model"
     },
     {
+      "id": "gas_evolution_acetic_acid_sodium_bicarbonate",
+      "handler_id": "gas_evolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
       "id": "single_displacement_magnesium_hydrochloric_acid",
       "handler_id": "single_displacement_v1",
       "enabled": true,
@@ -152,6 +164,12 @@
     },
     {
       "id": "phase_change_ice_melting",
+      "handler_id": "phase_change_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "phase_change_water_freezing",
       "handler_id": "phase_change_v1",
       "enabled": true,
       "safety_scope": "virtual_only_classroom_model"
