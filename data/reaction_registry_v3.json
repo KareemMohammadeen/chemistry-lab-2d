@@ -27,6 +27,36 @@
       "reaction_type": "acid_carbonate",
       "execution_mode": "generic_pipeline",
       "enabled": true
+    },
+    "precipitation_v1": {
+      "reaction_type": "precipitation",
+      "execution_mode": "generic_pipeline",
+      "enabled": true
+    },
+    "gas_evolution_v1": {
+      "reaction_type": "gas_evolution",
+      "execution_mode": "generic_pipeline",
+      "enabled": true
+    },
+    "single_displacement_v1": {
+      "reaction_type": "single_displacement",
+      "execution_mode": "generic_pipeline",
+      "enabled": true
+    },
+    "double_displacement_v1": {
+      "reaction_type": "double_displacement",
+      "execution_mode": "generic_pipeline",
+      "enabled": true
+    },
+    "combustion_v1": {
+      "reaction_type": "combustion",
+      "execution_mode": "generic_pipeline",
+      "enabled": true
+    },
+    "phase_change_v1": {
+      "reaction_type": "phase_change",
+      "execution_mode": "generic_pipeline",
+      "enabled": true
     }
   },
   "reactions": [
@@ -87,6 +117,42 @@
     {
       "id": "acid_carbonate_hydrochloric_sodium_bicarbonate",
       "handler_id": "acid_carbonate_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "precipitation_calcium_chloride_sodium_carbonate",
+      "handler_id": "precipitation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "double_displacement_calcium_chloride_sodium_carbonate",
+      "handler_id": "double_displacement_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "gas_evolution_zinc_hydrochloric_acid",
+      "handler_id": "gas_evolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "single_displacement_magnesium_hydrochloric_acid",
+      "handler_id": "single_displacement_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "combustion_magnesium_oxygen",
+      "handler_id": "combustion_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "phase_change_ice_melting",
+      "handler_id": "phase_change_v1",
       "enabled": true,
       "safety_scope": "virtual_only_classroom_model"
     },
