@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "id": "combustion_magnesium_oxygen",
+  "type": "combustion",
+  "name": "Combustion of magnesium in oxygen",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "2 Mg(s) + O2(g) → 2 MgO(s)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "A bright classroom combustion example forms a white solid product.",
+    "completed": "Magnesium oxide has formed.",
+    "gas": "Oxygen is being consumed by the combustion model."
+  },
+  "explanation": "Magnesium reacts with oxygen to form a white solid product in the virtual classroom model.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "magnesium",
+      "coefficient": 2,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    },
+    {
+      "chemical_id": "oxygen_gas",
+      "coefficient": 1,
+      "phase": "gas",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mol"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "magnesium_oxide",
+      "coefficient": 2,
+      "phase": "solid"
+    }
+  ],
+  "conditions": []
+}
