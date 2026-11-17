@@ -38,7 +38,43 @@
       "safety_scope": "virtual_only_classroom_model"
     },
     {
+      "id": "dissolve_potassium_nitrate",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "dissolve_sodium_bicarbonate",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "dissolve_calcium_chloride",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "dissolve_sodium_acetate",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
       "id": "neutralisation_strong_acid_strong_base",
+      "handler_id": "neutralisation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "neutralisation_acetic_acid_sodium_hydroxide",
+      "handler_id": "neutralisation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "neutralisation_nitric_acid_sodium_hydroxide",
       "handler_id": "neutralisation_v1",
       "enabled": true,
       "safety_scope": "virtual_only_classroom_model"
