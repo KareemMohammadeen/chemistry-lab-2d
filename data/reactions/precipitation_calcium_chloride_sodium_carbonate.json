@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "id": "precipitation_calcium_chloride_sodium_carbonate",
+  "type": "precipitation",
+  "name": "Precipitation of calcium carbonate",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "CaCl2(aq) + Na2CO3(aq) → CaCO3(s) + 2 NaCl(aq)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "A white precipitate forms as the two salt solutions are mixed.",
+    "completed": "A white solid settles out of the mixture.",
+    "precipitate": "White calcium carbonate has formed."
+  },
+  "explanation": "The ions swap partners in solution and calcium carbonate becomes insoluble, so it appears as a solid precipitate.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "calcium_chloride_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sodium_carbonate_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "calcium_carbonate",
+      "coefficient": 1,
+      "phase": "solid"
+    },
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 2,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
+}
