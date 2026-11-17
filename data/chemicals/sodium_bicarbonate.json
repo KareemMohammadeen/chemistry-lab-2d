@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "sodium_bicarbonate",
+  "name": "Sodium bicarbonate",
+  "short_name": "Sodium bicarbonate",
+  "formula": "NaHCO3",
+  "formula_display": "NaHCO3",
+  "state": "solid",
+  "category": "salt",
+  "color": [0.96, 0.96, 0.95, 1.0],
+  "color_status": "display",
+  "density_g_ml": {
+    "value": 2.16,
+    "status": "reference",
+    "unit": "g/mL",
+    "source": "Educational classroom reference value used for the simulation"
+  },
+  "solubility_in_water": {
+    "unit": "g/100 mL",
+    "status": "reference",
+    "source": "Educational classroom reference value used for the simulation",
+    "curve": [
+      [0, 6.9],
+      [20, 9.6],
+      [40, 11.1],
+      [60, 13.4],
+      [80, 15.4],
+      [100, 17.3]
+    ]
+  },
+  "label_lines": ["Sodium bicarbonate", "NaHCO3"],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "A common household salt used in safe classroom chemistry models.",
+    "storage": "Dry, closed container.",
+    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
+  },
+  "display": {
+    "summary": "A white crystalline salt that dissolves modestly in water."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
