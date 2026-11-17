@@ -56,7 +56,8 @@ func load_all() -> void:
 			_dissolution_by_solute[reaction.solute] = reaction
 			if not chemicals.has(reaction.solute):
 				errors.append("Reaction '%s' refers to unknown chemical '%s'." % [reaction.id, reaction.solute])
-		element_catalog = ElementCatalog.build_index(elements_by_number)
+	
+	element_catalog = ElementCatalog.build_index(elements_by_number)
 
 
 func _load_reference_data() -> void:
