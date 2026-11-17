@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "id": "double_displacement_calcium_chloride_sodium_carbonate",
+  "type": "double_displacement",
+  "name": "Double displacement: calcium chloride and sodium carbonate",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "CaCl2(aq) + Na2CO3(aq) → CaCO3(s) + 2 NaCl(aq)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "The ions swap partners and a white solid appears.",
+    "completed": "A white calcium carbonate precipitate has formed."
+  },
+  "explanation": "This is the standard double-displacement example used in classrooms to show precipitate formation.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "calcium_chloride_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sodium_carbonate_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "calcium_carbonate",
+      "coefficient": 1,
+      "phase": "solid"
+    },
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 2,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
+}
