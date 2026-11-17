@@ -17,6 +17,7 @@ func _initialize() -> void:
 	_test_boiling_executor()
 	_test_dissolution_executor()
 	_test_neutralisation_executor()
+	_test_generic_executor()
 	_test_step_dispatch()
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
 	quit(1 if _failures > 0 else 0)
@@ -82,6 +83,21 @@ func _test_neutralisation_executor() -> void:
 		if str(effect.get("effect_id", "")) == "heat_wave":
 			has_heat_wave = true
 	_check(has_heat_wave, "neutralisation includes a heat-wave effect")
+
+
+func _test_generic_executor() -> void:
+	print("-- generic executor: acid-carbonate")
+	var sim := LabSimulation.new(_content)
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.add_liquid("hydrochloric_acid_0_1m", 50.0)
+	vessel.add_solid("sodium_bicarbonate", 2.0)
+	var result := sim.engine.execute_registered_reaction("acid_carbonate_hydrochloric_sodium_bicarbonate", vessel)
+	_check(result.status == ReactionResult.Status.EXECUTED, "acid-carbonate reaction returns EXECUTED")
+	_check(float(vessel.gases.get("carbon_dioxide", 0.0)) > 0.0, "acid-carbonate produces carbon dioxide gas")
+	_check(float(vessel.dissolved.get("sodium_chloride", 0.0)) > 0.0, "acid-carbonate produces dissolved salt")
+	_check(result.effects.size() > 0, "acid-carbonate returns visual feedback")
+	_check(_contains_observation(result.observations, "generic_reaction:acid_carbonate_hydrochloric_sodium_bicarbonate"), "acid-carbonate records a generic observation")
 
 
 func _test_step_dispatch() -> void:
