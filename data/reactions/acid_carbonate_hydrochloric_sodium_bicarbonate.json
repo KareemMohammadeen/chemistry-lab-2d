@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "id": "acid_carbonate_hydrochloric_sodium_bicarbonate",
+  "type": "acid_carbonate",
+  "name": "Acid-carbonate reaction: hydrochloric acid and sodium bicarbonate",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "HCl(aq) + NaHCO3(s) → NaCl(aq) + H2O(l) + CO2(g)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "The mixture fizzes as carbon dioxide gas is released.",
+    "completed": "Carbon dioxide bubbles rise through the liquid.",
+    "gas": "Carbon dioxide is bubbling out of the mixture."
+  },
+  "explanation": "The acid reacts with bicarbonate to form salt, water and carbon dioxide gas. The generic executor uses the registered reactant and product ledgers to model the change.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "hydrochloric_acid_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sodium_bicarbonate",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 1,
+      "phase": "dissolved"
+    },
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid"
+    },
+    {
+      "chemical_id": "carbon_dioxide",
+      "coefficient": 1,
+      "phase": "gas"
+    }
+  ],
+  "conditions": []
+}
