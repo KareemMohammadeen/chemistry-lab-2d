@@ -76,7 +76,7 @@ func _step_dissolution(vessel: VesselState, dt: float, events: Array) -> void:
 
 
 func _step_neutralisation(vessel: VesselState, extra_heat_capacity_j_per_k: float, events: Array) -> void:
-	var reaction := _db.first_reaction_of_type("neutralisation")
+	var reaction := _db.first_enabled_reaction_of_type("neutralisation")
 	if reaction == null or not _reaction_is_allowed(reaction):
 		return
 	var amounts := AcidBase.moles(vessel, _db)
