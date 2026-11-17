@@ -134,3 +134,26 @@ func enabled_reaction_ids() -> Array[String]:
 			result.append(reaction_id)
 	result.sort()
 	return result
+
+
+func get_enabled_reaction_ids_by_type(reaction_type: String) -> Array[String]:
+	var result: Array[String] = []
+	if reaction_type.is_empty():
+		return result
+	for reaction_id_value in entries.keys():
+		var reaction_id := str(reaction_id_value)
+		if not is_enabled(reaction_id):
+			continue
+		var handler_id := get_handler_id(reaction_id)
+		var handler: Dictionary = handlers.get(handler_id, {})
+		if str(handler.get("reaction_type", "")) == reaction_type:
+			result.append(reaction_id)
+	result.sort()
+	return result
+
+
+func first_enabled_reaction_id_by_type(reaction_type: String) -> String:
+	var ids := get_enabled_reaction_ids_by_type(reaction_type)
+	if ids.is_empty():
+		return ""
+	return ids[0]
