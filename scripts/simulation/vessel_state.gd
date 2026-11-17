@@ -88,6 +88,20 @@ func pressure_kpa(ambient_pressure_kpa: float = DEFAULT_AMBIENT_PRESSURE_KPA) ->
 	return (trapped_air_moles + total_gas_moles()) * GAS_CONSTANT_J_PER_MOL_K * temperature_k / headspace_l()
 
 
+## Maximum safe temperature for the current closed-system gas load and pressure limit.
+## Open systems are not pressure-limited by the sealed-gas model.
+func max_temperature_c_for_pressure_limit(pressure_limit_kpa: float) -> float:
+	if not is_closed_system:
+		return INF
+	if pressure_limit_kpa <= 0.0:
+		return -273.15
+	var total_moles := trapped_air_moles + total_gas_moles()
+	if total_moles <= EPSILON:
+		return INF
+	var temperature_k := pressure_limit_kpa * headspace_l() / (GAS_CONSTANT_J_PER_MOL_K * total_moles)
+	return maxf(temperature_k - 273.15, -273.15)
+
+
 ## Returns the amount vented in the model and restores an open vessel at ambient pressure.
 func open_system() -> Dictionary:
 	var released := gases.duplicate(true)
