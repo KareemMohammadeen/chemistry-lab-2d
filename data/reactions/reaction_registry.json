@@ -9,6 +9,101 @@
       "id": "dissolve_copper_sulfate_pentahydrate",
       "type": "dissolution",
       "enabled": true
+    },
+    {
+      "id": "dissolve_potassium_nitrate",
+      "type": "dissolution",
+      "enabled": true
+    },
+    {
+      "id": "dissolve_sodium_bicarbonate",
+      "type": "dissolution",
+      "enabled": true
+    },
+    {
+      "id": "dissolve_calcium_chloride",
+      "type": "dissolution",
+      "enabled": true
+    },
+    {
+      "id": "dissolve_sodium_acetate",
+      "type": "dissolution",
+      "enabled": true
+    },
+    {
+      "id": "neutralisation_strong_acid_strong_base",
+      "type": "neutralisation",
+      "enabled": true
+    },
+    {
+      "id": "neutralisation_acetic_acid_sodium_hydroxide",
+      "type": "neutralisation",
+      "enabled": true
+    },
+    {
+      "id": "neutralisation_nitric_acid_sodium_hydroxide",
+      "type": "neutralisation",
+      "enabled": true
+    },
+    {
+      "id": "neutralisation_hydrochloric_sodium_hydroxide",
+      "type": "neutralisation",
+      "enabled": true
+    },
+    {
+      "id": "acid_carbonate_hydrochloric_sodium_bicarbonate",
+      "type": "acid_carbonate",
+      "enabled": true
+    },
+    {
+      "id": "precipitation_calcium_chloride_sodium_carbonate",
+      "type": "precipitation",
+      "enabled": true
+    },
+    {
+      "id": "double_displacement_calcium_chloride_sodium_carbonate",
+      "type": "double_displacement",
+      "enabled": true
+    },
+    {
+      "id": "gas_evolution_zinc_hydrochloric_acid",
+      "type": "gas_evolution",
+      "enabled": true
+    },
+    {
+      "id": "gas_evolution_acetic_acid_sodium_bicarbonate",
+      "type": "gas_evolution",
+      "enabled": true
+    },
+    {
+      "id": "single_displacement_magnesium_hydrochloric_acid",
+      "type": "single_displacement",
+      "enabled": true
+    },
+    {
+      "id": "combustion_magnesium_oxygen",
+      "type": "combustion",
+      "enabled": true
+    },
+    {
+      "id": "phase_change_ice_melting",
+      "type": "phase_change",
+      "enabled": true
+    },
+    {
+      "id": "phase_change_water_freezing",
+      "type": "phase_change",
+      "enabled": true
+    },
+    {
+      "id": "boil_water",
+      "type": "boiling",
+      "enabled": true
+    },
+    {
+      "id": "magnesium_combustion_virtual_demo",
+      "type": "visual_demo",
+      "enabled": false
     }
   ]
 }
