@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "id": "neutralisation_hydrochloric_sodium_hydroxide",
+  "type": "neutralisation",
+  "name": "Neutralisation of hydrochloric acid by sodium hydroxide",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)",
+  "enthalpy_kj_per_mol": {
+    "value": -57.0,
+    "status": "reference",
+    "unit": "kJ/mol",
+    "condition": "25 °C",
+    "source": "Educational classroom approximation used for the simulation"
+  },
+  "observations": {
+    "heat": "The mixture warms up because neutralisation releases heat.",
+    "neutral": "The acid and base have exactly cancelled: the mixture is neutral (pH 7).",
+    "acidic": "There is more acid than base, so the mixture is still acidic.",
+    "basic": "There is more base than acid, so the mixture is still basic."
+  },
+  "explanation": "Hydrogen ions from the acid and hydroxide ions from the base combine to form water, leaving a dissolved salt behind.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "hydrochloric_acid_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sodium_hydroxide_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid"
+    },
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 1,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
+}
