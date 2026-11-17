@@ -74,6 +74,9 @@ static func _step_vessel(state: LabState, db: ContentDatabase, item: LabObject, 
 	var boiling_point := boiling_point_c(db)
 	if AcidBase.aqueous_volume_ml(vessel, db) > 0.0 and vessel.temperature_c > boiling_point:
 		vessel.temperature_c = boiling_point
+	if vessel.is_closed_system:
+		var pressure_limit := db.constant("max_virtual_pressure_kpa", 300.0)
+		vessel.temperature_c = minf(vessel.temperature_c, vessel.max_temperature_c_for_pressure_limit(pressure_limit))
 	if is_boiling(vessel, db) and not vessel.fired_observations.has("boiling"):
 		var reaction := db.first_reaction_of_type("boiling")
 		if reaction != null:
