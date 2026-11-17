@@ -35,7 +35,7 @@ func _step_dissolution(vessel: VesselState, dt: float, events: Array) -> void:
 			continue
 		var chemical := _db.get_chemical(str(solute_id))
 		var reaction := _db.find_dissolution(str(solute_id))
-		if chemical == null or reaction == null:
+		if chemical == null or reaction == null or not _reaction_is_allowed(reaction):
 			if solvent_ml > 0.0:
 				_emit_once(vessel, events, "no_model:%s" % solute_id, "model",
 					"No dissolution model exists yet for this solid, so it stays as it is.", "")
@@ -77,7 +77,7 @@ func _step_dissolution(vessel: VesselState, dt: float, events: Array) -> void:
 
 func _step_neutralisation(vessel: VesselState, extra_heat_capacity_j_per_k: float, events: Array) -> void:
 	var reaction := _db.first_reaction_of_type("neutralisation")
-	if reaction == null:
+	if reaction == null or not _reaction_is_allowed(reaction):
 		return
 	var amounts := AcidBase.moles(vessel, _db)
 	var acid_mol := float(amounts["acid"])
@@ -92,6 +92,8 @@ func _step_neutralisation(vessel: VesselState, extra_heat_capacity_j_per_k: floa
 		if capacity > 0.0:
 			# enthalpy is negative for heat released, so the temperature rises
 			vessel.temperature_c -= reaction.enthalpy_kj_per_mol * 1000.0 * new_mol / capacity
+			var pressure_limit := _db.constant("max_virtual_pressure_kpa", 300.0)
+			vessel.temperature_c = minf(vessel.temperature_c, vessel.max_temperature_c_for_pressure_limit(pressure_limit))
 		vessel.neutralised_mol = reacted_mol
 		_emit_once(vessel, events, "neutralisation_heat", "heat", reaction.observation("heat"), "")
 
@@ -104,6 +106,16 @@ func _step_neutralisation(vessel: VesselState, extra_heat_capacity_j_per_k: floa
 		outcome = "basic"
 	_emit_on_change(vessel, events, "acid_base_outcome", outcome, "neutralisation",
 		reaction.observation(outcome), reaction.explanation)
+
+
+func _reaction_is_allowed(reaction: ReactionDefinition) -> bool:
+	if reaction == null:
+		return false
+	if _db == null or _db.reaction_registry == null:
+		return true
+	if not _db.reaction_registry.has_reaction(reaction.id):
+		return false
+	return _db.reaction_registry.is_enabled(reaction.id)
 
 
 ## Announces an observation the first time only.
