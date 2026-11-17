@@ -91,7 +91,12 @@ def main() -> int:
             if step.get("type") == "action":
                 assert step.get("command") in allowed_commands
                 assert step.get("interaction_id") in allowed_commands
-                assert step.get("source_contains_chemical_id", step.get("target_contains_chemical_id", "water")) in allowed_materials
+                source_id = step.get("source_contains_chemical_id", "")
+                target_id = step.get("target_contains_chemical_id", "")
+                if source_id:
+                    assert source_id in allowed_materials
+                if target_id:
+                    assert target_id in allowed_materials
                 assert step.get("target_equipment_id", "beaker_250ml") in allowed_vessels
             elif step.get("type") == "condition":
                 assert step.get("condition") == "minimum_dissolved_g"
