@@ -25,7 +25,7 @@ var element_catalog: Dictionary = {}
 var compounds: Dictionary = {}
 var layout: LabLayout = null
 ## Human-readable problems found while loading. Empty when everything loaded cleanly.
-var errors: PackedStringArray = PackedStringArray()
+var errors: PackedStringArray = []
 
 var _dissolution_by_solute: Dictionary = {}
 
@@ -154,7 +154,12 @@ func get_equipment(equipment_id: String) -> EquipmentDefinition:
 
 ## The dissolution reaction for a solid substance, or null when none is defined.
 func find_dissolution(solute_id: String) -> ReactionDefinition:
-	return _dissolution_by_solute.get(solute_id) as ReactionDefinition
+	var reaction := _dissolution_by_solute.get(solute_id) as ReactionDefinition
+	if reaction == null:
+		return null
+	if reaction_registry != null and reaction_registry.has_reaction(reaction.id) and not reaction_registry.is_enabled(reaction.id):
+		return null
+	return reaction
 
 
 ## The first reaction of a type (for example "neutralisation"), or null.
@@ -164,6 +169,36 @@ func first_reaction_of_type(type: String) -> ReactionDefinition:
 		if reaction.type == type:
 			return reaction
 	return null
+
+
+## The first enabled reaction of a type (for example "boiling"), or null.
+func first_enabled_reaction_of_type(type: String) -> ReactionDefinition:
+	var reaction_ids := enabled_reaction_ids_of_type(type)
+	if reaction_ids.is_empty():
+		return null
+	return reactions.get(reaction_ids[0]) as ReactionDefinition
+
+
+## All reaction ids of a specific type, sorted by id for deterministic lookup.
+func reaction_ids_of_type(type: String) -> Array[String]:
+	var result: Array[String] = []
+	for reaction_id_value in reactions.keys():
+		var reaction_id := str(reaction_id_value)
+		var reaction: ReactionDefinition = reactions[reaction_id]
+		if reaction != null and reaction.type == type:
+			result.append(reaction_id)
+	result.sort()
+	return result
+
+
+## Enabled reaction ids of a specific type, sorted by id for deterministic lookup.
+func enabled_reaction_ids_of_type(type: String) -> Array[String]:
+	if reaction_registry != null:
+		return reaction_registry.get_enabled_reaction_ids_by_type(type)
+	var result: Array[String] = []
+	for reaction_id in reaction_ids_of_type(type):
+		result.append(reaction_id)
+	return result
 
 
 func constant(key: String, fallback: float) -> float:
