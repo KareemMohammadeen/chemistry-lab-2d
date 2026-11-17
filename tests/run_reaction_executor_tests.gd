@@ -1,7 +1,7 @@
 extends SceneTree
 ## Headless coverage for the generic reaction executor. This verifies that the new
-## ReactionEngine entry point can execute registered dissolution, neutralisation and
-## boiling reactions without relying on the GUI.
+## ReactionEngine entry point can execute registered dissolution, neutralisation,
+## boiling and generic family reactions without relying on the GUI.
 
 const SETUP_PATH := "res://data/setups/first_demo.json"
 
@@ -17,6 +17,12 @@ func _initialize() -> void:
 	_test_boiling_executor()
 	_test_dissolution_executor()
 	_test_neutralisation_executor()
+	_test_precipitation_executor()
+	_test_double_displacement_executor()
+	_test_gas_evolution_executor()
+	_test_single_displacement_executor()
+	_test_combustion_executor()
+	_test_phase_change_executor()
 	_test_generic_executor()
 	_test_step_dispatch()
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
@@ -83,6 +89,84 @@ func _test_neutralisation_executor() -> void:
 		if str(effect.get("effect_id", "")) == "heat_wave":
 			has_heat_wave = true
 	_check(has_heat_wave, "neutralisation includes a heat-wave effect")
+
+
+func _test_precipitation_executor() -> void:
+	print("-- generic executor: precipitation")
+	var sim := LabSimulation.new(_content)
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.add_liquid("calcium_chloride_0_1m", 50.0)
+	vessel.add_liquid("sodium_carbonate_0_1m", 50.0)
+	var result := sim.engine.execute_registered_reaction("precipitation_calcium_chloride_sodium_carbonate", vessel)
+	_check(result.status == ReactionResult.Status.EXECUTED, "precipitation executor returns EXECUTED")
+	_check(float(vessel.solids.get("calcium_carbonate", 0.0)) > 0.0, "precipitation forms calcium carbonate")
+	_check(float(vessel.dissolved.get("sodium_chloride", 0.0)) > 0.0, "precipitation leaves dissolved salt behind")
+	_check(_contains_observation(result.observations, "generic_reaction:precipitation_calcium_chloride_sodium_carbonate"), "precipitation records a generic observation")
+
+
+func _test_double_displacement_executor() -> void:
+	print("-- generic executor: double displacement")
+	var sim := LabSimulation.new(_content)
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.add_liquid("calcium_chloride_0_1m", 50.0)
+	vessel.add_liquid("sodium_carbonate_0_1m", 50.0)
+	var result := sim.engine.execute_registered_reaction("double_displacement_calcium_chloride_sodium_carbonate", vessel)
+	_check(result.status == ReactionResult.Status.EXECUTED, "double displacement executor returns EXECUTED")
+	_check(float(vessel.solids.get("calcium_carbonate", 0.0)) > 0.0, "double displacement forms a precipitate")
+	_check(_contains_effect(result.effects, "precipitate_cloud"), "double displacement returns precipitate feedback")
+
+
+func _test_gas_evolution_executor() -> void:
+	print("-- generic executor: gas evolution")
+	var sim := LabSimulation.new(_content)
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.add_solid("zinc", 2.0)
+	vessel.add_liquid("hydrochloric_acid_0_1m", 50.0)
+	var result := sim.engine.execute_registered_reaction("gas_evolution_zinc_hydrochloric_acid", vessel)
+	_check(result.status == ReactionResult.Status.EXECUTED, "gas evolution returns EXECUTED")
+	_check(float(vessel.gases.get("hydrogen_gas", 0.0)) > 0.0, "gas evolution releases hydrogen")
+	_check(_contains_effect(result.effects, "gas_bubbles"), "gas evolution returns gas feedback")
+
+
+func _test_single_displacement_executor() -> void:
+	print("-- generic executor: single displacement")
+	var sim := LabSimulation.new(_content)
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.add_solid("magnesium", 2.0)
+	vessel.add_liquid("hydrochloric_acid_0_1m", 50.0)
+	var result := sim.engine.execute_registered_reaction("single_displacement_magnesium_hydrochloric_acid", vessel)
+	_check(result.status == ReactionResult.Status.EXECUTED, "single displacement returns EXECUTED")
+	_check(float(vessel.gases.get("hydrogen_gas", 0.0)) > 0.0, "single displacement produces hydrogen gas")
+	_check(result.produced.has("dissolved"), "single displacement reports dissolved product")
+
+
+func _test_combustion_executor() -> void:
+	print("-- generic executor: combustion")
+	var sim := LabSimulation.new(_content)
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.add_solid("magnesium", 2.0)
+	vessel.add_gas("oxygen_gas", 1.0)
+	var result := sim.engine.execute_registered_reaction("combustion_magnesium_oxygen", vessel)
+	_check(result.status == ReactionResult.Status.EXECUTED, "combustion returns EXECUTED")
+	_check(float(vessel.solids.get("magnesium_oxide", 0.0)) > 0.0, "combustion forms magnesium oxide")
+	_check(_contains_observation(result.observations, "generic_reaction:combustion_magnesium_oxygen"), "combustion records a generic observation")
+
+
+func _test_phase_change_executor() -> void:
+	print("-- generic executor: phase change")
+	var sim := LabSimulation.new(_content)
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.add_solid("ice", 5.0)
+	var result := sim.engine.execute_registered_reaction("phase_change_ice_melting", vessel)
+	_check(result.status == ReactionResult.Status.EXECUTED, "phase change returns EXECUTED")
+	_check(float(vessel.liquids.get("water", 0.0)) > 0.0, "phase change creates liquid water")
+	_check(_contains_observation(result.observations, "generic_reaction:phase_change_ice_melting"), "phase change records a generic observation")
 
 
 func _test_generic_executor() -> void:
