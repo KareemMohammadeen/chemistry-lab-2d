@@ -15,6 +15,8 @@ func _initialize() -> void:
 	_check(_content.reaction_registry.is_enabled("dissolve_sodium_chloride"), "sodium chloride dissolution is enabled")
 	_check(_content.reaction_registry.has_reaction("boil_water"), "boiling is registered")
 	_check(_content.reaction_registry.is_enabled("boil_water"), "boiling is enabled")
+	_check(_content.reaction_registry.has_reaction("acid_carbonate_hydrochloric_sodium_bicarbonate"), "acid-carbonate is registered")
+	_check(_content.reaction_registry.is_enabled("acid_carbonate_hydrochloric_sodium_bicarbonate"), "acid-carbonate is enabled")
 	_check(_content.reaction_registry.has_reaction("magnesium_combustion_virtual_demo"), "magnesium demo remains explicitly registered")
 	_check(not _content.reaction_registry.is_enabled("magnesium_combustion_virtual_demo"), "magnesium demo stays disabled")
 
@@ -23,6 +25,9 @@ func _initialize() -> void:
 
 	var boiling := _content.first_enabled_reaction_of_type("boiling")
 	_check(boiling != null and boiling.id == "boil_water", "boiling lookup resolves the boiling handler")
+
+	var acid_carbonate := _content.first_enabled_reaction_of_type("acid_carbonate")
+	_check(acid_carbonate != null and acid_carbonate.id == "acid_carbonate_hydrochloric_sodium_bicarbonate", "acid-carbonate lookup resolves the generic handler")
 
 	var neutralisation := _content.first_enabled_reaction_of_type("neutralisation")
 	_check(neutralisation != null and neutralisation.id == "neutralisation_strong_acid_strong_base", "neutralisation lookup resolves the neutralisation handler")
