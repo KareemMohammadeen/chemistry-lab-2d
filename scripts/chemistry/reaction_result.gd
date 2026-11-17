@@ -19,6 +19,7 @@ var message: String = ""
 var matched_reactants: Array = []
 var missing_reactants: Array = []
 var observations: Array = []
+var effects: Array = []
 var consumed: Dictionary = {}
 var produced: Dictionary = {}
 var energy_kj: float = 0.0
@@ -59,6 +60,7 @@ func to_dictionary() -> Dictionary:
 		"matched_reactants": matched_reactants.duplicate(true),
 		"missing_reactants": missing_reactants.duplicate(true),
 		"observations": observations.duplicate(true),
+		"effects": effects.duplicate(true),
 		"consumed": consumed.duplicate(true),
 		"produced": produced.duplicate(true),
 		"energy_kj": energy_kj,
