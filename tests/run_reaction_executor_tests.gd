@@ -17,6 +17,7 @@ func _initialize() -> void:
 	_test_boiling_executor()
 	_test_dissolution_executor()
 	_test_neutralisation_executor()
+	_test_step_dispatch()
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
 	quit(1 if _failures > 0 else 0)
 
@@ -83,6 +84,21 @@ func _test_neutralisation_executor() -> void:
 	_check(has_heat_wave, "neutralisation includes a heat-wave effect")
 
 
+func _test_step_dispatch() -> void:
+	print("-- generic executor: step dispatch")
+	var sim := LabSimulation.new(_content)
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.temperature_c = 105.0
+	vessel.add_liquid("water", 100.0)
+	var results := sim.engine.execute_step_reactions(vessel)
+	_check(results.size() >= 1, "step dispatch returns at least one result")
+	_check(_contains_result(results, "boil_water"), "step dispatch includes boiling")
+	var boiling := _find_result(results, "boil_water")
+	_check(boiling != null and boiling.status == ReactionResult.Status.EXECUTED, "boiling is executed by the generic step dispatcher")
+	_check(is_equal_approx(vessel.temperature_c, 100.0), "step dispatch clamps the vessel at the water boiling point")
+
+
 func _find(sim: LabSimulation, equipment_id: String, chemical_id: String = "") -> LabObject:
 	for item_value in sim.state.objects.values():
 		var item: LabObject = item_value
@@ -109,6 +125,17 @@ func _contains_effect(entries: Array, effect_id: String) -> bool:
 		if typeof(entry) == TYPE_DICTIONARY and str((entry as Dictionary).get("effect_id", "")) == effect_id:
 			return true
 	return false
+
+
+func _contains_result(results: Array, reaction_id: String) -> bool:
+	return _find_result(results, reaction_id) != null
+
+
+func _find_result(results: Array, reaction_id: String) -> ReactionResult:
+	for entry in results:
+		if entry is ReactionResult and str((entry as ReactionResult).reaction_id) == reaction_id:
+			return entry
+	return null
 
 
 func _check(condition: bool, label: String) -> void:
