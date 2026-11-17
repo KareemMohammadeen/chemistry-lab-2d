@@ -254,7 +254,7 @@ func _execute_dissolution_reaction(reaction: ReactionDefinition, vessel: VesselS
 	var moved_g := minf(undissolved, room_g)
 	if moved_g <= MIN_AMOUNT_G:
 		result.status = ReactionResult.Status.NOT_MATCHED
-		result.message = "The model could not move enough solid into the solution.")
+		result.message = "The model could not move enough solid into the solution."
 		return result
 	vessel.solids[reaction.solute] = undissolved - moved_g
 	if float(vessel.solids[reaction.solute]) <= MIN_AMOUNT_G:
@@ -265,7 +265,7 @@ func _execute_dissolution_reaction(reaction: ReactionDefinition, vessel: VesselS
 	_append_result_observation(result, vessel, "dissolve_started:%s" % reaction.solute,
 		"dissolution", reaction.observation("started"), "", "dissolution_particles")
 	var colour_text := reaction.observation("colour")
-	if SolutionAppearance.solute_strength(vessel, _db, reaction.solute) >= _db.constant("colour_observation_threshold", 0.15):
+	if SolutionAppearance.solute_strength(vessel, _db, str(reaction.solute)) >= _db.constant("colour_observation_threshold", 0.15):
 		_append_result_observation(result, vessel, "dissolve_colour:%s" % reaction.solute,
 			"colour_change", colour_text, reaction.explanation, "colour_shift")
 	if not vessel.solids.has(reaction.solute):
