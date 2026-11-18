@@ -28,7 +28,7 @@ func _ready() -> void:
 	get_window().min_size = MIN_WINDOW_SIZE
 	get_window().size_changed.connect(_update_content_scale)
 	_update_content_scale()
-	var content := ContentDatabase.new()
+	var content := ContentDatabasePlus.new()
 	content.load_all()
 	for message in content.errors:
 		push_error("Content: %s" % message)
