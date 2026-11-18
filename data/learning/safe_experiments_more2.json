@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_glycerol_viscosity",
+          "title": "Glycerol viscosity",
+          "materials": ["glycerol", "water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Compare a thick liquid with water in the classroom model.",
+          "student_observations": [
+            "The liquid moves slowly.",
+            "It can look clear but feel thicker in the model.",
+            "Different liquids can flow differently."
+          ],
+          "teacher_note": "Use this to introduce viscosity and mixing behavior."
+        },
+        {
+          "id": "prep2_starch_mixture",
+          "title": "Starch mixture idea",
+          "materials": ["starch", "water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that not every solid makes a truly clear solution.",
+          "student_observations": [
+            "The mixture can look cloudy.",
+            "Some particles remain visible at first.",
+            "Mixtures can differ from solutions."
+          ],
+          "teacher_note": "A good contrast with sugar dissolving examples."
+        },
+        {
+          "id": "prep2_solution_vs_mixture",
+          "title": "Solution versus mixture",
+          "materials": ["sucrose", "starch", "water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Compare a dissolving sugar with a cloudier starch mixture.",
+          "student_observations": [
+            "One sample stays clearer than the other.",
+            "The substances behave differently in water.",
+            "Appearance helps classify matter."
+          ],
+          "teacher_note": "This is a classroom classification activity."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
