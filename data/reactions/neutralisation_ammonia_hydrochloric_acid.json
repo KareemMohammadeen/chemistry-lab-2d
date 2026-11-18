@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "id": "neutralisation_ammonia_hydrochloric_acid",
+  "type": "neutralisation",
+  "name": "Neutralisation: ammonia and hydrochloric acid",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "NH3(g) + HCl(aq) → NH4Cl(s)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "A white solid or fumes appear where the acid and ammonia meet.",
+    "completed": "Ammonium chloride has formed.",
+    "precipitate": "White ammonium chloride has formed."
+  },
+  "explanation": "Ammonia acts as a base and reacts with hydrochloric acid to form the ammonium chloride salt in the virtual vessel.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "ammonia",
+      "coefficient": 1,
+      "phase": "gas",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "hydrochloric_acid_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "ammonium_chloride",
+      "coefficient": 1,
+      "phase": "solid"
+    }
+  ],
+  "conditions": []
+}
