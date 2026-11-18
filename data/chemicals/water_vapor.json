@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "id": "water_vapor",
+  "name": "Water vapour",
+  "short_name": "Water vapour",
+  "formula": "H2O(g)",
+  "formula_display": "H2O(g)",
+  "state": "gas",
+  "category": "gas",
+  "color": [0.70, 0.85, 1.0, 0.05],
+  "color_status": "display",
+  "density_g_ml": 0.0006,
+  "label_lines": ["Water vapour", "H2O(g)"],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "Water in its gaseous form for safe virtual phase-change models.",
+    "storage": "Handled as a virtual gas symbol only.",
+    "source": "General classroom simulation data written for this project."
+  },
+  "display": {
+    "summary": "The gaseous form of water used in evaporation and condensation models."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
