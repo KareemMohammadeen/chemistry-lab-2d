@@ -144,6 +144,11 @@
       "id": "single_displacement_zinc_hydrochloric_acid_classroom",
       "type": "single_displacement",
       "enabled": true
+    },
+    {
+      "id": "neutralisation_ammonia_hydrochloric_acid",
+      "type": "neutralisation",
+      "enabled": true
     }
   ]
 }
