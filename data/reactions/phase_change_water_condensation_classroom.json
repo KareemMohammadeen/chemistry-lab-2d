@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "id": "phase_change_water_condensation_classroom",
+  "type": "phase_change",
+  "name": "Condensation of water vapour",
+  "tier": "qualitative",
+  "equation": "H2O(g) → H2O(l)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "Water vapour condenses into liquid water.",
+    "completed": "Water vapour has condensed into liquid water."
+  },
+  "explanation": "The virtual model shows water changing state from gas back to liquid.",
+  "level": "middle_school",
+  "time_constant_s": 6.0,
+  "reactants": [
+    {
+      "chemical_id": "water_vapor",
+      "coefficient": 1,
+      "phase": "gas",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mol"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid"
+    }
+  ],
+  "conditions": [],
+  "kinetics": {
+    "time_constant_s": 6.0,
+    "rate_multiplier": 1.0
+  },
+  "equilibrium": {}
+}
