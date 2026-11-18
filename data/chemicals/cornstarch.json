@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "cornstarch",
+  "name": "Cornstarch",
+  "short_name": "Cornstarch",
+  "formula": "mixture",
+  "formula_display": "Mixture",
+  "state": "solid",
+  "category": "mixture",
+  "color": [0.98, 0.97, 0.92, 1.0],
+  "color_status": "display",
+  "label_lines": ["Cornstarch", "Mixture"],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "Low hazard classroom powder. Dust can irritate eyes and noses.",
+    "storage": "Dry, sealed container.",
+    "source": "General educational guidance written for this project."
+  },
+  "display": {
+    "summary": "A common powder used for mixture and suspension examples."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
