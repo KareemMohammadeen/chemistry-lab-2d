@@ -30,6 +30,7 @@ static func inspect(sim: LabSimulation, object_id: String) -> Dictionary:
 		"safety": [],
 		"heater": {"available": false},
 		"amount": {"visible": false},
+		"experiments": [],
 	}
 	var rows: Array = data["rows"]
 	rows.append({"label": "State", "value": _state_text(sim, item, equipment)})
@@ -137,6 +138,13 @@ static func _describe_vessel(sim: LabSimulation, item: LabObject, equipment: Equ
 			"step": MIN_AMOUNT_G if use_grams else MIN_AMOUNT_ML,
 		}
 	var main_chemical := _first_chemical(db, chemical_ids)
+	if main_chemical != null:
+		var experiments: Array = []
+		if db.has_method("get_experiments_for_chemical"):
+			experiments = db.call("get_experiments_for_chemical", main_chemical.id) as Array
+		if not experiments.is_empty():
+			rows.append({"label": "Suggested experiments", "value": "%d virtual demos" % experiments.size()})
+			data["experiments"] = experiments.slice(0, 5)
 	data["summary"] = main_chemical.summary if main_chemical != null else "Empty. Drag a bottle onto it to fill it."
 
 
