@@ -1,1 +1,243 @@
-{"version":1,"description":"Auto-generated series of 1000 classroom solution materials.","bases":[{"id":"sodium_chloride","name":"Sodium chloride","formula":"NaCl(aq)","formula_display":"NaCl(aq)","category":"dilute salt solution","color_hex":"#F4F8FF"},{"id":"potassium_chloride","name":"Potassium chloride","formula":"KCl(aq)","formula_display":"KCl(aq)","category":"dilute salt solution","color_hex":"#F4F8FF"},{"id":"calcium_chloride","name":"Calcium chloride","formula":"CaCl2(aq)","formula_display":"CaCl₂(aq)","category":"dilute salt solution","color_hex":"#F0F8FF"},{"id":"sodium_sulfate","name":"Sodium sulfate","formula":"Na2SO4(aq)","formula_display":"Na₂SO₄(aq)","category":"dilute salt solution","color_hex":"#F4F8FF"},{"id":"magnesium_sulfate","name":"Magnesium sulfate","formula":"MgSO4(aq)","formula_display":"MgSO₄(aq)","category":"dilute salt solution","color_hex":"#F4F8FF"},{"id":"sodium_nitrate","name":"Sodium nitrate","formula":"NaNO3(aq)","formula_display":"NaNO₃(aq)","category":"dilute salt solution","color_hex":"#F7FBFF"},{"id":"potassium_nitrate","name":"Potassium nitrate","formula":"KNO3(aq)","formula_display":"KNO₃(aq)","category":"dilute salt solution","color_hex":"#F7FBFF"},{"id":"sodium_carbonate","name":"Sodium carbonate","formula":"Na2CO3(aq)","formula_display":"Na₂CO₃(aq)","category":"alkaline salt solution","color_hex":"#F7FAF5"},{"id":"sodium_bicarbonate","name":"Sodium bicarbonate","formula":"NaHCO3(aq)","formula_display":"NaHCO₃(aq)","category":"mild buffer solution","color_hex":"#F7FAF5"},{"id":"sodium_hydroxide","name":"Sodium hydroxide","formula":"NaOH(aq)","formula_display":"NaOH(aq)","category":"alkali solution","color_hex":"#F7FAF0"},{"id":"potassium_hydroxide","name":"Potassium hydroxide","formula":"KOH(aq)","formula_display":"KOH(aq)","category":"alkali solution","color_hex":"#F7FAF0"},{"id":"hydrochloric_acid","name":"Hydrochloric acid","formula":"HCl(aq)","formula_display":"HCl(aq)","category":"acid solution","color_hex":"#F4F8FF"},{"id":"nitric_acid","name":"Nitric acid","formula":"HNO3(aq)","formula_display":"HNO₃(aq)","category":"acid solution","color_hex":"#F4F8FF"},{"id":"sulfuric_acid","name":"Sulfuric acid","formula":"H2SO4(aq)","formula_display":"H₂SO₄(aq)","category":"acid solution","color_hex":"#F4F8FF"},{"id":"acetic_acid","name":"Acetic acid","formula":"CH3COOH(aq)","formula_display":"CH₃COOH(aq)","category":"weak acid solution","color_hex":"#F4F8FF"},{"id":"silver_nitrate","name":"Silver nitrate","formula":"AgNO3(aq)","formula_display":"AgNO₃(aq)","category":"precipitation reagent","color_hex":"#F4F8FF"},{"id":"copper_sulfate_pentahydrate","name":"Copper sulfate pentahydrate","formula":"CuSO4·5H2O(aq)","formula_display":"CuSO₄·5H₂O(aq)","category":"blue salt solution","color_hex":"#EAF7FF"},{"id":"iron_ii_sulfate","name":"Iron(II) sulfate","formula":"FeSO4(aq)","formula_display":"FeSO₄(aq)","category":"salt solution","color_hex":"#F7FBFF"},{"id":"iron_iii_chloride","name":"Iron(III) chloride","formula":"FeCl3(aq)","formula_display":"FeCl₃(aq)","category":"salt solution","color_hex":"#F7FBFF"},{"id":"ammonia","name":"Ammonia","formula":"NH3(aq)","formula_display":"NH₃(aq)","category":"base solution","color_hex":"#F7FAF5"}],"concentrations":[0.001,0.002,0.005,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.075,0.08,0.09,0.1,0.12,0.15,0.18,0.2,0.22,0.25,0.3,0.35,0.4,0.45,0.5,0.6,0.75,0.8,0.9,1.0,1.25,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,0.007,0.008,0.009,0.015,0.025,0.035,0.065,0.085,0.11,0.13,0.17]}
+{
+  "version": 1,
+  "description": "Auto-generated series of 1000 classroom solution materials.",
+  "scientific_seed_database": "data/generated/scientific_seed_database.json",
+  "scientific_seed_title": "Scientific chemistry seed database",
+  "verification_policy": "reference-first; prefer official source data and keep source links in each record.",
+  "sources_used": [
+    {
+      "title": "NIST Chemistry WebBook",
+      "url": "https://webbook.nist.gov/chemistry/"
+    },
+    {
+      "title": "PubChem",
+      "url": "https://pubchem.ncbi.nlm.nih.gov/"
+    },
+    {
+      "title": "IUPAC Gold Book",
+      "url": "https://goldbook.iupac.org/"
+    },
+    {
+      "title": "CAS Common Chemistry",
+      "url": "https://commonchemistry.cas.org/"
+    },
+    {
+      "title": "User-provided research digest",
+      "url": "internal-user-content"
+    }
+  ],
+  "bases": [
+    {
+      "id": "sodium_chloride",
+      "name": "Sodium chloride",
+      "formula": "NaCl(aq)",
+      "formula_display": "NaCl(aq)",
+      "category": "dilute salt solution",
+      "color_hex": "#F4F8FF"
+    },
+    {
+      "id": "potassium_chloride",
+      "name": "Potassium chloride",
+      "formula": "KCl(aq)",
+      "formula_display": "KCl(aq)",
+      "category": "dilute salt solution",
+      "color_hex": "#F4F8FF"
+    },
+    {
+      "id": "calcium_chloride",
+      "name": "Calcium chloride",
+      "formula": "CaCl2(aq)",
+      "formula_display": "CaCl₂(aq)",
+      "category": "dilute salt solution",
+      "color_hex": "#F0F8FF"
+    },
+    {
+      "id": "sodium_sulfate",
+      "name": "Sodium sulfate",
+      "formula": "Na2SO4(aq)",
+      "formula_display": "Na₂SO₄(aq)",
+      "category": "dilute salt solution",
+      "color_hex": "#F4F8FF"
+    },
+    {
+      "id": "magnesium_sulfate",
+      "name": "Magnesium sulfate",
+      "formula": "MgSO4(aq)",
+      "formula_display": "MgSO₄(aq)",
+      "category": "dilute salt solution",
+      "color_hex": "#F4F8FF"
+    },
+    {
+      "id": "sodium_nitrate",
+      "name": "Sodium nitrate",
+      "formula": "NaNO3(aq)",
+      "formula_display": "NaNO₃(aq)",
+      "category": "dilute salt solution",
+      "color_hex": "#F7FBFF"
+    },
+    {
+      "id": "potassium_nitrate",
+      "name": "Potassium nitrate",
+      "formula": "KNO3(aq)",
+      "formula_display": "KNO₃(aq)",
+      "category": "dilute salt solution",
+      "color_hex": "#F7FBFF"
+    },
+    {
+      "id": "sodium_carbonate",
+      "name": "Sodium carbonate",
+      "formula": "Na2CO3(aq)",
+      "formula_display": "Na₂CO₃(aq)",
+      "category": "alkaline salt solution",
+      "color_hex": "#F7FAF5"
+    },
+    {
+      "id": "sodium_bicarbonate",
+      "name": "Sodium bicarbonate",
+      "formula": "NaHCO3(aq)",
+      "formula_display": "NaHCO₃(aq)",
+      "category": "mild buffer solution",
+      "color_hex": "#F7FAF5"
+    },
+    {
+      "id": "sodium_hydroxide",
+      "name": "Sodium hydroxide",
+      "formula": "NaOH(aq)",
+      "formula_display": "NaOH(aq)",
+      "category": "alkali solution",
+      "color_hex": "#F7FAF0"
+    },
+    {
+      "id": "potassium_hydroxide",
+      "name": "Potassium hydroxide",
+      "formula": "KOH(aq)",
+      "formula_display": "KOH(aq)",
+      "category": "alkali solution",
+      "color_hex": "#F7FAF0"
+    },
+    {
+      "id": "hydrochloric_acid",
+      "name": "Hydrochloric acid",
+      "formula": "HCl(aq)",
+      "formula_display": "HCl(aq)",
+      "category": "acid solution",
+      "color_hex": "#F4F8FF"
+    },
+    {
+      "id": "nitric_acid",
+      "name": "Nitric acid",
+      "formula": "HNO3(aq)",
+      "formula_display": "HNO₃(aq)",
+      "category": "acid solution",
+      "color_hex": "#F4F8FF"
+    },
+    {
+      "id": "sulfuric_acid",
+      "name": "Sulfuric acid",
+      "formula": "H2SO4(aq)",
+      "formula_display": "H₂SO₄(aq)",
+      "category": "acid solution",
+      "color_hex": "#F4F8FF"
+    },
+    {
+      "id": "acetic_acid",
+      "name": "Acetic acid",
+      "formula": "CH3COOH(aq)",
+      "formula_display": "CH₃COOH(aq)",
+      "category": "weak acid solution",
+      "color_hex": "#F4F8FF"
+    },
+    {
+      "id": "silver_nitrate",
+      "name": "Silver nitrate",
+      "formula": "AgNO3(aq)",
+      "formula_display": "AgNO₃(aq)",
+      "category": "precipitation reagent",
+      "color_hex": "#F4F8FF"
+    },
+    {
+      "id": "copper_sulfate_pentahydrate",
+      "name": "Copper sulfate pentahydrate",
+      "formula": "CuSO4·5H2O(aq)",
+      "formula_display": "CuSO₄·5H₂O(aq)",
+      "category": "blue salt solution",
+      "color_hex": "#EAF7FF"
+    },
+    {
+      "id": "iron_ii_sulfate",
+      "name": "Iron(II) sulfate",
+      "formula": "FeSO4(aq)",
+      "formula_display": "FeSO₄(aq)",
+      "category": "salt solution",
+      "color_hex": "#F7FBFF"
+    },
+    {
+      "id": "iron_iii_chloride",
+      "name": "Iron(III) chloride",
+      "formula": "FeCl3(aq)",
+      "formula_display": "FeCl₃(aq)",
+      "category": "salt solution",
+      "color_hex": "#F7FBFF"
+    },
+    {
+      "id": "ammonia",
+      "name": "Ammonia",
+      "formula": "NH3(aq)",
+      "formula_display": "NH₃(aq)",
+      "category": "base solution",
+      "color_hex": "#F7FAF5"
+    }
+  ],
+  "concentrations": [
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.03,
+    0.04,
+    0.05,
+    0.06,
+    0.07,
+    0.075,
+    0.08,
+    0.09,
+    0.1,
+    0.12,
+    0.15,
+    0.18,
+    0.2,
+    0.22,
+    0.25,
+    0.3,
+    0.35,
+    0.4,
+    0.45,
+    0.5,
+    0.6,
+    0.75,
+    0.8,
+    0.9,
+    1.0,
+    1.25,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0,
+    4.5,
+    5.0,
+    0.007,
+    0.008,
+    0.009,
+    0.015,
+    0.025,
+    0.035,
+    0.065,
+    0.085,
+    0.11,
+    0.13,
+    0.17
+  ]
+}
