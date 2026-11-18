@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_salt_dissolving_basics",
+          "title": "Salt dissolving basics",
+          "materials": ["sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show a classic soluble salt forming a clear solution.",
+          "student_observations": [
+            "The solid becomes smaller as it dissolves.",
+            "The liquid stays clear.",
+            "A solution is not the same as a solid mix."
+          ],
+          "teacher_note": "Use as a baseline example for solution formation."
+        },
+        {
+          "id": "prep2_ethanol_evaporation",
+          "title": "Ethanol evaporation idea",
+          "materials": ["ethanol", "water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Compare how different liquids can behave differently in the model.",
+          "student_observations": [
+            "The liquid can seem to disappear over time in the model.",
+            "Some liquids change faster than others.",
+            "Volatility is a property of matter."
+          ],
+          "teacher_note": "Keep the discussion conceptual and avoid any real heating steps."
+        },
+        {
+          "id": "prep2_vinegar_salt_contrast",
+          "title": "Vinegar and salt contrast",
+          "materials": ["vinegar", "sodium_chloride", "water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Compare a weak acid liquid with a neutral salt in water.",
+          "student_observations": [
+            "The liquids have different roles in the model.",
+            "The salt dissolves while the vinegar stays a liquid.",
+            "Acids and salts are different classes of substances."
+          ],
+          "teacher_note": "Use this as a classification activity."
+        },
+        {
+          "id": "prep2_vinegar_bicarbonate_concept_2",
+          "title": "Vinegar and bicarbonate concept",
+          "materials": ["vinegar", "sodium_bicarbonate", "water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Show a safe classroom gas-release concept through a weak acid and bicarbonate model.",
+          "student_observations": [
+            "Bubbles appear in the model.",
+            "The mixture foams briefly.",
+            "Gas formation is a visible sign of chemical change."
+          ],
+          "teacher_note": "Concept only; the app should present this at a classroom-safe level."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_phase_transitions",
+      "title": "OpenStax Chemistry 2e — 10.3 Phase Transitions",
+      "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
+      "supports": "Evaporation and condensation concepts."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
