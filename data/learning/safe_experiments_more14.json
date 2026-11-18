@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep1",
+      "grade_label": "Prep 1",
+      "experiments": [
+        {
+          "id": "prep1_temperature_and_flow_observation",
+          "title": "Temperature and flow observation",
+          "materials": ["distilled_water"],
+          "equipment": ["beaker_250ml", "thermometer"],
+          "focus": "Show that water can behave differently when it is warmer or cooler.",
+          "student_observations": [
+            "Liquid behavior can change with temperature.",
+            "Warm liquids may appear to move differently from cool ones.",
+            "Temperature is a useful physical property."
+          ],
+          "teacher_note": "Keep the example conceptual and simple."
+        },
+        {
+          "id": "prep1_melting_and_reforming_review",
+          "title": "Melting and reforming review",
+          "materials": ["ice", "distilled_water"],
+          "equipment": ["beaker_250ml", "thermometer"],
+          "focus": "Review that a material can melt and then form the solid again when conditions change.",
+          "student_observations": [
+            "Ice becomes liquid water.",
+            "Cooling can reverse the change in the model.",
+            "The substance stays the same while the state changes."
+          ],
+          "teacher_note": "Useful as a simple recap of phase change."
+        },
+        {
+          "id": "prep1_water_drop_and_surface_review",
+          "title": "Water drop and surface review",
+          "materials": ["distilled_water", "soap"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show that a tiny amount of soap can change how water behaves at the surface.",
+          "student_observations": [
+            "Small additions can change the surface behavior.",
+            "Bubbles may form more easily.",
+            "Everyday materials can affect physical properties."
+          ],
+          "teacher_note": "A quick demo for physical properties."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_fine_vs_coarse_particle_mixture",
+          "title": "Fine vs coarse particle mixture",
+          "materials": ["sand", "flour", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare how small and large particles behave in water.",
+          "student_observations": [
+            "Different particles can make the mixture look different.",
+            "Some mixtures stay cloudy longer.",
+            "Particle size matters in mixtures."
+          ],
+          "teacher_note": "Good for comparing suspensions."
+        },
+        {
+          "id": "prep2_filtering_concept_review",
+          "title": "Filtering concept review",
+          "materials": ["sand", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod", "funnel", "filter_paper"],
+          "focus": "Introduce the idea that some mixtures can be separated by filtration.",
+          "student_observations": [
+            "Solid particles can be held back by a filter.",
+            "The liquid can pass through.",
+            "Filtration is a useful separation method."
+          ],
+          "teacher_note": "Keep it as a concept demo in the virtual model."
+        },
+        {
+          "id": "prep2_dilution_with_water",
+          "title": "Dilution with water",
+          "materials": ["sugar", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that adding more water can make a solution less concentrated.",
+          "student_observations": [
+            "The same substance can be spread through more water.",
+            "Color or taste is not needed to discuss concentration.",
+            "Dilution changes concentration, not the identity of the substance."
+          ],
+          "teacher_note": "Useful for introducing concentration in simple words."
+        },
+        {
+          "id": "prep2_mixture_separation_by_settling",
+          "title": "Mixture separation by settling",
+          "materials": ["sand", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show that heavier particles can settle to the bottom over time.",
+          "student_observations": [
+            "Particles may move downward over time.",
+            "The top liquid can become clearer.",
+            "Settling is another separation idea."
+          ],
+          "teacher_note": "Pairs well with filtration and suspension review."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep3",
+      "grade_label": "Prep 3",
+      "experiments": [
+        {
+          "id": "prep3_diffusion_in_water_concept",
+          "title": "Diffusion in water concept",
+          "materials": ["food_coloring", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show how a colored substance can spread through water on its own.",
+          "student_observations": [
+            "The color spreads without stirring in the model.",
+            "Particles move from one area to another.",
+            "Diffusion happens in many everyday situations."
+          ],
+          "teacher_note": "Keep it visual and conceptual."
+        },
+        {
+          "id": "prep3_syrup_viscosity_concept",
+          "title": "Syrup viscosity concept",
+          "materials": ["glycerol", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare how thick liquids flow more slowly than thin liquids.",
+          "student_observations": [
+            "Some liquids flow more slowly.",
+            "Thickness is a physical property.",
+            "Viscosity can be compared in a model."
+          ],
+          "teacher_note": "A good bridge to the idea of viscosity."
+        },
+        {
+          "id": "prep3_mix_and_separate_review",
+          "title": "Mix and separate review",
+          "materials": ["oil", "water", "sand", "sugar", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Review several mixture types in one classroom activity.",
+          "student_observations": [
+            "Some mixtures form layers.",
+            "Some mixtures look cloudy.",
+            "Some materials dissolve to make clear solutions."
+          ],
+          "teacher_note": "Useful as a recap before senior-level concepts."
+        },
+        {
+          "id": "prep3_evaporation_speed_comparison",
+          "title": "Evaporation speed comparison",
+          "materials": ["distilled_water"],
+          "equipment": ["beaker_250ml", "thermometer"],
+          "focus": "Show that warmer conditions can make evaporation happen faster in the model.",
+          "student_observations": [
+            "Water can leave the container at different speeds.",
+            "Temperature can affect the rate.",
+            "Evaporation is a physical process."
+          ],
+          "teacher_note": "Keep the explanation simple and visual."
+        }
+      ]
+    },
+    {
+      "grade_id": "senior1",
+      "grade_label": "Senior 1",
+      "experiments": [
+        {
+          "id": "senior1_chromatography_concept_review",
+          "title": "Chromatography concept review",
+          "materials": ["marker_ink", "distilled_water"],
+          "equipment": ["filter_paper", "beaker_250ml"],
+          "focus": "Introduce the idea that mixed colors can separate because different parts move differently.",
+          "student_observations": [
+            "A mixed color can separate into parts.",
+            "Different components can move at different speeds.",
+            "Chromatography is a separation idea."
+          ],
+          "teacher_note": "Use as a conceptual example only."
+        },
+        {
+          "id": "senior1_concentration_comparison_review",
+          "title": "Concentration comparison review",
+          "materials": ["sugar", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare a weak and a strong solution in the classroom model.",
+          "student_observations": [
+            "The same solute can be spread in different amounts of water.",
+            "Concentration changes the appearance of a solution in the model.",
+            "The amount of solute matters."
+          ],
+          "teacher_note": "Useful for a first-pass concentration lesson."
+        },
+        {
+          "id": "senior1_temperature_and_solubility_review",
+          "title": "Temperature and solubility review",
+          "materials": ["sugar", "sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml", "thermometer", "stirring_rod"],
+          "focus": "Discuss how temperature can be linked to solubility ideas in the classroom model.",
+          "student_observations": [
+            "Temperature can matter in dissolution models.",
+            "Different substances can behave differently.",
+            "Solubility is a property worth comparing."
+          ],
+          "teacher_note": "Keep it descriptive, not procedural."
+        },
+        {
+          "id": "senior1_particle_size_and_dissolving_review",
+          "title": "Particle size and dissolving review",
+          "materials": ["sugar", "flour", "sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare how particle size can affect the way substances behave in water.",
+          "student_observations": [
+            "Some solids dissolve, some stay visible.",
+            "Particle size can affect the appearance of the mixture.",
+            "Not all powders behave the same way."
+          ],
+          "teacher_note": "Great for revision and sorting activities."
+        }
+      ]
+    },
+    {
+      "grade_id": "senior2",
+      "grade_label": "Senior 2",
+      "experiments": [
+        {
+          "id": "senior2_density_layer_review",
+          "title": "Density layer review",
+          "materials": ["vegetable_oil", "distilled_water", "glycerol"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that liquids can layer depending on density and miscibility.",
+          "student_observations": [
+            "Liquids may separate into layers.",
+            "Density helps explain the order of layers.",
+            "Not all liquids mix evenly."
+          ],
+          "teacher_note": "A useful advanced comparison activity."
+        },
+        {
+          "id": "senior2_precipitation_and_solution_review",
+          "title": "Precipitation and solution review",
+          "materials": ["calcium_chloride", "sodium_carbonate", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Review that some mixtures can turn cloudy because a new solid forms.",
+          "student_observations": [
+            "A clear mixture can become cloudy.",
+            "A solid product can appear in the model.",
+            "Not every reaction stays invisible."
+          ],
+          "teacher_note": "Tie this directly to the validated reaction registry."
+        },
+        {
+          "id": "senior2_separation_methods_overview",
+          "title": "Separation methods overview",
+          "materials": ["sand", "oil", "sugar", "sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod", "funnel", "filter_paper"],
+          "focus": "Compare filtration, settling, evaporation and layer separation as classroom methods.",
+          "student_observations": [
+            "Different mixtures need different separation ideas.",
+            "Some methods work on solids in liquids.",
+            "Some methods work on liquids that do not mix."
+          ],
+          "teacher_note": "A strong end-of-unit summary activity."
+        },
+        {
+          "id": "senior2_reversible_vs_irreversible_review",
+          "title": "Reversible vs irreversible review",
+          "materials": ["ice", "sodium_chloride", "distilled_water", "sugar"],
+          "equipment": ["beaker_250ml", "thermometer"],
+          "focus": "Classify a few classroom changes by whether they can be undone in the model.",
+          "student_observations": [
+            "Some changes can be reversed.",
+            "Some changes are just state changes.",
+            "Some changes are better described as mixture changes."
+          ],
+          "teacher_note": "Good final review before assessment."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_matter",
+      "title": "OpenStax Chemistry 2e — 1.3 Physical and Chemical Properties",
+      "url": "https://openstax.org/books/chemistry-2e/pages/1-3-physical-and-chemical-properties",
+      "supports": "Physical properties, phase change, diffusion and mixture classification ideas."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
