@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "id": "combustion_ethanol_oxygen",
+  "type": "combustion",
+  "name": "Combustion of ethanol in oxygen",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "C2H5OH(l) + 3 O2(g) → 2 CO2(g) + 3 H2O(l)",
+  "enthalpy_kj_per_mol": -1367,
+  "observations": {
+    "summary": "The fuel burns and the virtual flame effect appears.",
+    "completed": "Ethanol has combusted to carbon dioxide and water."
+  },
+  "explanation": "This is a classic combustion reaction used in school chemistry to show oxidation of an organic fuel.",
+  "level": "high_school",
+  "reactants": [
+    {
+      "chemical_id": "ethanol",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "oxygen_gas",
+      "coefficient": 3,
+      "phase": "gas",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mol"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "carbon_dioxide",
+      "coefficient": 2,
+      "phase": "gas"
+    },
+    {
+      "chemical_id": "water",
+      "coefficient": 3,
+      "phase": "liquid"
+    }
+  ],
+  "conditions": [
+    {
+      "kind": "ignition",
+      "detail": "spark or flame in the virtual model"
+    }
+  ]
+}
