@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "chalk",
+  "name": "Chalk",
+  "short_name": "Chalk",
+  "formula": "CaCO3",
+  "formula_display": "CaCO₃",
+  "state": "solid",
+  "category": "mineral",
+  "color": [0.97, 0.97, 0.95, 1.0],
+  "color_status": "display",
+  "label_lines": ["Chalk", "CaCO₃"],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "Low hazard classroom solid. Dust can irritate eyes.",
+    "storage": "Dry, labelled container.",
+    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
+  },
+  "display": {
+    "summary": "A common classroom mineral used for particle and suspension examples."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
