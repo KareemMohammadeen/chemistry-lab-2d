@@ -104,6 +104,46 @@
       "id": "magnesium_combustion_virtual_demo",
       "type": "visual_demo",
       "enabled": false
+    },
+    {
+      "id": "dissolution_magnesium_sulfate_classroom",
+      "type": "dissolution",
+      "enabled": true
+    },
+    {
+      "id": "dissolution_sodium_carbonate_classroom",
+      "type": "dissolution",
+      "enabled": true
+    },
+    {
+      "id": "dissolution_sodium_sulfate_classroom",
+      "type": "dissolution",
+      "enabled": true
+    },
+    {
+      "id": "precipitation_calcium_chloride_sodium_sulfate_classroom",
+      "type": "precipitation",
+      "enabled": true
+    },
+    {
+      "id": "gas_evolution_hydrochloric_sodium_carbonate_classroom",
+      "type": "gas_evolution",
+      "enabled": true
+    },
+    {
+      "id": "phase_change_water_evaporation_classroom",
+      "type": "phase_change",
+      "enabled": true
+    },
+    {
+      "id": "phase_change_water_condensation_classroom",
+      "type": "phase_change",
+      "enabled": true
+    },
+    {
+      "id": "single_displacement_zinc_hydrochloric_acid_classroom",
+      "type": "single_displacement",
+      "enabled": true
     }
   ]
 }
