@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_citric_bicarbonate_review",
+          "title": "Citric acid and bicarbonate review",
+          "materials": ["citric_acid", "sodium_bicarbonate", "distilled_water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Review the idea that acids and bicarbonates can produce a visible gas-forming change in the classroom model.",
+          "student_observations": [
+            "The mixture changes visibly in the model.",
+            "Bubbles are a sign that a new gas is being formed conceptually.",
+            "Acids and carbonates/bicarbonates are useful for comparison lessons."
+          ],
+          "teacher_note": "Keep the activity conceptual and classroom-level."
+        },
+        {
+          "id": "prep2_magnesium_carbonate_acid_concept",
+          "title": "Magnesium carbonate and acid concept",
+          "materials": ["magnesium_carbonate", "citric_acid", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Connect a carbonate solid with an acid in a safe comparison model.",
+          "student_observations": [
+            "The solid reacts in the model.",
+            "Small bubbles may appear as a sign of gas formation.",
+            "Carbonates can behave similarly in acid lessons."
+          ],
+          "teacher_note": "Use this as a comparison with sodium bicarbonate and calcium carbonate."
+        },
+        {
+          "id": "prep2_magnesium_carbonate_mixture",
+          "title": "Magnesium carbonate mixture",
+          "materials": ["magnesium_carbonate", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that not every solid makes a clear solution in water.",
+          "student_observations": [
+            "The solid does not disappear completely.",
+            "The liquid can look cloudy in the model.",
+            "Mixtures and solutions are not always the same thing."
+          ],
+          "teacher_note": "A useful contrast with sugar and salt dissolving."
+        },
+        {
+          "id": "prep2_acid_carbonate_family",
+          "title": "Acid-carbonate family comparison",
+          "materials": ["citric_acid", "sodium_bicarbonate", "magnesium_carbonate", "distilled_water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Compare two carbonate-related solids in the same lesson structure.",
+          "student_observations": [
+            "Different solids can show different rates of visible change.",
+            "All members of the family can be discussed using the same idea.",
+            "Classification helps students organize reactions."
+          ],
+          "teacher_note": "Good wrap-up activity for acids, carbonates, and observation skills."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_phase_transitions",
+      "title": "OpenStax Chemistry 2e — 10.3 Phase Transitions",
+      "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
+      "supports": "Evaporation and condensation concepts."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
