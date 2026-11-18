@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "id": "ammonium_chloride",
+  "name": "Ammonium chloride",
+  "short_name": "Ammonium chloride",
+  "formula": "NH4Cl",
+  "formula_display": "NH4Cl",
+  "state": "solid",
+  "category": "salt",
+  "color": [0.97, 0.97, 0.98, 1.0],
+  "color_status": "display",
+  "solution_color": [0.82, 0.9, 1.0, 0.25],
+  "color_full_at_g_per_100ml": 1,
+  "density_g_ml": {
+    "value": 1.527,
+    "status": "reference",
+    "unit": "g/mL",
+    "source": "Educational classroom reference value used for the simulation"
+  },
+  "melting_point_c": {
+    "value": 338,
+    "status": "reference",
+    "unit": "°C",
+    "source": "Educational classroom reference value used for the simulation"
+  },
+  "solubility_in_water": {
+    "unit": "g/100 mL",
+    "status": "reference",
+    "source": "Educational classroom reference value used for the simulation",
+    "curve": [
+      [20, 29.7]
+    ]
+  },
+  "label_lines": [
+    "Ammonium chloride",
+    "NH4Cl"
+  ],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "A common white salt used in classroom demonstrations and buffer examples.",
+    "storage": "Keep dry and closed.",
+    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
+  },
+  "display": {
+    "summary": "A white crystalline salt that dissolves in water."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
