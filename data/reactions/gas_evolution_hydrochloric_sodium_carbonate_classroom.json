@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "gas_evolution_hydrochloric_sodium_carbonate_classroom",
+  "type": "gas_evolution",
+  "name": "Gas evolution from hydrochloric acid and sodium carbonate",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "2 HCl(aq) + Na2CO3(s) → 2 NaCl(aq) + H2O(l) + CO2(g)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "Fizzing begins as carbon dioxide gas is released.",
+    "completed": "Carbon dioxide is being released from the mixture.",
+    "gas": "Bubbles of carbon dioxide are rising through the liquid."
+  },
+  "explanation": "An acid reacts with a carbonate to produce carbon dioxide, water and a dissolved salt.",
+  "level": "middle_school",
+  "time_constant_s": 4.0,
+  "reactants": [
+    {
+      "chemical_id": "hydrochloric_acid_0_1m",
+      "coefficient": 2,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sodium_carbonate",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 2,
+      "phase": "dissolved"
+    },
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid"
+    },
+    {
+      "chemical_id": "carbon_dioxide",
+      "coefficient": 1,
+      "phase": "gas"
+    }
+  ],
+  "conditions": [],
+  "kinetics": {
+    "time_constant_s": 4.0,
+    "rate_multiplier": 1.0
+  },
+  "equilibrium": {}
+}
