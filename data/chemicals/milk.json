@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "milk",
+  "name": "Milk",
+  "short_name": "Milk",
+  "formula": "mixture",
+  "formula_display": "Mixture",
+  "state": "liquid",
+  "category": "mixture",
+  "color": [0.98, 0.98, 0.96, 0.95],
+  "color_status": "display",
+  "label_lines": ["Milk", "Mixture"],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "Food mixture used only for classroom comparison examples.",
+    "storage": "Refrigerated in real life; virtual sample only in the model.",
+    "source": "General educational guidance written for this project."
+  },
+  "display": {
+    "summary": "A familiar mixture used to compare emulsions and suspensions."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
