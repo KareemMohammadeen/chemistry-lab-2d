@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_sand_and_water",
+          "title": "Sand and water",
+          "materials": ["sand", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that some solids make cloudy mixtures instead of clear solutions.",
+          "student_observations": [
+            "The sand does not disappear completely.",
+            "The liquid can stay cloudy.",
+            "Mixtures can be separated by physical methods."
+          ],
+          "teacher_note": "Good for introducing mixtures versus solutions."
+        },
+        {
+          "id": "prep2_oil_and_water_layers",
+          "title": "Oil and water layers",
+          "materials": ["vegetable_oil", "distilled_water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Show how some liquids do not mix and instead form layers.",
+          "student_observations": [
+            "Two layers appear in the model.",
+            "The oil stays on top.",
+            "Not all liquids are miscible."
+          ],
+          "teacher_note": "Use this to contrast with ethanol and water."
+        },
+        {
+          "id": "prep2_filtration_idea",
+          "title": "Filtration idea",
+          "materials": ["sand", "distilled_water"],
+          "equipment": ["beaker_250ml", "filter_paper", "funnel"],
+          "focus": "Introduce the idea that a solid can be separated from a liquid by filtration.",
+          "student_observations": [
+            "The solid is held back in the filter in the model.",
+            "The liquid passes through.",
+            "Separation methods matter in chemistry."
+          ],
+          "teacher_note": "Keep the activity conceptual and classroom-level."
+        },
+        {
+          "id": "prep2_carbon_dioxide_bubbles",
+          "title": "Carbon dioxide bubbles",
+          "materials": ["carbon_dioxide", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show a gas concept and how bubbles can be used as a visible model sign.",
+          "student_observations": [
+            "Bubbles are shown in the model.",
+            "The gas is invisible but can be represented by bubbles.",
+            "Gas behavior is different from liquids and solids."
+          ],
+          "teacher_note": "This is a simulation concept, not a real gas-handling procedure."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_phase_transitions",
+      "title": "OpenStax Chemistry 2e — 10.3 Phase Transitions",
+      "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
+      "supports": "Evaporation and condensation concepts."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
