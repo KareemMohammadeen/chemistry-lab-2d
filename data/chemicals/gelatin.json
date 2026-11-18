@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "gelatin",
+  "name": "Gelatin",
+  "short_name": "Gelatin",
+  "formula": "mixture",
+  "formula_display": "Mixture",
+  "state": "solid",
+  "category": "mixture",
+  "color": [0.97, 0.92, 0.85, 1.0],
+  "color_status": "display",
+  "label_lines": ["Gelatin", "Mixture"],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "Low hazard classroom material. Avoid ingestion in the simulation context.",
+    "storage": "Dry, sealed container.",
+    "source": "General educational guidance written for this project."
+  },
+  "display": {
+    "summary": "A familiar material used for texture and mixture examples."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
