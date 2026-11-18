@@ -20,6 +20,9 @@ var observations: Dictionary = {}
 var reactants: Array = []
 var products: Array = []
 var conditions: Array = []
+## Optional generic kinetics and equilibrium metadata for the advanced executor.
+var kinetics: Dictionary = {}
+var equilibrium: Dictionary = {}
 var safety_status: String = ""
 var source_ids: Array = []
 ## Optional visual-only demonstration metadata; never interpreted as a real procedure.
@@ -53,6 +56,8 @@ static func from_dictionary(data: Dictionary) -> ReactionDefinition:
 	reaction.reactants = _as_array(data.get("reactants", []))
 	reaction.products = _as_array(data.get("products", []))
 	reaction.conditions = _as_array(data.get("conditions", []))
+	reaction.kinetics = _as_dictionary(data.get("kinetics", {}))
+	reaction.equilibrium = _as_dictionary(data.get("equilibrium", {}))
 	reaction.safety_status = str(data.get("safety_status", ""))
 	reaction.source_ids = _as_array(data.get("source_ids", []))
 	reaction.virtual_only = bool(data.get("virtual_only", false))
@@ -72,3 +77,9 @@ static func _as_array(value: Variant) -> Array:
 	if typeof(value) == TYPE_ARRAY:
 		return value
 	return []
+
+
+static func _as_dictionary(value: Variant) -> Dictionary:
+	if typeof(value) == TYPE_DICTIONARY:
+		return value
+	return {}
