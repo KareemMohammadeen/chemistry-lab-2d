@@ -5,6 +5,7 @@ extends RefCounted
 ## Adding a chemical, reaction or equipment item means adding a JSON file; no code changes.
 
 const CHEMICALS_DIR := "res://data/chemicals"
+const GENERATED_CHEMICAL_SERIES_PATH := "res://data/generated/chemical_series_1000.json"
 const REACTIONS_DIR := "res://data/reactions"
 const REACTION_REGISTRY_PATH := "res://data/reaction_registry_v3.json"
 const EQUIPMENT_DIR := "res://data/equipment"
@@ -46,6 +47,7 @@ func load_all() -> void:
 	for path in JsonDataLoader.list_json_files(CHEMICALS_DIR):
 		var chemical := ChemicalDefinition.from_dictionary(JsonDataLoader.load_dictionary(path))
 		_register(chemicals, chemical, path)
+	_load_generated_chemical_series()
 	for path in JsonDataLoader.list_json_files(EQUIPMENT_DIR):
 		var item := EquipmentDefinition.from_dictionary(JsonDataLoader.load_dictionary(path))
 		_register(equipment, item, path)
@@ -72,6 +74,76 @@ func load_all() -> void:
 		errors.append("Reaction Registry: %s" % registry_error)
 
 	element_catalog = ElementCatalog.build_index(elements_by_number)
+
+
+## Expands a generated bulk JSON series into actual playable chemical definitions.
+## The file stays compact, but the loaded content becomes part of the simulation database.
+func _load_generated_chemical_series() -> void:
+	var series := JsonDataLoader.load_dictionary(GENERATED_CHEMICAL_SERIES_PATH)
+	if series.is_empty():
+		return
+	var bases: Array = series.get("bases", [])
+	var concentrations: Array = series.get("concentrations", [])
+	if bases.is_empty() or concentrations.is_empty():
+		errors.append("Generated chemical series file is missing bases or concentrations.")
+		return
+	var generated_count := 0
+	for base_value in bases:
+		if typeof(base_value) != TYPE_DICTIONARY:
+			continue
+		var base: Dictionary = base_value
+		var base_id := str(base.get("id", "")).strip_edges()
+		if base_id.is_empty():
+			continue
+		var base_name := str(base.get("name", base_id))
+		var base_formula := str(base.get("formula", ""))
+		var base_formula_display := str(base.get("formula_display", base_formula))
+		var category := str(base.get("category", "classroom solution series"))
+		for concentration_value in concentrations:
+			var concentration := float(concentration_value)
+			var concentration_token := _concentration_token(concentration)
+			var generated_id := "%s_%s" % [base_id, concentration_token]
+			if chemicals.has(generated_id):
+				continue
+			var display_concentration := _format_concentration_label(concentration)
+			var payload := {
+				"id": generated_id,
+				"name": "%s, %s mol/L" % [base_name, display_concentration],
+				"short_name": base_name,
+				"formula": base_formula,
+				"formula_display": base_formula_display,
+				"state": "liquid",
+				"category": category,
+				"color": [0.96, 0.98, 1.0, 0.35],
+				"solution_color": [0.85, 0.92, 1.0, 0.48],
+				"density_g_ml": {
+					"value": 1.0,
+					"unit": "g/mL",
+					"status": "derived",
+					"source": "Generated classroom solution series."
+				},
+				"is_aqueous_solvent": true,
+				"label_lines": [base_name, "%s mol/L" % display_concentration],
+				"safety": {
+					"status": "unverified_reference",
+					"summary": "Generated classroom solution for simulation and catalog breadth.",
+					"storage": "Model-only classroom solution series.",
+					"source": "Auto-generated educational content."
+				},
+				"display": {
+					"summary": "%s at %s mol/L generated for classroom use." % [base_name, display_concentration]
+				},
+				"simulation": {
+					"enabled": true,
+					"role": "classroom_reagent",
+					"scope": "generated classroom solution series"
+				}
+			}
+			var chemical := ChemicalDefinition.from_dictionary(payload)
+			_register(chemicals, chemical, GENERATED_CHEMICAL_SERIES_PATH + "#" + generated_id)
+			generated_count += 1
+	if generated_count < bases.size() * concentrations.size():
+		errors.append("Generated chemical series produced %d entries, expected %d." % [generated_count, bases.size() * concentrations.size()])
 
 
 ## Validates the forward-compatible participant schema without executing it. A future
@@ -214,3 +286,21 @@ func _register(target: Dictionary, item: Object, path: String) -> void:
 		errors.append("Duplicate id '%s' in %s" % [item_id, path])
 		return
 	target[item_id] = item
+
+
+static func _concentration_token(concentration: float) -> String:
+	var token := "%0.3f" % concentration
+	while token.ends_with("0"):
+		token = token.substr(0, token.length() - 1)
+	if token.ends_with("."):
+		token = token.substr(0, token.length() - 1)
+	return token.replace(".", "_")
+
+
+static func _format_concentration_label(concentration: float) -> String:
+	var label := "%0.3f" % concentration
+	while label.ends_with("0"):
+		label = label.substr(0, label.length() - 1)
+	if label.ends_with("."):
+		label = label.substr(0, label.length() - 1)
+	return label
