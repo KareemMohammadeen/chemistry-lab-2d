@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "id": "dissolution_magnesium_sulfate_classroom",
+  "type": "dissolution",
+  "name": "Dissolution of magnesium sulfate",
+  "substance": "magnesium_sulfate",
+  "tier": "qualitative",
+  "observations": {
+    "summary": "Magnesium sulfate dissolves in the water.",
+    "completed": "The solid has dissolved into the liquid."
+  },
+  "explanation": "A soluble magnesium salt disperses into ions in the virtual solvent.",
+  "level": "middle_school",
+  "time_constant_s": 4.0,
+  "reactants": [
+    {
+      "chemical_id": "magnesium_sulfate",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "magnesium_sulfate",
+      "coefficient": 1,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": [],
+  "kinetics": {
+    "time_constant_s": 4.0,
+    "rate_multiplier": 1.0
+  },
+  "equilibrium": {}
+}
