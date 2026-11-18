@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_ice_melting",
+          "title": "Ice melting",
+          "materials": ["ice", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show a simple phase change from solid to liquid water.",
+          "student_observations": [
+            "The solid becomes liquid in the model.",
+            "Phase change does not create a new substance.",
+            "Temperature helps explain state changes."
+          ],
+          "teacher_note": "A basic phase-change example for review lessons."
+        },
+        {
+          "id": "prep2_chalk_suspension",
+          "title": "Chalk suspension",
+          "materials": ["chalk", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that some solids make cloudy mixtures instead of true solutions.",
+          "student_observations": [
+            "The liquid can look cloudy.",
+            "The solid does not disappear completely.",
+            "Suspensions are different from clear solutions."
+          ],
+          "teacher_note": "Useful for comparing with sugar and salt behavior."
+        },
+        {
+          "id": "prep2_soap_and_water_bubbles",
+          "title": "Soap and water bubbles",
+          "materials": ["soap", "distilled_water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Introduce the idea that some substances change surface behavior in water.",
+          "student_observations": [
+            "Bubbles are easier to represent in the model.",
+            "Soap helps show cleaning and mixing behavior.",
+            "Different liquids can behave differently in water."
+          ],
+          "teacher_note": "Keep the lesson conceptual and classroom-level."
+        },
+        {
+          "id": "prep2_mixture_review",
+          "title": "Mixture review",
+          "materials": ["sand", "chalk", "soap", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Review how solids and liquids can behave differently in classroom mixtures.",
+          "student_observations": [
+            "Some materials cloud the water.",
+            "Some materials float or settle.",
+            "Observation helps classify matter."
+          ],
+          "teacher_note": "A good end-of-lesson review activity."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_phase_transitions",
+      "title": "OpenStax Chemistry 2e — 10.3 Phase Transitions",
+      "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
+      "supports": "Melting, freezing and phase-change concepts."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
