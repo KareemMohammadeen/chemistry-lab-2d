@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_flour_in_water",
+          "title": "Flour in water",
+          "materials": ["flour", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that some powders make cloudy mixtures instead of clear solutions.",
+          "student_observations": [
+            "The liquid can look cloudy.",
+            "The powder does not disappear completely.",
+            "Not every solid dissolves in water."
+          ],
+          "teacher_note": "Good comparison with sugar dissolving."
+        },
+        {
+          "id": "prep2_cornstarch_thick_mixture",
+          "title": "Cornstarch thick mixture",
+          "materials": ["cornstarch", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show how a powder can make a thick suspension instead of a clear solution.",
+          "student_observations": [
+            "The mixture can become thick.",
+            "The liquid does not stay perfectly clear.",
+            "Texture can help identify mixtures."
+          ],
+          "teacher_note": "Use this to discuss suspensions and viscosity.",
+          "
+        },
+        {
+          "id": "prep2_gelatin_texture",
+          "title": "Gelatin texture",
+          "materials": ["gelatin", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Introduce how some mixtures become thicker or more structured.",
+          "student_observations": [
+            "The model can look and feel thicker.",
+            "Different substances change texture differently.",
+            "Mixtures can have very different physical properties."
+          ],
+          "teacher_note": "Keep the example conceptual and classroom-level."
+        },
+        {
+          "id": "prep2_oatmeal_mixture",
+          "title": "Oatmeal mixture",
+          "materials": ["oatmeal", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show how a familiar food mixture behaves in water.",
+          "student_observations": [
+            "The mixture is not a clear solution.",
+            "Particles may remain visible.",
+            "Everyday materials can be mixtures."
+          ],
+          "teacher_note": "A simple real-world connection for students."
+        },
+        {
+          "id": "prep2_mixture_review_2",
+          "title": "Mixture review 2",
+          "materials": ["sugar", "flour", "cornstarch", "gelatin", "oatmeal", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Review the difference between a clear solution and several kinds of mixtures.",
+          "student_observations": [
+            "Some materials dissolve well.",
+            "Some materials cloud the water.",
+            "Some materials make the mixture thicker."
+          ],
+          "teacher_note": "Useful for a final review or classroom quiz."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_matter",
+      "title": "OpenStax Chemistry 2e — 1.3 Physical and Chemical Properties",
+      "url": "https://openstax.org/books/chemistry-2e/pages/1-3-physical-and-chemical-properties",
+      "supports": "Physical properties and mixture classification ideas."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
