@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep1",
+      "grade_label": "Prep 1",
+      "experiments": [
+        {
+          "id": "prep1_ice_melting",
+          "title": "Ice melting",
+          "materials": ["ice"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show a simple change of state from solid to liquid.",
+          "student_observations": [
+            "The ice piece gets smaller over time.",
+            "The model changes from solid to liquid.",
+            "Temperature can affect state changes."
+          ],
+          "teacher_note": "Useful for introducing physical change and phase transitions."
+        },
+        {
+          "id": "prep1_mixture_review_3",
+          "title": "Mixture review 3",
+          "materials": ["sugar", "flour", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare a dissolving solid with a cloudy mixture.",
+          "student_observations": [
+            "Sugar can disappear into the liquid.",
+            "Flour keeps the liquid cloudy.",
+            "Different solids behave differently in water."
+          ],
+          "teacher_note": "A simple review before moving to separation ideas."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_salt_vs_sugar_dissolving",
+          "title": "Salt versus sugar dissolving",
+          "materials": ["sodium_chloride", "sugar", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare two common solids that both dissolve but may be discussed differently in class.",
+          "student_observations": [
+            "Both solids can dissolve in water.",
+            "The model can show different amounts or speeds.",
+            "Solutions can still look clear even when the solute changes."
+          ],
+          "teacher_note": "Good bridge between everyday examples and solution language."
+        },
+        {
+          "id": "prep2_soap_and_water_bubbles",
+          "title": "Soap and water bubbles",
+          "materials": ["soap", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Introduce the idea that additives can change the behavior of water.",
+          "student_observations": [
+            "The mixture can produce bubbles.",
+            "Water behavior changes when soap is added.",
+            "Some substances affect surfaces and mixing."
+          ],
+          "teacher_note": "Keep this as a visual, non-technical concept activity."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep3",
+      "grade_label": "Prep 3",
+      "experiments": [
+        {
+          "id": "prep3_evaporation_and_residue_concept",
+          "title": "Evaporation and residue concept",
+          "materials": ["sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show the idea that a solvent can leave behind a dissolved solid.",
+          "student_observations": [
+            "The water amount can decrease in the model.",
+            "The dissolved solid can remain visible later.",
+            "Solutions can change as the solvent leaves."
+          ],
+          "teacher_note": "A safe conceptual example for separation and recovery ideas."
+        },
+        {
+          "id": "prep3_solution_review_3",
+          "title": "Solution review 3",
+          "materials": ["sodium_chloride", "sugar", "flour", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Review which materials form clear solutions and which stay as mixtures.",
+          "student_observations": [
+            "Some solids dissolve well.",
+            "Some solids make the water cloudy.",
+            "Clear solutions and cloudy mixtures are not the same."
+          ],
+          "teacher_note": "Good for revision before a classroom quiz or recap."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_matter",
+      "title": "OpenStax Chemistry 2e — 1.3 Physical and Chemical Properties",
+      "url": "https://openstax.org/books/chemistry-2e/pages/1-3-physical-and-chemical-properties",
+      "supports": "Physical properties, mixtures and state-change ideas."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
