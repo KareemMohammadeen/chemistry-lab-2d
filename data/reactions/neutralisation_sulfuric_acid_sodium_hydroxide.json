@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "id": "neutralisation_sulfuric_acid_sodium_hydroxide",
+  "type": "neutralisation",
+  "name": "Neutralisation: sulfuric acid and sodium hydroxide",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "H2SO4(aq) + 2 NaOH(aq) → Na2SO4(aq) + 2 H2O(l)",
+  "enthalpy_kj_per_mol": -114,
+  "observations": {
+    "summary": "The mixture warms as the acid and base are neutralised.",
+    "completed": "Neutralisation is complete and the solution is near neutral."
+  },
+  "explanation": "A strong acid and a strong base react to form sodium sulfate and water in the virtual vessel.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "sulfuric_acid",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sodium_hydroxide",
+      "coefficient": 2,
+      "phase": "dissolved",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "sodium_sulfate",
+      "coefficient": 1,
+      "phase": "dissolved"
+    },
+    {
+      "chemical_id": "water",
+      "coefficient": 2,
+      "phase": "liquid"
+    }
+  ],
+  "conditions": []
+}
