@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "oatmeal",
+  "name": "Oatmeal",
+  "short_name": "Oatmeal",
+  "formula": "mixture",
+  "formula_display": "Mixture",
+  "state": "solid",
+  "category": "mixture",
+  "color": [0.90, 0.83, 0.67, 1.0],
+  "color_status": "display",
+  "label_lines": ["Oatmeal", "Mixture"],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "Low hazard classroom food mixture. Avoid ingestion in the simulation context.",
+    "storage": "Dry, sealed container.",
+    "source": "General educational guidance written for this project."
+  },
+  "display": {
+    "summary": "A common mixture used for texture and suspension examples."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
