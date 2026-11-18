@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep1",
+      "grade_label": "Prep 1",
+      "experiments": [
+        {
+          "id": "prep1_ice_melting_review_3",
+          "title": "Ice melting review 3",
+          "materials": ["ice", "distilled_water"],
+          "equipment": ["beaker_250ml", "thermometer"],
+          "focus": "Review that a solid can change into a liquid without becoming a different substance.",
+          "student_observations": [
+            "The ice becomes smaller over time.",
+            "Liquid water forms around the ice.",
+            "This is a physical change."
+          ],
+          "teacher_note": "Use as a quick recap before moving to freezing."
+        },
+        {
+          "id": "prep1_water_freezing_review_2",
+          "title": "Water freezing review 2",
+          "materials": ["distilled_water", "ice"],
+          "equipment": ["beaker_250ml", "thermometer"],
+          "focus": "Review that cooling can turn liquid water back into solid ice.",
+          "student_observations": [
+            "Liquid water can return to a solid state.",
+            "Temperature matters in state changes.",
+            "The substance can stay the same while the state changes."
+          ],
+          "teacher_note": "Pairs well with the melting review."
+        },
+        {
+          "id": "prep1_water_evaporation_review_2",
+          "title": "Water evaporation review 2",
+          "materials": ["distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show that liquid water can slowly leave the container as vapor in a model situation.",
+          "student_observations": [
+            "The water level can go down.",
+            "No new substance has to be added.",
+            "Heat and airflow can affect the speed."
+          ],
+          "teacher_note": "Connect with drying clothes or puddles."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_sand_and_water_filtration_concept",
+          "title": "Sand and water filtration concept",
+          "materials": ["sand", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that some solids can be separated from water by using a simple filtration idea.",
+          "student_observations": [
+            "The mixture can look cloudy at first.",
+            "Solid particles can be seen separately.",
+            "Some mixtures need separation rather than dissolution."
+          ],
+          "teacher_note": "Keep it conceptual and link it to filtration vocabulary."
+        },
+        {
+          "id": "prep2_oil_and_water_separation_review",
+          "title": "Oil and water separation review",
+          "materials": ["vegetable_oil", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that some liquids do not mix evenly and can form layers.",
+          "student_observations": [
+            "The liquids can separate into layers.",
+            "Not every liquid mixes with water.",
+            "Density and miscibility are useful ideas."
+          ],
+          "teacher_note": "A simple introduction to immiscible liquids."
+        },
+        {
+          "id": "prep2_soap_and_water_surface_tension_review_3",
+          "title": "Soap and water surface tension review 3",
+          "materials": ["soap", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that a small amount of soap can change how water behaves at the surface.",
+          "student_observations": [
+            "Bubbles may form more easily.",
+            "The surface behaves differently.",
+            "Physical properties can change without a new substance being created."
+          ],
+          "teacher_note": "Good as a short demo about everyday materials."
+        },
+        {
+          "id": "prep2_sugar_vs_salt_dissolving_review_3",
+          "title": "Sugar vs salt dissolving review 3",
+          "materials": ["sugar", "sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare how two familiar solids behave in water.",
+          "student_observations": [
+            "Both solids can dissolve in water in the model.",
+            "Different substances can dissolve differently.",
+            "Clear solutions are not all identical."
+          ],
+          "teacher_note": "Useful for a comparison table."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep3",
+      "grade_label": "Prep 3",
+      "experiments": [
+        {
+          "id": "prep3_flour_in_water_cloudiness_3",
+          "title": "Flour in water cloudiness 3",
+          "materials": ["flour", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that some powders create cloudy mixtures instead of clear solutions.",
+          "student_observations": [
+            "The liquid can look cloudy.",
+            "The powder does not disappear completely.",
+            "Mixtures can have different textures."
+          ],
+          "teacher_note": "A simple comparison with sugar dissolving."
+        },
+        {
+          "id": "prep3_glycerol_viscosity_review",
+          "title": "Glycerol viscosity review",
+          "materials": ["glycerol", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show how some liquids flow more slowly than others.",
+          "student_observations": [
+            "The liquid can seem thicker.",
+            "Flow speed can differ between liquids.",
+            "Viscosity is a useful physical property."
+          ],
+          "teacher_note": "Good for introducing viscosity in simple language."
+        },
+        {
+          "id": "prep3_chalk_in_water_suspension_review",
+          "title": "Chalk in water suspension review",
+          "materials": ["chalk", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that some solids stay visible in water instead of forming a clear solution.",
+          "student_observations": [
+            "The water can become cloudy.",
+            "Solid particles may stay visible.",
+            "Not every powder dissolves well."
+          ],
+          "teacher_note": "Use this to compare with a true solution."
+        },
+        {
+          "id": "prep3_vinegar_and_bicarbonate_bubbles_3",
+          "title": "Vinegar and bicarbonate bubbles 3",
+          "materials": ["vinegar", "sodium_bicarbonate"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Introduce a safe classroom acid-carbonate concept with visible gas formation in the model.",
+          "student_observations": [
+            "Bubbles can appear in the model.",
+            "Gas may be produced.",
+            "This is a useful reaction concept."
+          ],
+          "teacher_note": "Use the reaction registry for the underlying logic."
+        },
+        {
+          "id": "prep3_evaporation_and_residue_review",
+          "title": "Evaporation and residue review",
+          "materials": ["sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show that removing water can leave a solid behind from a solution.",
+          "student_observations": [
+            "The liquid part can decrease.",
+            "A solid residue can remain.",
+            "Evaporation can separate some mixtures."
+          ],
+          "teacher_note": "Connect with drying and salt crystals."
+        }
+      ]
+    },
+    {
+      "grade_id": "senior1",
+      "grade_label": "Senior 1",
+      "experiments": [
+        {
+          "id": "senior1_crystallization_review_3",
+          "title": "Crystallization review 3",
+          "materials": ["sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Review how a dissolved substance can reappear when the solvent is removed.",
+          "student_observations": [
+            "A clear solution can return to a solid form.",
+            "Crystals can form from the same substance.",
+            "Evaporation and crystallization are linked ideas."
+          ],
+          "teacher_note": "Useful after solutions and separation lessons."
+        },
+        {
+          "id": "senior1_precipitation_concept_review_2",
+          "title": "Precipitation concept review 2",
+          "materials": ["calcium_chloride", "sodium_carbonate", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Introduce the idea that mixing two clear solutions can form a new solid in the model.",
+          "student_observations": [
+            "A new solid can appear in the model.",
+            "Not all mixtures stay clear.",
+            "Some reactions can produce a precipitate."
+          ],
+          "teacher_note": "Tie this directly to the validated registry."
+        },
+        {
+          "id": "senior1_solution_vs_suspension_compare_2",
+          "title": "Solution vs suspension compare 2",
+          "materials": ["sugar", "flour", "sand", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare a clear solution with cloudy mixtures and visible particles.",
+          "student_observations": [
+            "Some materials make clear solutions.",
+            "Some materials stay visible.",
+            "Mixture type depends on the particles and the solvent."
+          ],
+          "teacher_note": "A good summary activity for revision."
+        },
+        {
+          "id": "senior1_dissolution_rate_review",
+          "title": "Dissolution rate review",
+          "materials": ["sugar", "sodium_chloride", "calcium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare how quickly different solids dissolve in the classroom model.",
+          "student_observations": [
+            "Different solids can dissolve at different speeds.",
+            "Stirring can change the result.",
+            "Solubility and rate are related but not identical ideas."
+          ],
+          "teacher_note": "Useful for a discussion about rate vs amount."
+        }
+      ]
+    },
+    {
+      "grade_id": "senior2",
+      "grade_label": "Senior 2",
+      "experiments": [
+        {
+          "id": "senior2_mixture_classification_review_2",
+          "title": "Mixture classification review 2",
+          "materials": ["oil", "water", "sand", "sugar", "flour", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Group common classroom materials by solution, suspension or immiscible liquid examples.",
+          "student_observations": [
+            "Some mixtures stay clear.",
+            "Some mixtures remain cloudy or separate.",
+            "Classification depends on how the materials behave together."
+          ],
+          "teacher_note": "This is a broad summary activity for the whole unit."
+        },
+        {
+          "id": "senior2_evaporation_separation_review_2",
+          "title": "Evaporation separation review 2",
+          "materials": ["sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Review how removing water can help separate a dissolved solid from a solution.",
+          "student_observations": [
+            "Liquid can be removed while the solid remains.",
+            "Separation methods depend on the mixture type.",
+            "Evaporation and crystallization are connected ideas."
+          ],
+          "teacher_note": "A useful end-of-unit recap."
+        },
+        {
+          "id": "senior2_viscosity_and_flow_review",
+          "title": "Viscosity and flow review",
+          "materials": ["glycerol", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare how quickly different liquids flow and mix.",
+          "student_observations": [
+            "Some liquids flow more slowly than others.",
+            "Viscosity changes how a liquid behaves.",
+            "Physical properties help identify materials."
+          ],
+          "teacher_note": "Use as a revision bridge between liquids and mixtures."
+        },
+        {
+          "id": "senior2_reversible_change_review",
+          "title": "Reversible change review",
+          "materials": ["ice", "distilled_water", "sodium_chloride"],
+          "equipment": ["beaker_250ml", "thermometer"],
+          "focus": "Review which classroom changes are reversible and which are just physical state changes.",
+          "student_observations": [
+            "Ice can melt and water can freeze again.",
+            "A dissolved solid can sometimes be recovered.",
+            "Reversible changes are useful in the model."
+          ],
+          "teacher_note": "Good final revision activity before assessment."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_matter",
+      "title": "OpenStax Chemistry 2e — 1.3 Physical and Chemical Properties",
+      "url": "https://openstax.org/books/chemistry-2e/pages/1-3-physical-and-chemical-properties",
+      "supports": "Physical properties, phase change and mixture classification ideas."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
