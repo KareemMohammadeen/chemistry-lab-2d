@@ -10,7 +10,7 @@ signal state_restored
 
 var database: ContentDatabase
 var state: LabState = LabState.new()
-var engine: ReactionEngine
+var engine: ReactionEngineAdvanced
 ## Object the operator is currently holding (dragging), or "".
 var held_object_id: String = ""
 var setup_title: String = ""
@@ -18,7 +18,7 @@ var setup_title: String = ""
 
 func _init(content: ContentDatabase) -> void:
 	database = content
-	engine = ReactionEngine.new(content)
+	engine = ReactionEngineAdvanced.new(content)
 
 
 ## Replaces the state with the objects described in a setup file (data/setups/*.json).
