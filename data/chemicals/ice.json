@@ -10,12 +10,18 @@
   "color": [0.92, 0.97, 1.0, 1.0],
   "color_status": "display",
   "density_g_ml": {
-    "value": 0.92,
+    "value": 0.917,
     "status": "reference",
     "unit": "g/mL",
     "source": "Educational classroom reference value used for the simulation"
   },
-  "label_lines": ["Ice", "H2O(s)"],
+  "melting_point_c": {
+    "value": 0,
+    "status": "reference",
+    "unit": "°C",
+    "source": "Educational classroom reference value used for the simulation"
+  },
+  "label_lines": ["Ice", "H₂O(s)"],
   "safety": {
     "status": "reference_only",
     "summary": "A simple classroom phase-change material used only for virtual demonstrations.",
