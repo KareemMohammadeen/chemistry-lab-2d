@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_salt_vs_water",
+          "title": "Salt versus water",
+          "materials": ["sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show the difference between a solid solute and a liquid solvent.",
+          "student_observations": [
+            "The salt starts as a solid.",
+            "The water acts as the solvent.",
+            "A solution forms when the solid disappears into the liquid."
+          ],
+          "teacher_note": "Use this as a basic solution model."
+        },
+        {
+          "id": "prep2_ethanol_water_mix",
+          "title": "Ethanol and water mix",
+          "materials": ["ethanol", "distilled_water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Compare two clear liquids and how they mix in the classroom model.",
+          "student_observations": [
+            "Both liquids appear clear.",
+            "The mixture stays uniform in the model.",
+            "Some liquids mix easily with water."
+          ],
+          "teacher_note": "A simple way to introduce miscibility."
+        },
+        {
+          "id": "prep2_vinegar_and_salt",
+          "title": "Vinegar and salt",
+          "materials": ["vinegar", "sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Compare the behavior of a weak acid solution and a neutral salt in water.",
+          "student_observations": [
+            "The salt dissolves while the vinegar remains a liquid.",
+            "Different substances can coexist in the same beaker.",
+            "Classification helps organize matter."
+          ],
+          "teacher_note": "This is a classification example, not a lab recipe."
+        },
+        {
+          "id": "prep2_solution_loopback",
+          "title": "Solution loopback",
+          "materials": ["distilled_water", "sodium_chloride", "ethanol", "vinegar"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Review the idea that not all clear liquids behave the same way.",
+          "student_observations": [
+            "Some liquids dissolve solids well.",
+            "Some liquids mix with each other easily.",
+            "Physical properties help tell substances apart."
+          ],
+          "teacher_note": "Good wrap-up activity for mixture and solution lessons."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_phase_transitions",
+      "title": "OpenStax Chemistry 2e — 10.3 Phase Transitions",
+      "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
+      "supports": "Evaporation and condensation concepts."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
