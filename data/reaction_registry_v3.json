@@ -97,6 +97,12 @@
       "safety_scope": "virtual_only_classroom_model"
     },
     {
+      "id": "dissolve_sugar",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
       "id": "neutralisation_strong_acid_strong_base",
       "handler_id": "neutralisation_v1",
       "enabled": true,
