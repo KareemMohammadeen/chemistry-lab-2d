@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "id": "precipitation_calcium_chloride_sodium_sulfate",
+  "type": "precipitation",
+  "name": "Precipitation: calcium chloride and sodium sulfate",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "CaCl2(aq) + Na2SO4(aq) → CaSO4(s) + 2 NaCl(aq)",
+  "enthalpy_kj_per_mol": -25,
+  "observations": {
+    "summary": "A white solid appears as the solutions are mixed.",
+    "completed": "The calcium sulfate precipitate has formed."
+  },
+  "explanation": "This double-displacement reaction forms a sparingly soluble calcium sulfate precipitate.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "calcium_chloride_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sodium_sulfate",
+      "coefficient": 1,
+      "phase": "dissolved",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "calcium_sulfate",
+      "coefficient": 1,
+      "phase": "solid"
+    },
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 2,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
+}
