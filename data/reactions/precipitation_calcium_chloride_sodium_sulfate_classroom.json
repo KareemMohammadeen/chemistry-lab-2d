@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "id": "precipitation_calcium_chloride_sodium_sulfate_classroom",
+  "type": "precipitation",
+  "name": "Precipitation of calcium sulfate",
+  "tier": "stoichiometric_with_timescale",
+  "equation": "CaCl2(aq) + Na2SO4(aq) → CaSO4(s) + 2 NaCl(aq)",
+  "enthalpy_kj_per_mol": 0.0,
+  "observations": {
+    "summary": "A white precipitate forms as the solutions are mixed.",
+    "completed": "A white solid settles out of the mixture.",
+    "precipitate": "White calcium sulfate has formed."
+  },
+  "explanation": "The ions swap partners and a sparingly soluble calcium salt appears as a solid precipitate.",
+  "level": "middle_school",
+  "time_constant_s": 4.0,
+  "reactants": [
+    {
+      "chemical_id": "calcium_chloride_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sodium_sulfate_0_1m",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 0.000001,
+      "minimum_amount_unit": "mL"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "calcium_sulfate",
+      "coefficient": 1,
+      "phase": "solid"
+    },
+    {
+      "chemical_id": "sodium_chloride",
+      "coefficient": 2,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": [],
+  "kinetics": {
+    "time_constant_s": 4.0,
+    "rate_multiplier": 1.0
+  },
+  "equilibrium": {}
+}
