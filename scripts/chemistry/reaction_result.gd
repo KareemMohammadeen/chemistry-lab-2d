@@ -16,6 +16,7 @@ var reaction_id: String = ""
 var reaction_name: String = ""
 var reaction_type: String = ""
 var message: String = ""
+var progress: float = 0.0
 var matched_reactants: Array = []
 var missing_reactants: Array = []
 var observations: Array = []
@@ -57,6 +58,7 @@ func to_dictionary() -> Dictionary:
 		"reaction_name": reaction_name,
 		"reaction_type": reaction_type,
 		"message": message,
+		"progress": progress,
 		"matched_reactants": matched_reactants.duplicate(true),
 		"missing_reactants": missing_reactants.duplicate(true),
 		"observations": observations.duplicate(true),
