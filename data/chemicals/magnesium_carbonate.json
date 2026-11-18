@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "id": "magnesium_carbonate",
+  "name": "Magnesium carbonate",
+  "short_name": "Magnesium carbonate",
+  "formula": "MgCO3",
+  "formula_display": "MgCO3",
+  "state": "solid",
+  "category": "salt",
+  "color": [0.97, 0.97, 0.96, 1.0],
+  "color_status": "display",
+  "density_g_ml": 2.96,
+  "label_lines": ["Magnesium carbonate", "MgCO3"],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "A white carbonate solid used in safe classroom precipitation examples.",
+    "storage": "Dry, labelled container.",
+    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
+  },
+  "display": {
+    "summary": "A white carbonate solid used in virtual precipitation reactions."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  }
+}
