@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_sugar_dissolving",
+          "title": "Sugar dissolving",
+          "materials": ["sugar", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show a familiar solid forming a clear solution in water.",
+          "student_observations": [
+            "The sugar disappears into the liquid.",
+            "The solution stays clear.",
+            "Some solids are highly soluble in water."
+          ],
+          "teacher_note": "A classic first lesson on solutions."
+        },
+        {
+          "id": "prep2_milk_mixture",
+          "title": "Milk mixture",
+          "materials": ["milk", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Compare a food mixture with pure water in the classroom model.",
+          "student_observations": [
+            "The liquid is not the same as pure water.",
+            "Mixtures can contain many tiny components.",
+            "Appearance alone does not define a substance."
+          ],
+          "teacher_note": "Useful for mixture and composition discussions."
+        },
+        {
+          "id": "prep2_orange_juice_mixture",
+          "title": "Orange juice mixture",
+          "materials": ["orange_juice", "distilled_water"],
+          "equipment": ["beaker_250ml", "dropper_3ml"],
+          "focus": "Show that a food liquid mixture behaves differently from pure water.",
+          "student_observations": [
+            "The liquid has color.",
+            "The mixture may stay uniform or cloudier than water.",
+            "Real-world liquids can be mixtures."
+          ],
+          "teacher_note": "Keep the activity conceptual and classroom-level."
+        },
+        {
+          "id": "prep2_solution_and_mixture_review",
+          "title": "Solution and mixture review",
+          "materials": ["sugar", "milk", "orange_juice", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Review how clear solutions and everyday mixtures can look different.",
+          "student_observations": [
+            "Some materials make clear solutions.",
+            "Some materials remain mixed but not fully dissolved.",
+            "Observation helps classify matter."
+          ],
+          "teacher_note": "Good end-of-lesson summary activity."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_phase_transitions",
+      "title": "OpenStax Chemistry 2e — 10.3 Phase Transitions",
+      "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
+      "supports": "Phase change and state-of-matter review concepts."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
