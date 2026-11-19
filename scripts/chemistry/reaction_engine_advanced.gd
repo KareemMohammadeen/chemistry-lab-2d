@@ -1,5 +1,5 @@
 class_name ReactionEngineAdvanced
-extends ReactionEngineFinal
+extends "res://scripts/chemistry/reaction_engine_final.gd"
 ## Backwards-compatible wrapper that now reuses the complete engine.
 ## Unlisted reactions are allowed so newly added classroom data can execute
 ## without requiring a registry edit for every safe addition.
