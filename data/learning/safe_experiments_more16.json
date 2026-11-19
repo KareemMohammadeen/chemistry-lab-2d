@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "country": "EG",
+  "academic_year": "2026-2027",
+  "scope": "Additional safe classroom experiment concepts only.",
+  "grades": [
+    {
+      "grade_id": "prep1",
+      "grade_label": "Prep 1",
+      "experiments": [
+        {
+          "id": "prep1_condensation_on_cold_surface",
+          "title": "Condensation on a cold surface",
+          "materials": ["ice", "distilled_water"],
+          "equipment": ["beaker_250ml", "thermometer"],
+          "focus": "Show that water vapor can turn back into liquid on a cold surface in the model.",
+          "student_observations": [
+            "Tiny drops can appear on the cooler area.",
+            "Temperature affects physical change.",
+            "The substance is still water."
+          ],
+          "teacher_note": "Use this as a simple link between cooling and state change."
+        },
+        {
+          "id": "prep1_temperature_and_flow_observation_2",
+          "title": "Temperature and flow observation 2",
+          "materials": ["distilled_water"],
+          "equipment": ["beaker_250ml", "thermometer"],
+          "focus": "Show that water can behave differently when it is warmer or cooler.",
+          "student_observations": [
+            "Warm and cool liquids can behave differently.",
+            "Temperature is a physical property.",
+            "The substance is still water."
+          ],
+          "teacher_note": "Keep the example visual and easy to compare."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep2",
+      "grade_label": "Prep 2",
+      "experiments": [
+        {
+          "id": "prep2_stirring_effect_on_dissolving_2",
+          "title": "Stirring effect on dissolving 2",
+          "materials": ["sugar", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that stirring can change how quickly a solid appears to dissolve in the model.",
+          "student_observations": [
+            "The solution can change faster when stirred.",
+            "Mixing helps spread the solute through the solvent.",
+            "Rate is different from the final result."
+          ],
+          "teacher_note": "Useful for talking about rate in simple language."
+        },
+        {
+          "id": "prep2_oil_and_water_layers_2",
+          "title": "Oil and water layers 2",
+          "materials": ["vegetable_oil", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that some liquids do not mix evenly and can form layers.",
+          "student_observations": [
+            "The liquids can separate into layers.",
+            "Not every liquid mixes with water.",
+            "Density and miscibility are useful ideas."
+          ],
+          "teacher_note": "A quick introduction to immiscible liquids."
+        }
+      ]
+    },
+    {
+      "grade_id": "prep3",
+      "grade_label": "Prep 3",
+      "experiments": [
+        {
+          "id": "prep3_particle_size_effect_2",
+          "title": "Particle size effect 2",
+          "materials": ["sugar", "flour", "sand", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare how different particle sizes look and behave in water.",
+          "student_observations": [
+            "Some materials dissolve.",
+            "Some stay visible.",
+            "Particle size can affect the mixture."
+          ],
+          "teacher_note": "Great for sorting and comparison activities."
+        },
+        {
+          "id": "prep3_filtration_and_settling_compare_2",
+          "title": "Filtration and settling compare 2",
+          "materials": ["sand", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod", "funnel", "filter_paper"],
+          "focus": "Compare letting particles settle with separating them by filtration.",
+          "student_observations": [
+            "Solid particles can be held back by a filter.",
+            "Particles can also settle over time.",
+            "Different mixtures need different separation methods."
+          ],
+          "teacher_note": "Useful as a revision activity for separation ideas."
+        },
+        {
+          "id": "prep3_evaporation_and_residue_2",
+          "title": "Evaporation and residue 2",
+          "materials": ["sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml"],
+          "focus": "Show that removing water can leave a solid behind from a solution.",
+          "student_observations": [
+            "The liquid part can decrease.",
+            "A solid residue can remain.",
+            "Evaporation can separate some mixtures."
+          ],
+          "teacher_note": "Connect with drying and salt crystals."
+        }
+      ]
+    },
+    {
+      "grade_id": "senior1",
+      "grade_label": "Senior 1",
+      "experiments": [
+        {
+          "id": "senior1_saturation_concept_review_2",
+          "title": "Saturation concept review 2",
+          "materials": ["sugar", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Introduce the idea that a solution can reach a point where no more solute is easily added.",
+          "student_observations": [
+            "A solution can have a limit.",
+            "More solute does not always change the result the same way.",
+            "Saturation is a useful idea for solutions."
+          ],
+          "teacher_note": "Keep it conceptual and classroom-safe."
+        },
+        {
+          "id": "senior1_solvent_choice_compare_2",
+          "title": "Solvent choice compare 2",
+          "materials": ["sugar", "vegetable_oil", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Compare how choosing a different liquid changes whether a substance seems to dissolve or separate.",
+          "student_observations": [
+            "Different liquids can behave differently as solvents.",
+            "Some substances mix well with water but not with oil.",
+            "Solvent choice matters in mixtures."
+          ],
+          "teacher_note": "Good for introducing solvent selection."
+        }
+      ]
+    },
+    {
+      "grade_id": "senior2",
+      "grade_label": "Senior 2",
+      "experiments": [
+        {
+          "id": "senior2_density_layer_review_3",
+          "title": "Density layer review 3",
+          "materials": ["vegetable_oil", "distilled_water", "glycerol"],
+          "equipment": ["beaker_250ml", "stirring_rod"],
+          "focus": "Show that liquids can layer depending on density and miscibility.",
+          "student_observations": [
+            "Liquids may separate into layers.",
+            "Density helps explain the order.",
+            "Not all liquids mix evenly."
+          ],
+          "teacher_note": "A useful advanced comparison activity."
+        },
+        {
+          "id": "senior2_separation_methods_overview_4",
+          "title": "Separation methods overview 4",
+          "materials": ["sand", "oil", "sugar", "sodium_chloride", "distilled_water"],
+          "equipment": ["beaker_250ml", "stirring_rod", "funnel", "filter_paper"],
+          "focus": "Review several ways to separate classroom mixtures.",
+          "student_observations": [
+            "Some mixtures form layers.",
+            "Some mixtures can be filtered.",
+            "Some substances dissolve and need evaporation or crystallization."
+          ],
+          "teacher_note": "Good end-of-unit summary activity."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "openstax_dissolution",
+      "title": "OpenStax Chemistry 2e — 11.1 The Dissolution Process",
+      "url": "https://openstax.org/books/chemistry-2e/pages/11-1-the-dissolution-process",
+      "supports": "Solutions, solutes, solvents, dissolution and solvation concepts."
+    },
+    {
+      "id": "openstax_matter",
+      "title": "OpenStax Chemistry 2e — 1.3 Physical and Chemical Properties",
+      "url": "https://openstax.org/books/chemistry-2e/pages/1-3-physical-and-chemical-properties",
+      "supports": "Physical properties, phase change and mixture classification ideas."
+    },
+    {
+      "id": "acs_secondary_safety",
+      "title": "American Chemical Society — Safety in Middle and High School Chemistry",
+      "url": "https://www.acs.org/education/policies/middle-and-high-school-chemistry/safety.html",
+      "supports": "The RAMP framework and middle/high-school chemistry safety principles."
+    }
+  ]
+}
