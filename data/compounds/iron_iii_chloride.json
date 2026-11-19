@@ -1,78 +1,15 @@
 {
- "version": 1,
- "id": "iron_iii_chloride",
- "name": "Iron(III) chloride",
- "formula": "FeCl3",
- "formula_display": "FeCl₃",
- "composition": {
-  "Fe": 1,
-  "Cl": 3
- },
- "molar_mass_g_mol": {
-  "value": 162.195,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "Dark green-brown crystals; the hexahydrate is yellow-brown.",
- "color_hex": {
-  "value": "#6B5A2A",
-  "status": "display"
- },
- "solution_color_hex": {
-  "value": "#D9A441",
-  "status": "display"
- },
- "density_g_cm3": {
-  "value": 2.9,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": 306,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 91,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "Very soluble (about 91 g per 100 mL at 25 degC); the solution is yellow-brown and acidic."
- },
- "hazards": {
-  "classes": [
-   "corrosive",
-   "harmful"
-  ],
-  "summary": "Corrosive to metals and irritating to eyes and skin; harmful if swallowed.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed container in a dry place; it absorbs moisture.",
- "reactions": [
-  {
-   "role": "precipitation",
-   "note": "Gives a red-brown precipitate with sodium hydroxide."
-  },
-  {
-   "role": "test for thiocyanate",
-   "note": "Gives a blood-red colour with thiocyanate ions."
-  }
- ],
- "educational_notes": "Used to etch circuit boards and to treat water.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Iron(III) chloride",
+  "formula": "FeCl3",
+  "state": "solid",
+  "density_g_ml": 2.9,
+  "color": "#7b4a1e",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Iron salt used in solution and precipitation demonstrations.",
+  "tags": [
+    "salt",
+    "iron",
+    "classroom"
+  ]
 }

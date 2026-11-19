@@ -1,1 +1,15 @@
-{"version":1,"id":"potassium_chloride","name":"Potassium chloride","short_name":"Potassium chloride","formula":"KCl","formula_display":"KCl","state":"solid","category":"salt","color":[0.97,0.97,0.98,1],"color_status":"display","density_g_ml":{"value":1.98,"status":"unverified_reference","unit":"g/mL","source":"commonly quoted textbook value; check a primary source before citing"},"melting_point_c":{"value":770,"status":"unverified_reference","unit":"°C","source":"commonly quoted textbook value; check a primary source before citing"},"solubility_in_water":{"unit":"g/100 mL","status":"unverified_reference","source":"commonly quoted textbook value; check a primary source before citing","curve":[[20,34]]},"label_lines":["Potassium chloride","KCl"],"safety":{"status":"unverified_reference","summary":"Low hazard salt in classroom quantities. Dust may irritate eyes.","storage":"Dry, closed container.","source":"General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."},"display":{"summary":"A simple soluble salt used for classroom dissolution examples."},"simulation":{"enabled":true,"role":"classroom_reagent","scope":"approved virtual teaching subset"}}
+{
+  "name": "Potassium chloride",
+  "formula": "KCl",
+  "state": "solid",
+  "density_g_ml": 1.98,
+  "color": "#f8f8f8",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Salt used in dissolution and precipitation examples.",
+  "tags": [
+    "salt",
+    "dissolution",
+    "classroom"
+  ]
+}

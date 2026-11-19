@@ -1,54 +1,15 @@
 {
- "version": 1,
- "id": "starch",
- "name": "Starch",
- "formula": "C6H10O5",
- "formula_display": "C₆H₁₀O₅",
- "composition": {
-  "C": 6,
-  "H": 10,
-  "O": 5
- },
- "molar_mass_g_mol": {
-  "value": 162.141,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "White, tasteless powder.",
- "color_hex": {
-  "value": "#FAF8F0",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": null,
- "melting_c": null,
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": null,
-  "note": "Insoluble in cold water; forms a paste in hot water. The formula is that of one repeating unit."
- },
- "hazards": {
-  "classes": [],
-  "summary": "Low hazard; fine dust can ignite.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Dry container.",
- "reactions": [
-  {
-   "role": "iodine test",
-   "note": "Gives an intense blue-black colour with iodine solution."
-  }
- ],
- "educational_notes": "Plants store energy as starch. The molar mass shown is for one repeating unit, not the whole polymer.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Starch",
+  "formula": "(C6H10O5)n",
+  "state": "solid",
+  "density_g_ml": 1.5,
+  "color": "#fff6e0",
+  "hazard_level": "safe",
+  "safe_for_classroom": true,
+  "notes": "Indicator and food-related material for safe demonstrations.",
+  "tags": [
+    "food",
+    "indicator",
+    "classroom"
+  ]
 }

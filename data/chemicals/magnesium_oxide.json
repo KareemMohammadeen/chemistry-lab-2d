@@ -1,28 +1,15 @@
 {
-  "version": 1,
-  "id": "magnesium_oxide",
   "name": "Magnesium oxide",
-  "short_name": "Magnesium oxide",
   "formula": "MgO",
-  "formula_display": "MgO",
   "state": "solid",
-  "category": "virtual reaction product",
-  "color": [0.96, 0.96, 0.93, 1.0],
-  "color_status": "display",
-  "density_g_ml": {"value": 3.58, "status": "unverified_reference", "unit": "g/mL", "condition": "reference only; not used for the illustrative demo"},
-  "label_lines": ["Magnesium oxide", "MgO"],
-  "safety": {
-    "status": "reference_only",
-    "summary": "Product identity shown for an educational virtual model only.",
-    "storage": "Not applicable: illustrative software product.",
-    "source": "Educational boundary written for the Chemistry Lab simulation."
-  },
-  "display": {
-    "summary": "A white solid product used by the qualitative magnesium-combustion teaching model."
-  },
-  "simulation": {
-    "enabled": true,
-    "role": "visual_demo_product",
-    "note": "The amount shown is illustrative, not a stoichiometric yield or measured result."
-  }
+  "density_g_ml": 3.58,
+  "color": "#f2f2f2",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "White solid used in thermal and reaction examples.",
+  "tags": [
+    "oxide",
+    "solid",
+    "classroom"
+  ]
 }

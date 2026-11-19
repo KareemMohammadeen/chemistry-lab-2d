@@ -1,33 +1,15 @@
 {
-  "version": 1,
-  "id": "oxygen_gas",
-  "name": "Oxygen",
-  "short_name": "Oxygen",
+  "name": "Oxygen gas",
   "formula": "O2",
-  "formula_display": "O2",
   "state": "gas",
-  "category": "gas",
-  "color": [0.88, 0.95, 1.0, 0.12],
-  "color_status": "display",
-  "density_g_ml": {
-    "value": 0.00143,
-    "status": "reference",
-    "unit": "g/mL",
-    "source": "Educational classroom reference value used for the simulation"
-  },
-  "label_lines": ["Oxygen", "O2"],
-  "safety": {
-    "status": "unverified_reference",
-    "summary": "An oxidising gas used in safe classroom combustion models.",
-    "storage": "Not compressed in this virtual model; handled as a gas symbol.",
-    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
-  },
-  "display": {
-    "summary": "A gas used as the oxidiser in classroom combustion examples."
-  },
-  "simulation": {
-    "enabled": true,
-    "role": "classroom_reagent",
-    "scope": "approved virtual teaching subset"
-  }
+  "density_g_ml": 0.00143,
+  "color": "#f8fbff",
+  "hazard_level": "safe",
+  "safe_for_classroom": true,
+  "notes": "Gas used in combustion and support-of-combustion demonstrations.",
+  "tags": [
+    "gas",
+    "combustion",
+    "classroom"
+  ]
 }

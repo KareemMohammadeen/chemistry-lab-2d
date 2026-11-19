@@ -1,27 +1,15 @@
 {
-  "version": 1,
-  "id": "orange_juice",
   "name": "Orange juice",
-  "short_name": "Juice",
   "formula": "mixture",
-  "formula_display": "Mixture",
   "state": "liquid",
-  "category": "mixture",
-  "color": [0.98, 0.66, 0.18, 0.90],
-  "color_status": "display",
-  "label_lines": ["Orange juice", "Mixture"],
-  "safety": {
-    "status": "unverified_reference",
-    "summary": "Food mixture used only for classroom comparison examples.",
-    "storage": "Closed container in the model.",
-    "source": "General educational guidance written for this project."
-  },
-  "display": {
-    "summary": "A familiar liquid mixture used for mixture and separation examples."
-  },
-  "simulation": {
-    "enabled": true,
-    "role": "classroom_reagent",
-    "scope": "approved virtual teaching subset"
-  }
+  "density_g_ml": 1.04,
+  "color": "#ffa64d",
+  "hazard_level": "safe",
+  "safe_for_classroom": true,
+  "notes": "Food liquid used in safe acid-base and mixture demonstrations.",
+  "tags": [
+    "food",
+    "acidic",
+    "classroom"
+  ]
 }

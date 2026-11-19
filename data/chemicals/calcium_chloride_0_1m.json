@@ -1,40 +1,16 @@
 {
-  "version": 1,
-  "id": "calcium_chloride_0_1m",
-  "name": "Calcium chloride, 0.1 mol/L",
-  "short_name": "Calcium chloride",
-  "formula": "CaCl2(aq)",
-  "formula_display": "CaCl₂(aq)",
-  "state": "liquid",
-  "category": "dilute salt solution",
-  "color": [0.97, 0.98, 0.99, 0.38],
-  "color_status": "display",
-  "density_g_ml": {
-    "value": 1.0,
-    "status": "derived",
-    "unit": "g/mL",
-    "source": "Educational classroom model; treated as water-like for simulation"
-  },
-  "is_aqueous_solvent": true,
-  "acid_base": {
-    "h_plus_mol_per_l": 0,
-    "oh_minus_mol_per_l": 0,
-    "status": "idealised",
-    "note": "Neutral salt solution used only for classroom simulation."
-  },
-  "label_lines": ["Calcium chloride", "0.1 mol/L"],
-  "safety": {
-    "status": "unverified_reference",
-    "summary": "A classroom salt solution. Keep out of the eyes and label clearly.",
-    "storage": "Closed, labelled container.",
-    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
-  },
-  "display": {
-    "summary": "A water-like salt solution used for safe classroom precipitation models."
-  },
-  "simulation": {
-    "enabled": true,
-    "role": "classroom_reagent",
-    "scope": "approved virtual teaching subset"
-  }
+  "name": "Calcium chloride 0.1M",
+  "formula": "CaCl2",
+  "state": "aqueous",
+  "concentration_mol_L": 0.1,
+  "density_g_ml": 1.0,
+  "color": "#fafafa",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Dilute aqueous calcium chloride solution.",
+  "tags": [
+    "salt",
+    "solution",
+    "classroom"
+  ]
 }

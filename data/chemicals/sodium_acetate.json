@@ -1,46 +1,15 @@
 {
-  "version": 1,
-  "id": "sodium_acetate",
   "name": "Sodium acetate",
-  "short_name": "Sodium acetate",
   "formula": "CH3COONa",
-  "formula_display": "CH3COONa",
   "state": "solid",
-  "category": "salt",
-  "color": [0.97, 0.97, 0.96, 1.0],
-  "color_status": "display",
-  "density_g_ml": {
-    "value": 1.53,
-    "status": "reference",
-    "unit": "g/mL",
-    "source": "Educational classroom reference value used for the simulation"
-  },
-  "solubility_in_water": {
-    "unit": "g/100 mL",
-    "status": "reference",
-    "source": "Educational classroom reference value used for the simulation",
-    "curve": [
-      [0, 119.0],
-      [20, 170.0],
-      [40, 258.0],
-      [60, 338.0],
-      [80, 410.0],
-      [100, 500.0]
-    ]
-  },
-  "label_lines": ["Sodium acetate", "CH3COONa"],
-  "safety": {
-    "status": "unverified_reference",
-    "summary": "A common salt used as a classroom reaction product. Keep dust out of the eyes.",
-    "storage": "Dry, closed container.",
-    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
-  },
-  "display": {
-    "summary": "A white crystalline salt produced by neutralisation models."
-  },
-  "simulation": {
-    "enabled": true,
-    "role": "classroom_product",
-    "scope": "approved virtual teaching subset"
-  }
+  "density_g_ml": 1.45,
+  "color": "#f7f7f7",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Salt used in crystallisation and thermal demonstrations.",
+  "tags": [
+    "salt",
+    "crystal",
+    "classroom"
+  ]
 }

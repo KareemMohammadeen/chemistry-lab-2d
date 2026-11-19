@@ -1,76 +1,15 @@
 {
- "version": 1,
- "id": "ethanol",
- "name": "Ethanol",
- "formula": "C2H5OH",
- "formula_display": "C₂H₅OH",
- "composition": {
-  "C": 2,
-  "H": 6,
-  "O": 1
- },
- "molar_mass_g_mol": {
-  "value": 46.069,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "liquid",
- "appearance": "Clear, colourless liquid.",
- "color_hex": {
-  "value": "#EEF3F6",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 0.789,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": -114.1,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": {
-  "value": 78.4,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "solubility_in_water": {
-  "g_per_100ml_at_20c": null,
-  "note": "Miscible with water in all proportions."
- },
- "hazards": {
-  "classes": [
-   "flammable",
-   "harmful"
-  ],
-  "summary": "Highly flammable; keep away from flames. Harmful if swallowed in quantity.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed container in a flammables cabinet.",
- "reactions": [
-  {
-   "role": "fuel",
-   "note": "Burns with a pale blue flame to carbon dioxide and water."
-  },
-  {
-   "role": "solvent",
-   "note": "Dissolves many organic compounds."
-  }
- ],
- "educational_notes": "The alcohol in drinks, used here as a laboratory solvent and fuel.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Ethanol",
+  "formula": "C2H5OH",
+  "state": "liquid",
+  "density_g_ml": 0.789,
+  "color": "#fdfdfd",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Alcohol used for combustion and evaporation examples.",
+  "tags": [
+    "alcohol",
+    "liquid",
+    "classroom"
+  ]
 }

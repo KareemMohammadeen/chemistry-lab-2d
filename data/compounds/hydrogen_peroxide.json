@@ -1,75 +1,15 @@
 {
- "version": 1,
- "id": "hydrogen_peroxide",
- "name": "Hydrogen peroxide",
- "formula": "H2O2",
- "formula_display": "H₂O₂",
- "composition": {
-  "H": 2,
-  "O": 2
- },
- "molar_mass_g_mol": {
-  "value": 34.014,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "liquid",
- "appearance": "Clear, colourless liquid (usually sold as a dilute solution).",
- "color_hex": {
-  "value": "#E8F1F8",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 1.45,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": -0.4,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": {
-  "value": 150,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "solubility_in_water": {
-  "g_per_100ml_at_20c": null,
-  "note": "Miscible with water. The density is for the pure liquid; a 3 % solution is close to water."
- },
- "hazards": {
-  "classes": [
-   "oxidiser",
-   "corrosive"
-  ],
-  "summary": "Strong oxidiser. Concentrated solutions burn skin and eyes; a 3 % solution is a mild irritant.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Cool, dark, vented container, away from organic material and metals.",
- "reactions": [
-  {
-   "role": "oxidiser",
-   "note": "Oxidises many substances."
-  },
-  {
-   "role": "decomposes",
-   "note": "Breaks down to water and oxygen, quickly with manganese dioxide or the enzyme catalase."
-  }
- ],
- "educational_notes": "The bubbling when hydrogen peroxide meets a catalyst is oxygen gas leaving the liquid.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Hydrogen peroxide",
+  "formula": "H2O2",
+  "state": "aqueous",
+  "density_g_ml": 1.11,
+  "color": "#f8f8f8",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Oxidising solution used in controlled decomposition examples.",
+  "tags": [
+    "oxidiser",
+    "solution",
+    "classroom"
+  ]
 }

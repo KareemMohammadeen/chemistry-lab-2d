@@ -1,79 +1,15 @@
 {
- "version": 1,
- "id": "copper_chloride",
- "name": "Copper(II) chloride",
- "formula": "CuCl2",
- "formula_display": "CuCl₂",
- "composition": {
-  "Cu": 1,
-  "Cl": 2
- },
- "molar_mass_g_mol": {
-  "value": 134.446,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "Yellow-brown solid; the dihydrate forms blue-green crystals.",
- "color_hex": {
-  "value": "#B88A3C",
-  "status": "display"
- },
- "solution_color_hex": {
-  "value": "#3FA89B",
-  "status": "display"
- },
- "density_g_cm3": {
-  "value": 3.39,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": 498,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 76,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "Soluble in water (about 76 g per 100 mL at 25 degC); the solution is blue-green."
- },
- "hazards": {
-  "classes": [
-   "harmful",
-   "irritant",
-   "environmental"
-  ],
-  "summary": "Harmful if swallowed, irritating to skin and eyes and toxic to aquatic life.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed container in a dry place.",
- "reactions": [
-  {
-   "role": "flame test",
-   "note": "Gives a green-blue flame."
-  },
-  {
-   "role": "displacement",
-   "note": "Iron displaces copper from its solution, depositing red-brown copper."
-  }
- ],
- "educational_notes": "Concentrated solutions look green and dilute ones blue because the copper complex changes with the amount of chloride.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Copper chloride",
+  "formula": "CuCl2",
+  "state": "solid",
+  "density_g_ml": 3.4,
+  "color": "#4aa3ff",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Copper salt used in displacement and solution examples.",
+  "tags": [
+    "salt",
+    "blue",
+    "classroom"
+  ]
 }

@@ -1,68 +1,15 @@
 {
- "version": 1,
- "id": "hydrochloric_acid",
- "name": "Hydrochloric acid",
- "formula": "HCl",
- "formula_display": "HCl",
- "composition": {
-  "H": 1,
-  "Cl": 1
- },
- "molar_mass_g_mol": {
-  "value": 36.458,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "liquid",
- "appearance": "Clear, colourless solution; concentrated acid fumes in moist air.",
- "color_hex": {
-  "value": "#EEF6F2",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 1.18,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": null,
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": null,
-  "note": "Hydrogen chloride gas is very soluble in water. The density is for concentrated (about 37 %) acid."
- },
- "hazards": {
-  "classes": [
-   "corrosive"
-  ],
-  "summary": "Concentrated acid burns skin and eyes and its fumes irritate the lungs. Dilute solutions are mildly irritating.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed, labelled container, away from bases and metals.",
- "reactions": [
-  {
-   "role": "strong acid",
-   "note": "Fully ionised in water."
-  },
-  {
-   "role": "neutralisation",
-   "note": "Reacts with bases to give a salt and water, releasing heat."
-  },
-  {
-   "role": "metals and carbonates",
-   "note": "Reacts with many metals (hydrogen) and carbonates (carbon dioxide)."
-  }
- ],
- "educational_notes": "A strong acid: in water every molecule gives up its hydrogen ion, so the pH of 0.1 mol/L acid is about 1.",
- "simulation": {
-  "supported": true,
-  "chemical_id": "hydrochloric_acid_0_1m",
-  "note": "Linked to the playable chemical of this id (the playable version may be a dilute solution)."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Hydrochloric acid",
+  "formula": "HCl",
+  "state": "aqueous",
+  "density_g_ml": 1.05,
+  "color": "#f8f8f8",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Acid used in neutralisation and gas evolution examples.",
+  "tags": [
+    "acid",
+    "solution",
+    "classroom"
+  ]
 }

@@ -1,33 +1,15 @@
 {
-  "version": 1,
-  "id": "sand",
   "name": "Sand",
-  "short_name": "Sand",
-  "formula": "SiO2",
-  "formula_display": "SiO₂",
+  "formula": "mixture",
   "state": "solid",
-  "category": "mineral",
-  "color": [0.92, 0.88, 0.72, 1.0],
-  "color_status": "display",
-  "density_g_ml": {
-    "value": 2.65,
-    "status": "unverified_reference",
-    "unit": "g/mL",
-    "source": "commonly quoted textbook value; check a primary source before citing"
-  },
-  "label_lines": ["Sand", "SiO₂"],
-  "safety": {
-    "status": "unverified_reference",
-    "summary": "Low hazard classroom solid. Dust can irritate eyes.",
-    "storage": "Closed, dry container.",
-    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
-  },
-  "display": {
-    "summary": "A common mineral used for mixture, filtration, and particle-size examples."
-  },
-  "simulation": {
-    "enabled": true,
-    "role": "classroom_reagent",
-    "scope": "approved virtual teaching subset"
-  }
+  "density_g_ml": 1.6,
+  "color": "#d8c08f",
+  "hazard_level": "safe",
+  "safe_for_classroom": true,
+  "notes": "Inert granular material used in safe mixture demonstrations.",
+  "tags": [
+    "mixture",
+    "solid",
+    "classroom"
+  ]
 }

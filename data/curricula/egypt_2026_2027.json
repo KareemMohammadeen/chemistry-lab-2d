@@ -1,117 +1,30 @@
 {
-  "schema_version": 1,
-  "country": "EG",
-  "academic_year": "2026-2027",
-  "display_language": "en",
-  "curriculum_name": "Egyptian Ministry of Education — school-year reference",
-  "notes": [
-    "This file records only grade/subject facts that can be supported by the linked Ministry sources.",
-    "Exact unit-by-unit mappings are deliberately left pending until the matching official textbook edition and pathway have been reviewed.",
-    "The periodic-table entries are reference cards only; they are not laboratory reagents.",
-    "Senior 2 chemistry is not universal across pathways; see Ministerial Decree 213/2025 and confirm the student's exact pathway."
+  "curriculum_name": "Egypt 2026/2027 Chemistry",
+  "grade_levels": [
+    "Grade 7",
+    "Grade 8",
+    "Grade 9"
   ],
-  "sources": [
+  "safe_experiments_only": true,
+  "units": [
     {
-      "id": "official_student_books",
-      "title": "Ministry of Education — Student Books",
-      "url": "https://studentbooks.moe.gov.eg/Books",
-      "accessed": "2026-11-12",
-      "supports": "Official textbook portal for school stages. Use the selected academic year and grade before importing unit-level mappings."
+      "id": "atoms_and_elements",
+      "title": "Atoms and elements",
+      "focus": "Introduce elements, compounds, and basic classification.",
+      "safe_experiments": [
+        "observe_element_samples",
+        "build_simple_molecule_models"
+      ]
     },
     {
-      "id": "official_secondary_books",
-      "title": "Ministry of Education — Secondary Books",
-      "url": "https://ellibrary.moe.gov.eg/Books-sec/",
-      "accessed": "2026-11-12",
-      "supports": "Official secondary-stage book portal."
-    },
-    {
-      "id": "senior1_integrated_science_statement",
-      "title": "State Information Service — Ministry statement on first-secondary subject map",
-      "url": "https://sis.gov.eg/ar/%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%B9%D9%84%D8%A7%D9%85%D9%8A/%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%AA%D9%88%D8%B6%D9%8A%D8%AD-%D9%87%D8%A7%D9%85-%D9%85%D9%86-%D9%88%D8%B2%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%8A%D8%A9-%D9%88%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%8A%D9%85-%D8%AD%D9%88%D9%84-%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA-%D9%85%D8%AA%D8%AF%D8%A7%D9%88%D9%84%D8%A9-%D8%AA%D8%AF%D8%B9%D9%8A-%D8%A5%D9%84%D8%BA%D8%A7%D8%A1-%D9%85%D8%A7%D8%AF%D8%A9-%D8%A7%D9%84%D8%B9%D9%84%D9%88%D9%85-%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%D8%A9/",
-      "published": "2026-09-01",
-      "accessed": "2026-11-12",
-      "supports": "The Ministry stated that the first-secondary subject map remained unchanged, including Integrated Science."
-    },
-    {
-      "id": "egyptian_baccalaureate_books",
-      "title": "Ministry of Education — Egyptian Baccalaureate books",
-      "url": "https://ellibrary.moe.gov.eg/EgyptianBaccalaureate/",
-      "accessed": "2026-11-12",
-      "supports": "Official portal for Egyptian Baccalaureate subject books; Senior 2 must be mapped to the student's actual pathway."
-    },
-    {
-      "id": "ministerial_decree_213_2025",
-      "title": "Official Gazette — Ministry of Education Decree 213/2025 on the Egyptian Baccalaureate",
-      "url": "https://mediadr.sis.gov.eg/bitstream/handle/123456789/108533/WQ202_20250911_1658.pdf?isAllowed=y&sequence=2",
-      "published": "2025-09-11",
-      "accessed": "2026-11-12",
-      "supports": "The second-secondary Egyptian Baccalaureate has pathway-specific subject choices; Chemistry is one option in the Engineering and Computer Science pathway, not a universal subject for every Senior 2 student."
-    }
-  ],
-  "profiles": [
-    {
-      "id": "prep1",
-      "label": "Prep 1",
-      "stage": "preparatory",
-      "subject": "Science",
-      "subject_status": "official_grade_book_portal",
-      "topic_mapping_status": "pending_official_textbook_review",
-      "source_ids": [
-        "official_student_books"
-      ],
-      "note": "Use the official 2026–2027 Prep 1 science book for lesson-level mapping. No unit list is guessed here."
-    },
-    {
-      "id": "prep2",
-      "label": "Prep 2",
-      "stage": "preparatory",
-      "subject": "Science",
-      "subject_status": "official_grade_book_portal",
-      "topic_mapping_status": "pending_official_textbook_review",
-      "source_ids": [
-        "official_student_books"
-      ],
-      "note": "Use the official 2026–2027 Prep 2 science book for lesson-level mapping. No unit list is guessed here."
-    },
-    {
-      "id": "prep3",
-      "label": "Prep 3",
-      "stage": "preparatory",
-      "subject": "Science",
-      "subject_status": "official_grade_book_portal",
-      "topic_mapping_status": "pending_official_textbook_review",
-      "source_ids": [
-        "official_student_books"
-      ],
-      "note": "Use the official 2026–2027 Prep 3 science book for lesson-level mapping. No unit list is guessed here."
-    },
-    {
-      "id": "senior1",
-      "label": "Senior 1",
-      "stage": "secondary",
-      "subject": "Integrated Science",
-      "subject_status": "confirmed_by_ministry_statement",
-      "topic_mapping_status": "pending_official_textbook_review",
-      "source_ids": [
-        "official_secondary_books",
-        "senior1_integrated_science_statement"
-      ],
-      "note": "The Ministry's 2026-09-01 statement confirms Integrated Science remains in the first-secondary subject map for 2026–2027."
-    },
-    {
-      "id": "senior2",
-      "label": "Senior 2",
-      "stage": "secondary",
-      "subject": "Pathway-dependent — confirm General Secondary or Egyptian Baccalaureate",
-      "subject_status": "requires_pathway_confirmation",
-      "topic_mapping_status": "pending_official_textbook_review",
-      "source_ids": [
-        "official_secondary_books",
-        "egyptian_baccalaureate_books",
-        "ministerial_decree_213_2025"
-      ],
-      "note": "Do not assign one Chemistry syllabus to every Senior 2 student. Under the Egyptian Baccalaureate, the Engineering and Computer Science pathway includes a choice between Chemistry and Programming/AI; confirm the student's system and actual pathway before mapping lessons. General Secondary must be matched to its exact official 2026–2027 book."
+      "id": "states_of_matter",
+      "title": "States of matter",
+      "focus": "Explain solids, liquids, and gases through safe classroom examples.",
+      "safe_experiments": [
+        "ice_melting",
+        "water_evaporation",
+        "water_condensation"
+      ]
     }
   ]
 }

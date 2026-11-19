@@ -1,50 +1,7 @@
 {
-  "schema_version": 1,
-  "country": "EG",
-  "academic_year": "2026-2027",
-  "title": "Egyptian school-year safe experiment pack",
-  "note": "This file maps classroom-safe experiment concepts to grades. It does not claim official unit order.",
-  "grade_experiments": [
-    {
-      "grade_id": "prep1",
-      "experiment_ids": [
-        "prep1_states_of_matter",
-        "prep1_solution_intro",
-        "prep1_mixtures"
-      ]
-    },
-    {
-      "grade_id": "prep2",
-      "experiment_ids": [
-        "prep2_solvent_solute",
-        "prep2_saturation_idea",
-        "prep2_state_changes",
-        "prep2_magnesium_combustion_observation"
-      ]
-    },
-    {
-      "grade_id": "prep3",
-      "experiment_ids": [
-        "prep3_conservation",
-        "prep3_material_categories",
-        "prep3_solution_review"
-      ]
-    },
-    {
-      "grade_id": "senior1",
-      "experiment_ids": [
-        "senior1_particles_energy",
-        "senior1_biological_molecules",
-        "senior1_carbon_cycle"
-      ]
-    },
-    {
-      "grade_id": "senior2",
-      "experiment_ids": [
-        "senior2_model_limits",
-        "senior2_pathway_check",
-        "senior2_safe_review"
-      ]
-    }
+  "safe_experiments": [
+    "observe_color_change",
+    "heat_water_gently",
+    "dissolve_salt_in_water"
   ]
 }

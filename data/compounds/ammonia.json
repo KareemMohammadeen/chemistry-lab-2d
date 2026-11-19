@@ -1,77 +1,15 @@
 {
- "version": 1,
- "id": "ammonia",
- "name": "Ammonia",
- "formula": "NH3",
- "formula_display": "NH₃",
- "composition": {
-  "N": 1,
-  "H": 3
- },
- "molar_mass_g_mol": {
-  "value": 17.031,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "gas",
- "appearance": "Colourless gas with a pungent smell; the laboratory solution is clear and colourless.",
- "color_hex": {
-  "value": "#F0F4F8",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 0.00077,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use.",
-  "note": "gases at 0 degC and 1 atm"
- },
- "melting_c": {
-  "value": -77.7,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": {
-  "value": -33.3,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "solubility_in_water": {
-  "g_per_100ml_at_20c": null,
-  "note": "Extremely soluble in water; the laboratory solution is usually 25-30 % ammonia."
- },
- "hazards": {
-  "classes": [
-   "toxic",
-   "corrosive",
-   "environmental"
-  ],
-  "summary": "The gas and concentrated solution irritate eyes and lungs; use in a fume cupboard.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Cool, well-ventilated place in a closed container.",
- "reactions": [
-  {
-   "role": "weak base",
-   "note": "Takes a hydrogen ion from water (pKb about 4.8)."
-  },
-  {
-   "role": "complex formation",
-   "note": "Dissolves copper(II) hydroxide to give a deep blue complex."
-  }
- ],
- "educational_notes": "The density is that of the gas at 0 degC. Ammonia solution turns red litmus blue.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Ammonia",
+  "formula": "NH3",
+  "state": "aqueous",
+  "density_g_ml": 0.88,
+  "color": "#f2f8ff",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Weak base used in neutralisation and gas-related examples.",
+  "tags": [
+    "base",
+    "solution",
+    "classroom"
+  ]
 }

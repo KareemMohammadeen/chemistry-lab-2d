@@ -1,71 +1,15 @@
 {
- "version": 1,
- "id": "ammonium_chloride",
- "name": "Ammonium chloride",
- "formula": "NH4Cl",
- "formula_display": "NH₄Cl",
- "composition": {
-  "N": 1,
-  "H": 4,
-  "Cl": 1
- },
- "molar_mass_g_mol": {
-  "value": 53.489,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "White crystals.",
- "color_hex": {
-  "value": "#FDFDFD",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 1.527,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": null,
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 37.2,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "Soluble in water; dissolving cools the solution."
- },
- "hazards": {
-  "classes": [
-   "harmful",
-   "irritant"
-  ],
-  "summary": "Harmful if swallowed; irritates the eyes.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed container.",
- "reactions": [
-  {
-   "role": "endothermic dissolution",
-   "note": "The solution gets noticeably colder as it dissolves."
-  },
-  {
-   "role": "sublimation",
-   "note": "Turns directly to vapour on strong heating."
-  }
- ],
- "educational_notes": "A simple way to see an endothermic dissolution.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Ammonium chloride",
+  "formula": "NH4Cl",
+  "state": "solid",
+  "density_g_ml": 1.53,
+  "color": "#f8f8f8",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Salt used in dissolution and gas evolution examples.",
+  "tags": [
+    "salt",
+    "solid",
+    "classroom"
+  ]
 }

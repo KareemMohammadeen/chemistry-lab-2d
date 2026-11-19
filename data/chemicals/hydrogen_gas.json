@@ -1,33 +1,15 @@
 {
-  "version": 1,
-  "id": "hydrogen_gas",
-  "name": "Hydrogen",
-  "short_name": "Hydrogen",
+  "name": "Hydrogen gas",
   "formula": "H2",
-  "formula_display": "H2",
   "state": "gas",
-  "category": "gas",
-  "color": [0.92, 0.98, 1.0, 0.1],
-  "color_status": "display",
-  "density_g_ml": {
-    "value": 0.00009,
-    "status": "reference",
-    "unit": "g/mL",
-    "source": "Educational classroom reference value used for the simulation"
-  },
-  "label_lines": ["Hydrogen", "H2"],
-  "safety": {
-    "status": "unverified_reference",
-    "summary": "A light gas used only as a virtual product in the simulation.",
-    "storage": "Not compressed in this virtual model; handled as a gas symbol.",
-    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
-  },
-  "display": {
-    "summary": "A gas product used in safe classroom displacement examples."
-  },
-  "simulation": {
-    "enabled": true,
-    "role": "classroom_product",
-    "scope": "approved virtual teaching subset"
-  }
+  "density_g_ml": 0.00008988,
+  "color": "#f5fbff",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Light gas used in gas evolution demonstrations.",
+  "tags": [
+    "gas",
+    "reaction",
+    "classroom"
+  ]
 }

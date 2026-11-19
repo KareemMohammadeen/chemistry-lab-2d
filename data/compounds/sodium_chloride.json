@@ -1,77 +1,15 @@
 {
- "version": 1,
- "id": "sodium_chloride",
- "name": "Sodium chloride",
- "formula": "NaCl",
- "formula_display": "NaCl",
- "composition": {
-  "Na": 1,
-  "Cl": 1
- },
- "molar_mass_g_mol": {
-  "value": 58.44,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "White crystals.",
- "color_hex": {
-  "value": "#FDFDFD",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 2.165,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": 801,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": {
-  "value": 1413,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 35.9,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "Soluble in water (about 36 g per 100 mL at 20 degC), barely changing with temperature."
- },
- "hazards": {
-  "classes": [],
-  "summary": "Low hazard.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Dry, closed container.",
- "reactions": [
-  {
-   "role": "dissolution",
-   "note": "Dissolves into sodium and chloride ions."
-  },
-  {
-   "role": "precipitation",
-   "note": "Gives white silver chloride with silver nitrate."
-  }
- ],
- "educational_notes": "Table salt. Its solubility changes very little between cold and boiling water.",
- "simulation": {
-  "supported": true,
-  "chemical_id": "sodium_chloride",
-  "note": "Linked to the playable chemical of this id (the playable version may be a dilute solution)."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Sodium chloride",
+  "formula": "NaCl",
+  "state": "solid",
+  "density_g_ml": 2.16,
+  "color": "#f9f9f9",
+  "hazard_level": "safe",
+  "safe_for_classroom": true,
+  "notes": "Common salt used as a safe reference material.",
+  "tags": [
+    "salt",
+    "safe",
+    "classroom"
+  ]
 }

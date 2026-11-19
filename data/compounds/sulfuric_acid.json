@@ -1,79 +1,15 @@
 {
- "version": 1,
- "id": "sulfuric_acid",
- "name": "Sulfuric acid",
- "formula": "H2SO4",
- "formula_display": "H₂SO₄",
- "composition": {
-  "H": 2,
-  "S": 1,
-  "O": 4
- },
- "molar_mass_g_mol": {
-  "value": 98.072,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "liquid",
- "appearance": "Clear, colourless, oily liquid.",
- "color_hex": {
-  "value": "#F2F2EC",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 1.84,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": 10.3,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": {
-  "value": 337,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "solubility_in_water": {
-  "g_per_100ml_at_20c": null,
-  "note": "Miscible with water; mixing releases a lot of heat."
- },
- "hazards": {
-  "classes": [
-   "corrosive"
-  ],
-  "summary": "Concentrated acid is highly corrosive and strips water from skin and paper. Always add acid to water, never water to acid.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed, labelled container, away from bases and organic material.",
- "reactions": [
-  {
-   "role": "strong acid",
-   "note": "First hydrogen fully ionised, the second partly."
-  },
-  {
-   "role": "dehydrating agent",
-   "note": "Removes water from sugar and other organic compounds, leaving carbon."
-  },
-  {
-   "role": "neutralisation",
-   "note": "Neutralises bases, releasing heat."
-  }
- ],
- "educational_notes": "The density is for the concentrated (about 98 %) acid. Sulfuric acid is the most produced industrial chemical.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Sulfuric acid",
+  "formula": "H2SO4",
+  "state": "aqueous",
+  "density_g_ml": 1.84,
+  "color": "#f8f8f8",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Acid used in controlled neutralisation demonstrations.",
+  "tags": [
+    "acid",
+    "solution",
+    "classroom"
+  ]
 }

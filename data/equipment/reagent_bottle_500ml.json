@@ -1,78 +1,8 @@
 {
-  "version": 1,
   "id": "reagent_bottle_500ml",
-  "name": "Reagent bottle",
-  "category": "vessel",
-  "material": "glass with plastic cap",
-  "capacity_ml": {
-    "value": 500.0,
-    "status": "placeholder",
-    "unit": "mL",
-    "source": "nominal capacity; graduations are approximate"
-  },
-  "default_state": "open",
-  "movable": true,
-  "interactions": [
-    "select",
-    "pick_up",
-    "drag",
-    "place",
-    "pour",
-    "add_solid"
-  ],
-  "default_pour_ml": 50.0,
-  "default_solid_g": 5.0,
-  "glass_mass_g": {
-    "value": 250.0,
-    "status": "placeholder",
-    "unit": "g",
-    "source": "typical mass for glassware of this size"
-  },
-  "placement": {
-    "surface": true,
-    "support": false,
-    "insert_into_vessel": false
-  },
-  "interaction_points": {
-    "base": [
-      0,
-      0
-    ],
-    "opening": [
-      0,
-      -148
-    ],
-    "pour_lip": [
-      22,
-      -148
-    ]
-  },
-  "visual": {
-    "style": "bottle",
-    "height": 170,
-    "profile": [
-      [
-        0,
-        58
-      ],
-      [
-        100,
-        58
-      ],
-      [
-        118,
-        40
-      ],
-      [
-        132,
-        22
-      ],
-      [
-        148,
-        22
-      ]
-    ],
-    "wall_px": 3.0,
-    "graduation_ml": 0.0
-  }
+  "name": "500 mL Reagent Bottle",
+  "type": "container",
+  "capacity_ml": 500,
+  "safe_for_classroom": true,
+  "description": "Storage bottle for liquids and prepared solutions."
 }

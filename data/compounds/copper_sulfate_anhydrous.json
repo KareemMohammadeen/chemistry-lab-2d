@@ -1,63 +1,15 @@
 {
- "version": 1,
- "id": "copper_sulfate_anhydrous",
- "name": "Copper(II) sulfate (anhydrous)",
- "formula": "CuSO4",
- "formula_display": "CuSO₄",
- "composition": {
-  "Cu": 1,
-  "S": 1,
-  "O": 4
- },
- "molar_mass_g_mol": {
-  "value": 159.602,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "White to pale grey powder.",
- "color_hex": {
-  "value": "#E9E9E4",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 3.6,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": null,
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": null,
-  "note": "Dissolves and turns blue as it takes up water."
- },
- "hazards": {
-  "classes": [
-   "harmful",
-   "irritant",
-   "environmental"
-  ],
-  "summary": "As for the pentahydrate.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Tightly closed container; it absorbs moisture.",
- "reactions": [
-  {
-   "role": "test for water",
-   "note": "Turns from white to blue when water is added."
-  }
- ],
- "educational_notes": "A classic test for water: add it to a liquid and watch for a white-to-blue change.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Copper sulfate anhydrous",
+  "formula": "CuSO4",
+  "state": "solid",
+  "density_g_ml": 3.6,
+  "color": "#d6d6d6",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Anhydrous copper sulfate used as a water indicator and in demonstrations.",
+  "tags": [
+    "salt",
+    "indicator",
+    "classroom"
+  ]
 }

@@ -1,60 +1,15 @@
 {
- "version": 1,
- "id": "magnesium_sulfate",
- "name": "Magnesium sulfate heptahydrate",
- "formula": "MgSO4.7H2O",
- "formula_display": "MgSO₄·7H₂O",
- "composition": {
-  "Mg": 1,
-  "S": 1,
-  "O": 11,
-  "H": 14
- },
- "molar_mass_g_mol": {
-  "value": 246.466,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "Colourless crystals (Epsom salt).",
- "color_hex": {
-  "value": "#FAFAFA",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 1.68,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": null,
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": null,
-  "note": "Soluble in water."
- },
- "hazards": {
-  "classes": [],
-  "summary": "Low hazard.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed container.",
- "reactions": [
-  {
-   "role": "dehydration",
-   "note": "Loses its water on heating and is used as a drying agent in its anhydrous form."
-  }
- ],
- "educational_notes": "The anhydrous salt (molar mass 120.4 g/mol) is a common drying agent for organic liquids.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Magnesium sulfate",
+  "formula": "MgSO4",
+  "state": "solid",
+  "density_g_ml": 2.66,
+  "color": "#f3f3f3",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Magnesium salt used in dissolution and classroom demos.",
+  "tags": [
+    "salt",
+    "solid",
+    "classroom"
+  ]
 }

@@ -1,72 +1,15 @@
 {
- "version": 1,
- "id": "silver_nitrate",
- "name": "Silver nitrate",
- "formula": "AgNO3",
- "formula_display": "AgNO₃",
- "composition": {
-  "Ag": 1,
-  "N": 1,
-  "O": 3
- },
- "molar_mass_g_mol": {
-  "value": 169.874,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "Colourless crystals.",
- "color_hex": {
-  "value": "#F2F2F2",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 4.35,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": 210,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": null,
-  "note": "Very soluble in water."
- },
- "hazards": {
-  "classes": [
-   "corrosive",
-   "oxidiser",
-   "environmental"
-  ],
-  "summary": "Corrosive, an oxidiser and very toxic to aquatic life. Stains skin black.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Dark glass bottle, away from light and organic material.",
- "reactions": [
-  {
-   "role": "precipitation",
-   "note": "Gives white silver chloride with chloride ions, a test for chloride."
-  },
-  {
-   "role": "light-sensitive",
-   "note": "Slowly turns grey-black in light as silver forms."
-  }
- ],
- "educational_notes": "Silver halide precipitates are the basis of old photographic film.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Silver nitrate",
+  "formula": "AgNO3",
+  "state": "solid",
+  "density_g_ml": 4.35,
+  "color": "#f8f8f8",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Salt used in precipitation and qualitative analysis examples.",
+  "tags": [
+    "salt",
+    "precipitation",
+    "classroom"
+  ]
 }

@@ -1,75 +1,15 @@
 {
- "version": 1,
- "id": "sodium_carbonate",
- "name": "Sodium carbonate",
- "formula": "Na2CO3",
- "formula_display": "Na₂CO₃",
- "composition": {
-  "Na": 2,
-  "C": 1,
-  "O": 3
- },
- "molar_mass_g_mol": {
-  "value": 105.988,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "White powder.",
- "color_hex": {
-  "value": "#F7F7F7",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 2.54,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": 851,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 21.5,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "Soluble in water; the solution is alkaline."
- },
- "hazards": {
-  "classes": [
-   "irritant"
-  ],
-  "summary": "Irritating to eyes.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed container; it absorbs moisture.",
- "reactions": [
-  {
-   "role": "carbonate",
-   "note": "Reacts with acids giving carbon dioxide."
-  },
-  {
-   "role": "weak base",
-   "note": "Gives an alkaline solution (pH about 11)."
-  }
- ],
- "educational_notes": "Also called washing soda.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Sodium carbonate",
+  "formula": "Na2CO3",
+  "state": "solid",
+  "density_g_ml": 2.54,
+  "color": "#f8f8f8",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Washing soda used in precipitation and neutralisation examples.",
+  "tags": [
+    "carbonate",
+    "solid",
+    "classroom"
+  ]
 }

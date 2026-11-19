@@ -1,71 +1,15 @@
 {
- "version": 1,
- "id": "potassium_permanganate",
- "name": "Potassium permanganate",
- "formula": "KMnO4",
- "formula_display": "KMnO₄",
- "composition": {
-  "K": 1,
-  "Mn": 1,
-  "O": 4
- },
- "molar_mass_g_mol": {
-  "value": 158.032,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "Dark purple, almost black crystals.",
- "color_hex": {
-  "value": "#3A1245",
-  "status": "display"
- },
- "solution_color_hex": {
-  "value": "#8E1B8F",
-  "status": "display"
- },
- "density_g_cm3": {
-  "value": 2.7,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": null,
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 6.4,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "Soluble in water (about 6 g per 100 mL at 20 degC), giving an intense purple solution."
- },
- "hazards": {
-  "classes": [
-   "oxidiser",
-   "harmful",
-   "environmental"
-  ],
-  "summary": "Strong oxidiser; can ignite organic material. Harmful if swallowed and very toxic to aquatic life; stains skin and clothes.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed glass container, away from organic substances and acids.",
- "reactions": [
-  {
-   "role": "oxidiser",
-   "note": "Reduced to nearly colourless manganese(II) in acid, which makes it useful for titrations."
-  }
- ],
- "educational_notes": "The purple colour is so intense that a single crystal colours litres of water.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Potassium permanganate",
+  "formula": "KMnO4",
+  "state": "solid",
+  "density_g_ml": 2.7,
+  "color": "#7d3cff",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Strongly coloured oxidising salt used in demos.",
+  "tags": [
+    "salt",
+    "oxidiser",
+    "classroom"
+  ]
 }

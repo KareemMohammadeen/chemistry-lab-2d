@@ -1,80 +1,15 @@
 {
- "version": 1,
- "id": "copper_sulfate_pentahydrate",
- "name": "Copper(II) sulfate pentahydrate",
- "formula": "CuSO4.5H2O",
- "formula_display": "CuSO₄·5H₂O",
- "composition": {
-  "Cu": 1,
-  "S": 1,
-  "O": 9,
-  "H": 10
- },
- "molar_mass_g_mol": {
-  "value": 249.677,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "Bright blue crystals.",
- "color_hex": {
-  "value": "#2E6FD0",
-  "status": "display"
- },
- "solution_color_hex": {
-  "value": "#2E86DE",
-  "status": "display"
- },
- "density_g_cm3": {
-  "value": 2.286,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": null,
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 32,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "About 32 g of the anhydrous salt per 100 mL of water at 20 degC."
- },
- "hazards": {
-  "classes": [
-   "harmful",
-   "irritant",
-   "environmental"
-  ],
-  "summary": "Harmful if swallowed, irritating to eyes and skin, and very toxic to aquatic life. Never pour solutions down the drain.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Closed container in a dry place.",
- "reactions": [
-  {
-   "role": "dissolution",
-   "note": "Dissolves to give a blue solution of hydrated copper ions."
-  },
-  {
-   "role": "dehydration",
-   "note": "Heating drives off the water and the crystals turn white."
-  },
-  {
-   "role": "precipitation",
-   "note": "Gives a pale blue precipitate with sodium hydroxide."
-  }
- ],
- "educational_notes": "The blue colour comes from water molecules bound to the copper(II) ion.",
- "simulation": {
-  "supported": true,
-  "chemical_id": "copper_sulfate_pentahydrate",
-  "note": "Linked to the playable chemical of this id (the playable version may be a dilute solution)."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Copper sulfate pentahydrate",
+  "formula": "CuSO4·5H2O",
+  "state": "solid",
+  "density_g_ml": 2.28,
+  "color": "#4fa3ff",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Blue crystalline salt for dissolution and displacement demonstrations.",
+  "tags": [
+    "salt",
+    "blue",
+    "classroom"
+  ]
 }

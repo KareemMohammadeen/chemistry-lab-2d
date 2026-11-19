@@ -1,73 +1,15 @@
 {
- "version": 1,
- "id": "potassium_chloride",
- "name": "Potassium chloride",
- "formula": "KCl",
- "formula_display": "KCl",
- "composition": {
-  "K": 1,
-  "Cl": 1
- },
- "molar_mass_g_mol": {
-  "value": 74.548,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "White crystals.",
- "color_hex": {
-  "value": "#FDFDFD",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 1.984,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": 770,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": {
-  "value": 1420,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 34.4,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "Soluble in water (about 34 g per 100 mL at 20 degC)."
- },
- "hazards": {
-  "classes": [],
-  "summary": "Low hazard.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Dry, closed container.",
- "reactions": [
-  {
-   "role": "flame test",
-   "note": "Gives a lilac flame."
-  }
- ],
- "educational_notes": "Used as a fertiliser and salt substitute.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Potassium chloride",
+  "formula": "KCl",
+  "state": "solid",
+  "density_g_ml": 1.98,
+  "color": "#f8f8f8",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Salt used in dissolution and precipitation examples.",
+  "tags": [
+    "salt",
+    "solid",
+    "classroom"
+  ]
 }

@@ -1,73 +1,15 @@
 {
- "version": 1,
- "id": "sucrose",
- "name": "Sucrose",
- "formula": "C12H22O11",
- "formula_display": "C₁₂H₂₂O₁₁",
- "composition": {
-  "C": 12,
-  "H": 22,
-  "O": 11
- },
- "molar_mass_g_mol": {
-  "value": 342.297,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "White crystals (table sugar).",
- "color_hex": {
-  "value": "#FCFCFC",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 1.587,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": {
-  "value": 186,
-  "unit": "degC",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 200,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "Very soluble in water (about 200 g per 100 mL at 20 degC)."
- },
- "hazards": {
-  "classes": [],
-  "summary": "Not hazardous.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Dry container.",
- "reactions": [
-  {
-   "role": "dehydration",
-   "note": "Concentrated sulfuric acid removes water and leaves black carbon."
-  },
-  {
-   "role": "caramelisation",
-   "note": "Browns and decomposes when heated above its melting point."
-  }
- ],
- "educational_notes": "Not a reducing sugar: it does not react with Benedict's solution until it has been split by acid.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Sucrose",
+  "formula": "C12H22O11",
+  "state": "solid",
+  "density_g_ml": 1.59,
+  "color": "#fff6e2",
+  "hazard_level": "safe",
+  "safe_for_classroom": true,
+  "notes": "Table sugar used in safe classroom demonstrations.",
+  "tags": [
+    "sugar",
+    "food",
+    "classroom"
+  ]
 }

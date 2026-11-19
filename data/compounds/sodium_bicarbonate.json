@@ -1,69 +1,15 @@
 {
- "version": 1,
- "id": "sodium_bicarbonate",
- "name": "Sodium hydrogencarbonate",
- "formula": "NaHCO3",
- "formula_display": "NaHCO₃",
- "composition": {
-  "Na": 1,
-  "H": 1,
-  "C": 1,
-  "O": 3
- },
- "molar_mass_g_mol": {
-  "value": 84.006,
-  "unit": "g/mol",
-  "status": "derived",
-  "source": "sum of abridged standard atomic weights in data/elements/elements.json"
- },
- "state_at_20c": "solid",
- "appearance": "White powder.",
- "color_hex": {
-  "value": "#F9F9F9",
-  "status": "display"
- },
- "solution_color_hex": null,
- "density_g_cm3": {
-  "value": 2.2,
-  "unit": "g/cm3",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "melting_c": null,
- "boiling_c": null,
- "solubility_in_water": {
-  "g_per_100ml_at_20c": {
-   "value": 9.6,
-   "unit": "g/100 mL",
-   "status": "unverified_reference",
-   "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
-  },
-  "note": "Moderately soluble in water; the solution is mildly alkaline."
- },
- "hazards": {
-  "classes": [],
-  "summary": "Low hazard.",
-  "status": "unverified_reference",
-  "source": "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- },
- "storage": "Any dry container.",
- "reactions": [
-  {
-   "role": "carbonate",
-   "note": "Reacts with acids giving carbon dioxide."
-  },
-  {
-   "role": "thermal decomposition",
-   "note": "Decomposes on heating to sodium carbonate, water and carbon dioxide."
-  }
- ],
- "educational_notes": "Baking soda: it reacts with acids in batter to make the bubbles that raise cakes.",
- "simulation": {
-  "supported": false,
-  "chemical_id": null,
-  "note": "Reference data only; not yet playable in the simulation."
- },
- "references": [
-  "General-chemistry reference values recalled from memory; check a supplier data sheet or handbook before teaching use."
- ]
+  "name": "Sodium bicarbonate",
+  "formula": "NaHCO3",
+  "state": "solid",
+  "density_g_ml": 2.16,
+  "color": "#f8f8f8",
+  "hazard_level": "controlled",
+  "safe_for_classroom": true,
+  "notes": "Baking soda used in gas evolution and acid-base demonstrations.",
+  "tags": [
+    "bicarbonate",
+    "solid",
+    "classroom"
+  ]
 }

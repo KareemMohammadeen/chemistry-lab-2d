@@ -1,83 +1,8 @@
 {
-  "version": 1,
   "id": "test_tube_20ml",
-  "name": "Test tube",
-  "category": "vessel",
-  "material": "borosilicate glass",
-  "capacity_ml": {
-    "value": 20.0,
-    "status": "placeholder",
-    "unit": "mL",
-    "source": "nominal capacity; graduations are approximate"
-  },
-  "default_state": "open",
-  "movable": true,
-  "interactions": [
-    "select",
-    "pick_up",
-    "drag",
-    "place",
-    "pour",
-    "add_solid",
-    "mix"
-  ],
-  "default_pour_ml": 5.0,
-  "default_solid_g": 0.5,
-  "glass_mass_g": {
-    "value": 12.0,
-    "status": "placeholder",
-    "unit": "g",
-    "source": "typical mass for glassware of this size"
-  },
-  "placement": {
-    "surface": true,
-    "support": false,
-    "insert_into_vessel": false
-  },
-  "interaction_points": {
-    "base": [
-      0,
-      0
-    ],
-    "opening": [
-      0,
-      -150
-    ],
-    "pour_lip": [
-      13,
-      -150
-    ]
-  },
-  "visual": {
-    "style": "vessel",
-    "height": 154,
-    "profile": [
-      [
-        0,
-        2
-      ],
-      [
-        3,
-        7
-      ],
-      [
-        7,
-        10
-      ],
-      [
-        12,
-        12
-      ],
-      [
-        18,
-        13
-      ],
-      [
-        150,
-        13
-      ]
-    ],
-    "wall_px": 3.0,
-    "graduation_ml": 5.0
-  }
+  "name": "20 mL Test Tube",
+  "type": "test_tube",
+  "capacity_ml": 20,
+  "safe_for_classroom": true,
+  "description": "Small tube used for observing small-scale reactions."
 }
