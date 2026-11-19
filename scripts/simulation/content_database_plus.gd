@@ -4,7 +4,7 @@ class_name ContentDatabasePlus extends ContentDatabase
 ## small set of virtual classroom experiments that can be shown in the UI.
 
 var experiments_by_chemical: Dictionary = {}
-var experiment_list: Array = {}
+var experiment_list: Array = []
 
 
 func load_all() -> void:
