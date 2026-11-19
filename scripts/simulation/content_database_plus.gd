@@ -1,11 +1,10 @@
-class_name ContentDatabasePlus
-extends "res://scripts/simulation/content_database.gd"
+class_name ContentDatabasePlus extends ContentDatabase
 ## Extends the base content database with generated, per-chemical experiment suggestions.
 ## This keeps the project data-driven: adding a new chemical automatically creates a
 ## small set of virtual classroom experiments that can be shown in the UI.
 
 var experiments_by_chemical: Dictionary = {}
-var experiment_list: Array = []
+var experiment_list: Array = {}
 
 
 func load_all() -> void:
