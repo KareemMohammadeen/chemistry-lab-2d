@@ -1,4 +1,5 @@
-class_name ContentDatabasePlus extends ContentDatabase
+class_name ContentDatabasePlus
+extends ContentDatabase
 ## Extends the base content database with generated, per-chemical experiment suggestions.
 ## This keeps the project data-driven: adding a new chemical automatically creates a
 ## small set of virtual classroom experiments that can be shown in the UI.
