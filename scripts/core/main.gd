@@ -40,6 +40,11 @@ func _ready() -> void:
 		return
 	workspace.bind(_host)
 	lab_interface.bind(_host)
+	if workspace.get_parent() != lab_interface.stage_slot:
+		var parent := workspace.get_parent()
+		if parent != null:
+			parent.remove_child(workspace)
+		lab_interface.stage_slot.add_child(workspace)
 	lab_interface.save_session_requested.connect(_on_save_session_requested)
 	lab_interface.load_session_requested.connect(_on_load_session_requested)
 	_audio = LAB_AUDIO_SCRIPT.new() as LabAudio
@@ -85,6 +90,8 @@ func _process(_delta: float) -> void:
 			workspace.fit_to_rect(rect)
 		else:
 			workspace.update_stage_rect(rect)
+		var stage_origin := lab_interface.stage_slot.get_global_rect().position
+		workspace.position -= stage_origin
 		_last_stage_rect = rect
 
 
