@@ -236,3 +236,11 @@ func _find_result(results: Array, reaction_id: String) -> ReactionResult:
 		if entry is ReactionResult and str((entry as ReactionResult).reaction_id) == reaction_id:
 			return entry
 	return null
+
+
+func _check(condition: bool, message: String) -> void:
+	_checks += 1
+	if condition:
+		return
+	_failures += 1
+	push_error(message)
