@@ -36,7 +36,7 @@ func _test_boiling_executor() -> void:
 	vessel.capacity_ml = 250.0
 	vessel.temperature_c = 105.0
 	vessel.add_liquid("water", 100.0)
-	var result := sim.engine.execute_registered_reaction("boil_water", vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("boil_water", vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "boiling executor returns EXECUTED")
 	_check(result.observations.size() > 0, "boiling executor returns observations")
 	_check(result.effects.size() > 0, "boiling executor returns visual effects")
@@ -56,7 +56,7 @@ func _test_dissolution_executor() -> void:
 	beaker.vessel.add_liquid("water", 100.0)
 	beaker.vessel.add_solid("sodium_chloride", 5.0)
 	var before_snapshot := sim.capture_snapshot()
-	var result := sim.engine.execute_registered_reaction("dissolve_sodium_chloride", beaker.vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("dissolve_sodium_chloride", beaker.vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "dissolution executor returns EXECUTED")
 	_check(result.effects.size() > 0, "dissolution executor returns visual effects")
 	_check(float(beaker.vessel.dissolved.get("sodium_chloride", 0.0)) > 0.0, "salt moves into the dissolved ledger")
@@ -77,7 +77,7 @@ func _test_neutralisation_executor() -> void:
 	flask.vessel.add_liquid("hydrochloric_acid_0_1m", 50.0)
 	flask.vessel.add_liquid("sodium_hydroxide_0_1m", 50.0)
 	var before_temperature := flask.vessel.temperature_c
-	var result := sim.engine.execute_registered_reaction("neutralisation_strong_acid_strong_base", flask.vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("neutralisation_strong_acid_strong_base", flask.vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "neutralisation executor returns EXECUTED")
 	_check(result.effects.size() > 0, "neutralisation executor returns visual effects")
 	_check(result.temperature_delta_c >= 0.0, "neutralisation reports a non-negative temperature change")
@@ -98,7 +98,7 @@ func _test_precipitation_executor() -> void:
 	vessel.capacity_ml = 250.0
 	vessel.add_liquid("calcium_chloride_0_1m", 50.0)
 	vessel.add_liquid("sodium_carbonate_0_1m", 50.0)
-	var result := sim.engine.execute_registered_reaction("precipitation_calcium_chloride_sodium_carbonate", vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("precipitation_calcium_chloride_sodium_carbonate", vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "precipitation executor returns EXECUTED")
 	_check(float(vessel.solids.get("calcium_carbonate", 0.0)) > 0.0, "precipitation forms calcium carbonate")
 	_check(float(vessel.dissolved.get("sodium_chloride", 0.0)) > 0.0, "precipitation leaves dissolved salt behind")
@@ -112,7 +112,7 @@ func _test_double_displacement_executor() -> void:
 	vessel.capacity_ml = 250.0
 	vessel.add_liquid("calcium_chloride_0_1m", 50.0)
 	vessel.add_liquid("sodium_carbonate_0_1m", 50.0)
-	var result := sim.engine.execute_registered_reaction("double_displacement_calcium_chloride_sodium_carbonate", vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("double_displacement_calcium_chloride_sodium_carbonate", vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "double displacement executor returns EXECUTED")
 	_check(float(vessel.solids.get("calcium_carbonate", 0.0)) > 0.0, "double displacement forms a precipitate")
 	_check(_contains_effect(result.effects, "precipitate_cloud"), "double displacement returns precipitate feedback")
@@ -125,7 +125,7 @@ func _test_gas_evolution_executor() -> void:
 	vessel.capacity_ml = 250.0
 	vessel.add_solid("zinc", 2.0)
 	vessel.add_liquid("hydrochloric_acid_0_1m", 50.0)
-	var result := sim.engine.execute_registered_reaction("gas_evolution_zinc_hydrochloric_acid", vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("gas_evolution_zinc_hydrochloric_acid", vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "gas evolution returns EXECUTED")
 	_check(float(vessel.gases.get("hydrogen_gas", 0.0)) > 0.0, "gas evolution releases hydrogen")
 	_check(_contains_effect(result.effects, "gas_bubbles"), "gas evolution returns gas feedback")
@@ -138,7 +138,7 @@ func _test_single_displacement_executor() -> void:
 	vessel.capacity_ml = 250.0
 	vessel.add_solid("magnesium", 2.0)
 	vessel.add_liquid("hydrochloric_acid_0_1m", 50.0)
-	var result := sim.engine.execute_registered_reaction("single_displacement_magnesium_hydrochloric_acid", vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("single_displacement_magnesium_hydrochloric_acid", vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "single displacement returns EXECUTED")
 	_check(float(vessel.gases.get("hydrogen_gas", 0.0)) > 0.0, "single displacement produces hydrogen gas")
 	_check(result.produced.has("dissolved"), "single displacement reports dissolved product")
@@ -151,7 +151,7 @@ func _test_combustion_executor() -> void:
 	vessel.capacity_ml = 250.0
 	vessel.add_solid("magnesium", 2.0)
 	vessel.add_gas("oxygen_gas", 1.0)
-	var result := sim.engine.execute_registered_reaction("combustion_magnesium_oxygen", vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("combustion_magnesium_oxygen", vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "combustion returns EXECUTED")
 	_check(float(vessel.solids.get("magnesium_oxide", 0.0)) > 0.0, "combustion forms magnesium oxide")
 	_check(_contains_observation(result.observations, "generic_reaction:combustion_magnesium_oxygen"), "combustion records a generic observation")
@@ -163,7 +163,7 @@ func _test_phase_change_executor() -> void:
 	var vessel := VesselState.new()
 	vessel.capacity_ml = 250.0
 	vessel.add_solid("ice", 5.0)
-	var result := sim.engine.execute_registered_reaction("phase_change_ice_melting", vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("phase_change_ice_melting", vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "phase change returns EXECUTED")
 	_check(float(vessel.liquids.get("water", 0.0)) > 0.0, "phase change creates liquid water")
 	_check(_contains_observation(result.observations, "generic_reaction:phase_change_ice_melting"), "phase change records a generic observation")
@@ -176,7 +176,7 @@ func _test_generic_executor() -> void:
 	vessel.capacity_ml = 250.0
 	vessel.add_liquid("hydrochloric_acid_0_1m", 50.0)
 	vessel.add_solid("sodium_bicarbonate", 2.0)
-	var result := sim.engine.execute_registered_reaction("acid_carbonate_hydrochloric_sodium_bicarbonate", vessel)
+	var result: ReactionResult = sim.engine.execute_registered_reaction("acid_carbonate_hydrochloric_sodium_bicarbonate", vessel)
 	_check(result.status == ReactionResult.Status.EXECUTED, "acid-carbonate reaction returns EXECUTED")
 	_check(float(vessel.gases.get("carbon_dioxide", 0.0)) > 0.0, "acid-carbonate produces carbon dioxide gas")
 	_check(float(vessel.dissolved.get("sodium_chloride", 0.0)) > 0.0, "acid-carbonate produces dissolved salt")
@@ -191,7 +191,7 @@ func _test_step_dispatch() -> void:
 	vessel.capacity_ml = 250.0
 	vessel.temperature_c = 105.0
 	vessel.add_liquid("water", 100.0)
-	var results := sim.engine.execute_step_reactions(vessel)
+	var results: Array[ReactionResult] = sim.engine.execute_step_reactions(vessel)
 	_check(results.size() >= 1, "step dispatch returns at least one result")
 	_check(_contains_result(results, "boil_water"), "step dispatch includes boiling")
 	var boiling := _find_result(results, "boil_water")
@@ -216,7 +216,7 @@ func _find(sim: LabSimulation, equipment_id: String, chemical_id: String = "") -
 func _contains_observation(entries: Array, key: String) -> bool:
 	for entry in entries:
 		if typeof(entry) == TYPE_DICTIONARY and str((entry as Dictionary).get("key", "")) == key:
-			return true
+			true
 	return false
 
 
@@ -236,11 +236,3 @@ func _find_result(results: Array, reaction_id: String) -> ReactionResult:
 		if entry is ReactionResult and str((entry as ReactionResult).reaction_id) == reaction_id:
 			return entry
 	return null
-
-
-func _check(condition: bool, label: String) -> void:
-	_checks += 1
-	if condition:
-		return
-	_failures += 1
-	push_error(label)
