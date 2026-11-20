@@ -52,12 +52,12 @@
       "safety_scope": "virtual_only_classroom_model"
     },
     {
-      "id": "sugar_and_water_guided",
-      "name": "Sugar and water: guided dissolution check",
+      "id": "sucrose_and_water_guided",
+      "name": "Sucrose and water: guided dissolution check",
       "enabled": true,
       "grade_suggestion": "Prep 1–3",
       "alignment_status": "suggested_not_verified_against_official_textbook",
-      "description": "Follow the virtual actions, then inspect how much sugar has dissolved.",
+      "description": "Follow the virtual actions, then inspect how much sucrose has dissolved.",
       "notice": "This guided activity runs only inside the software model. It is not an instruction to perform a real laboratory experiment.",
       "steps": [
         {
@@ -74,12 +74,12 @@
           "type": "action",
           "command": "add_solid",
           "interaction_id": "add_solid",
-          "source_contains_chemical_id": "sugar",
+          "source_contains_chemical_id": "sucrose",
           "target_equipment_id": "beaker_250ml",
           "same_vessel_as_previous": true,
-          "target_contains_chemical_id": "sugar",
-          "prompt": "Add the virtual sugar sample to the same beaker.",
-          "success": "The sugar sample is now in the beaker."
+          "target_contains_chemical_id": "sucrose",
+          "prompt": "Add the virtual sucrose sample to the same beaker.",
+          "success": "The sucrose sample is now in the beaker."
         },
         {
           "type": "action",
@@ -92,10 +92,10 @@
         {
           "type": "condition",
           "condition": "minimum_dissolved_g",
-          "chemical_id": "sugar",
+          "chemical_id": "sucrose",
           "minimum_g": 1,
-          "prompt": "Wait for the model to dissolve at least 1 g of sugar, then inspect the vessel.",
-          "success": "The model confirms that at least 1 g of sugar has dissolved."
+          "prompt": "Wait for the model to dissolve at least 1 g of sucrose, then inspect the vessel.",
+          "success": "The model confirms that at least 1 g of sucrose has dissolved."
         }
       ],
       "safety_scope": "virtual_only_classroom_model"
