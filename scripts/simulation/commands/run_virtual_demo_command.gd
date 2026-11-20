@@ -28,7 +28,7 @@ func validate(sim: LabSimulation) -> InteractionResult:
 func execute(sim: LabSimulation) -> InteractionResult:
 	var item := sim.state.get_object(context.source)
 	var reaction := sim.database.reactions.get(REACTION_ID) as ReactionDefinition
-	var entry := sim.engine.run_visual_demo(item.vessel, REACTION_ID)
+	var entry: Dictionary = sim.engine.run_visual_demo(item.vessel, REACTION_ID)
 	if entry.is_empty():
 		return InteractionResult.failure("The qualitative demonstration could not run.")
 	sim.record_observation(item.id, entry)
