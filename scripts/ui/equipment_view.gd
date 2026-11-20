@@ -356,16 +356,30 @@ func _glass_colors(polygon: PackedVector2Array) -> PackedColorArray:
 
 
 func _draw_glass_details(top: float) -> void:
-	var wall := float(_equipment.visual.get("wall_px", 3.0))
-	draw_polygon(VesselGeometry.slice_polygon(_profile, 0.0, 6.0), _uniform_colors(VesselGeometry.slice_polygon(_profile, 0.0, 6.0), Color(LabColors.GLASS_EDGE, 0.22)))
-	draw_polyline(VesselGeometry.wall_polyline(_profile), LabColors.GLASS_EDGE, wall, true)
+	var wall := maxf(float(_equipment.visual.get("wall_px", 3.0)), 1.5)
+	var foot_height := minf(6.0, maxf(top * 0.06, 2.5))
+	var foot := VesselGeometry.slice_polygon(_profile, 0.0, foot_height)
+	draw_polygon(foot, _uniform_colors(foot, Color(LabColors.GLASS_EDGE, 0.16)))
+	draw_polyline(VesselGeometry.wall_polyline(_profile), Color(LabColors.GLASS_EDGE, 0.88), wall, true)
+
+	# A second, finer inner rim gives the opening a glass-wall thickness instead of a flat outline.
 	var rim_width := VesselGeometry.half_width_at(_profile, top)
-	var rim := _ellipse(Vector2(0.0, -top), rim_width, RIM_HEIGHT)
-	draw_polyline(_closed(rim), LabColors.GLASS_EDGE, 2.0, true)
-	var inset := VesselGeometry.half_width_at(_profile, top * 0.5) - wall - 5.0
-	draw_line(Vector2(-inset, -top * 0.12), Vector2(-inset, -top * 0.88), Color(1.0, 1.0, 1.0, 0.55), 3.0, true)
-	draw_line(Vector2(-inset + 7.0, -top * 0.2), Vector2(-inset + 7.0, -top * 0.7), Color(1.0, 1.0, 1.0, 0.2), 2.0, true)
-	draw_line(Vector2(inset * 0.85, -top * 0.22), Vector2(inset * 0.85, -top * 0.55), Color(1.0, 1.0, 1.0, 0.25), 2.0, true)
+	var outer_rim := _ellipse(Vector2(0.0, -top), rim_width, RIM_HEIGHT)
+	draw_colored_polygon(outer_rim, Color(LabColors.GLASS_EDGE, 0.10))
+	draw_polyline(_closed(outer_rim), Color(LabColors.GLASS_EDGE, 0.92), 1.8, true)
+	var inner_rim := _ellipse(Vector2(0.0, -top + 1.2), maxf(rim_width - wall * 1.6, 1.0), RIM_HEIGHT * 0.48)
+	draw_polyline(_closed(inner_rim), Color(1.0, 1.0, 1.0, 0.34), 1.0, true)
+
+	# Long, soft reflections and a heavier base reflection make the vessel read as borosilicate glass.
+	var mid_width := VesselGeometry.half_width_at(_profile, top * 0.52)
+	var inset := maxf(mid_width - wall - 5.0, 1.0)
+	draw_line(Vector2(-inset, -top * 0.10), Vector2(-inset, -top * 0.88), Color(1.0, 1.0, 1.0, 0.48), 2.2, true)
+	draw_line(Vector2(-inset + 5.0, -top * 0.22), Vector2(-inset + 5.0, -top * 0.70), Color(1.0, 1.0, 1.0, 0.17), 1.2, true)
+	var right_inset := maxf(mid_width - wall * 2.0, 1.0)
+	draw_line(Vector2(right_inset, -top * 0.20), Vector2(right_inset, -top * 0.54), Color(1.0, 1.0, 1.0, 0.20), 1.2, true)
+	var base_width := VesselGeometry.half_width_at(_profile, 0.0)
+	var base_reflection := _ellipse(Vector2(0.0, -2.0), maxf(base_width - 1.0, 1.0), 2.4)
+	draw_polyline(_closed(base_reflection), Color(1.0, 1.0, 1.0, 0.30), 1.1, true)
 
 
 func _uniform_colors(polygon: PackedVector2Array, color: Color) -> PackedColorArray:
@@ -386,15 +400,32 @@ func _draw_contents(vessel: VesselState) -> void:
 
 func _draw_liquid(level_height: float, vessel: VesselState, heat: float) -> void:
 	var body := VesselGeometry.slice_polygon(_profile, 0.0, level_height)
-	var deep := _shown_color.darkened(0.16)
-	var light := _shown_color.lightened(0.1)
+	var deep := _shown_color.darkened(0.22)
+	var light := _shown_color.lightened(0.08)
 	var colors := PackedColorArray()
 	for point in body:
-		colors.append(deep.lerp(light, clampf(-point.y / level_height, 0.0, 1.0)))
+		var vertical := clampf(-point.y / maxf(level_height, 0.01), 0.0, 1.0)
+		colors.append(deep.lerp(light, vertical))
 	draw_polygon(body, colors)
+
+	# The meniscus is deliberately subtle: a translucent surface, a fine bright edge and
+	# a darker inner contour make the liquid feel contained by glass rather than painted on.
 	var surface_width := VesselGeometry.half_width_at(_profile, level_height)
-	draw_colored_polygon(_ellipse(Vector2(0.0, -level_height), surface_width, RIM_HEIGHT * 0.9), Color(light, minf(_shown_color.a, 0.75)).lightened(0.12))
-	draw_polyline(_closed(_ellipse(Vector2(0.0, -level_height), surface_width, RIM_HEIGHT * 0.9)), Color(1.0, 1.0, 1.0, 0.5), 1.5, true)
+	var surface_height := RIM_HEIGHT * 0.72
+	var surface := _ellipse(Vector2(0.0, -level_height), surface_width, surface_height)
+	draw_colored_polygon(surface, Color(light, minf(_shown_color.a + 0.12, 0.58)))
+	draw_polyline(_closed(surface), Color(1.0, 1.0, 1.0, 0.42), 1.2, true)
+	var inner_surface := _ellipse(Vector2(0.0, -level_height + 1.0), surface_width * 0.82, surface_height * 0.38)
+	draw_polyline(_closed(inner_surface), Color(deep, 0.38), 0.8, true)
+
+	# Narrow side refractions stay inside the vessel profile, including tapered test tubes.
+	var lower_y := level_height * 0.16
+	var upper_y := level_height * 0.84
+	var lower_x := VesselGeometry.half_width_at(_profile, lower_y) * 0.72
+	var upper_x := VesselGeometry.half_width_at(_profile, upper_y) * 0.72
+	draw_line(Vector2(-lower_x, -lower_y), Vector2(-upper_x, -upper_y), Color(1.0, 1.0, 1.0, 0.18), 1.0, true)
+	draw_line(Vector2(lower_x, -lower_y), Vector2(upper_x, -upper_y), Color(1.0, 1.0, 1.0, 0.09), 1.0, true)
+
 	if heat > 0.05:
 		_draw_convection(level_height, heat)
 	if HeatSystem.is_boiling(vessel, _sim.database):
@@ -426,21 +457,47 @@ func _draw_bubbles(level_height: float) -> void:
 
 
 func _draw_solid(vessel: VesselState) -> void:
-	var fraction := _shown_solid_ml / maxf(vessel.capacity_ml, 1.0)
+	var fraction := clampf(_shown_solid_ml / maxf(vessel.capacity_ml, 1.0), 0.0, 1.0)
 	var solid_height := maxf(VesselGeometry.height_for_fraction(_profile, fraction), 2.0)
 	var body := VesselGeometry.slice_polygon(_profile, 0.0, solid_height)
 	var colors := PackedColorArray()
 	for point in body:
-		colors.append(last_solid_color.darkened(0.2).lerp(last_solid_color, clampf(-point.y / solid_height, 0.0, 1.0)))
+		var vertical := clampf(-point.y / solid_height, 0.0, 1.0)
+		colors.append(last_solid_color.darkened(0.34).lerp(last_solid_color.darkened(0.08), vertical))
 	draw_polygon(body, colors)
-	var peak_width := VesselGeometry.half_width_at(_profile, solid_height)
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(-peak_width, -solid_height), Vector2(0.0, -solid_height - 6.0), Vector2(peak_width, -solid_height)]),
-		last_solid_color)
-	for index in range(SPECKLE_COUNT):
-		var y := solid_height * _hash01(index, 78.233) * 0.9 + 1.0
-		var x := (_hash01(index, 12.9898) * 2.0 - 1.0) * VesselGeometry.half_width_at(_profile, y) * 0.85
-		draw_rect(Rect2(x, -y, 3.0, 3.0), Color(1.0, 1.0, 1.0, 0.35))
+
+	# Show each undissolved substance with its own colour. The bed remains display-only;
+	# mass, dissolution and precipitation continue to come exclusively from VesselState.
+	var chemical_ids: Array = vessel.solids.keys()
+	chemical_ids.sort()
+	var total_mass := 0.0
+	for chemical_id in chemical_ids:
+		total_mass += maxf(float(vessel.solids[chemical_id]), 0.0)
+	if total_mass <= 0.0:
+		return
+
+	for chemical_index in range(chemical_ids.size()):
+		var chemical_id := str(chemical_ids[chemical_index])
+		var chemical := _sim.database.get_chemical(chemical_id)
+		var grain_color := last_solid_color if chemical == null else chemical.color
+		grain_color = Color(grain_color.r, grain_color.g, grain_color.b, 1.0)
+		var share := maxf(float(vessel.solids[chemical_id]), 0.0) / total_mass
+		var grain_count := clampi(int(round(6.0 + 22.0 * share)), 6, 28)
+		var seed_value := float(chemical_index + 1) * 7919.0
+		for index in range(grain_count):
+			var y := solid_height * (0.08 + _hash01(index, seed_value + 78.233) * 0.78) + 0.8
+			var half_width_at_y := VesselGeometry.half_width_at(_profile, y) * 0.78
+			var x := (_hash01(index, seed_value + 12.9898) * 2.0 - 1.0) * half_width_at_y
+			var radius := 1.0 + _hash01(index, seed_value + 4.17) * 1.8
+			var grain := PackedVector2Array([
+				Vector2(x - radius, -y),
+				Vector2(x, -y - radius * 0.9),
+				Vector2(x + radius, -y),
+				Vector2(x, -y + radius * 0.65)
+			])
+			draw_colored_polygon(grain, grain_color.darkened(0.10))
+			draw_line(Vector2(x - radius * 0.45, -y - radius * 0.15),
+				Vector2(x, -y - radius * 0.78), Color(1.0, 1.0, 1.0, 0.38), 0.8, true)
 
 
 ## Heat shimmer and steam above the rim of a hot vessel.
