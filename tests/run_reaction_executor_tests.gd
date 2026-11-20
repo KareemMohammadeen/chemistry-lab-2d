@@ -216,7 +216,7 @@ func _find(sim: LabSimulation, equipment_id: String, chemical_id: String = "") -
 func _contains_observation(entries: Array, key: String) -> bool:
 	for entry in entries:
 		if typeof(entry) == TYPE_DICTIONARY and str((entry as Dictionary).get("key", "")) == key:
-			true
+			return true
 	return false
 
 
