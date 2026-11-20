@@ -48,7 +48,6 @@ func execute_step_reactions(vessel: VesselState, dt: float = 1.0, extra_heat_cap
 	var results: Array = []
 	if _db == null or vessel == null:
 		return results
-
 	for reaction_id in _enabled_reaction_ids():
 		var reaction := _db.reactions.get(reaction_id) as ReactionDefinition
 		if reaction == null or reaction.virtual_only or reaction.type == "visual_demo":
@@ -94,6 +93,22 @@ func run_visual_demo(vessel: VesselState, reaction_id: String) -> Dictionary:
 		"effect_id": reaction.visual_effect,
 		"virtual_only": true,
 	}
+
+
+func add_gas_product(vessel: VesselState, chemical_id: String, amount: float, ambient_pressure_kpa: float = VesselState.DEFAULT_AMBIENT_PRESSURE_KPA) -> bool:
+	if vessel == null or amount <= 0.0:
+		return false
+	var chemical := _db.get_chemical(chemical_id) if _db != null else null
+	if chemical == null or chemical.state != "gas" or not chemical.virtual_simulation_enabled:
+		return false
+	if vessel.free_volume_ml() <= VesselState.EPSILON:
+		return false
+	var projected_pressure := vessel.pressure_after_adding_gas(amount, ambient_pressure_kpa)
+	var pressure_limit := _db.constant("max_virtual_pressure_kpa", 300.0) if _db != null else 300.0
+	if not is_finite(projected_pressure) or projected_pressure > pressure_limit:
+		return false
+	vessel.add_gas(chemical_id, amount, ambient_pressure_kpa)
+	return true
 
 
 func _enabled_reaction_ids() -> Array[String]:
@@ -242,7 +257,7 @@ func _execute_visual_demo_reaction(reaction: ReactionDefinition, vessel: VesselS
 		result.status = ReactionResult.Status.NOT_MATCHED
 		result.message = "The visual demo has already been shown."
 		return result
-	var product := _db.get_chemical(reaction.product_solid_id)
+	var product := _db.get_chemical(reaction.product_solid_id) if _db != null else null
 	if product == null or product.state != "solid":
 		result.status = ReactionResult.Status.REJECTED
 		result.message = "The visual demo product is missing or invalid."
@@ -293,7 +308,7 @@ func _execute_generic_reaction(reaction: ReactionDefinition, vessel: VesselState
 	var capacity := maxf(ThermalProperties.contents_capacity_j_per_k(vessel, _db) + extra_heat_capacity_j_per_k, 0.0)
 	if capacity > 0.0 and is_finite(reaction.enthalpy_kj_per_mol) and absf(reaction.enthalpy_kj_per_mol) > 0.0:
 		vessel.temperature_c -= reaction.enthalpy_kj_per_mol * 1000.0 * extent / capacity
-		var pressure_limit := _db.constant("max_virtual_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA)
+		var pressure_limit := _db.constant("max_virtual_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA) if _db != null else VesselState.DEFAULT_AMBIENT_PRESSURE_KPA
 		vessel.temperature_c = minf(vessel.temperature_c, vessel.max_temperature_c_for_pressure_limit(pressure_limit))
 	result.temperature_delta_c = vessel.temperature_c - before_temperature
 	result.energy_kj = reaction.enthalpy_kj_per_mol * extent
@@ -333,7 +348,7 @@ func _execute_generic_reaction(reaction: ReactionDefinition, vessel: VesselState
 			"dissolved":
 				vessel.dissolved[chemical_id] = float(vessel.dissolved.get(chemical_id, 0.0)) + amount
 			"gas":
-				var ambient_pressure := _db.constant("ambient_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA)
+				var ambient_pressure := _db.constant("ambient_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA) if _db != null else VesselState.DEFAULT_AMBIENT_PRESSURE_KPA
 				vessel.add_gas(chemical_id, amount, ambient_pressure)
 
 	result.message = _reaction_message(reaction, extent)
@@ -387,7 +402,7 @@ func _reaction_progress(reaction: ReactionDefinition, vessel: VesselState, dt: f
 func _conditions_allow_reaction(reaction: ReactionDefinition, vessel: VesselState, result: ReactionResult) -> bool:
 	if reaction.conditions.is_empty():
 		return true
-	var ambient_pressure := _db.constant("ambient_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA)
+	var ambient_pressure := _db.constant("ambient_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA) if _db != null else VesselState.DEFAULT_AMBIENT_PRESSURE_KPA
 	var pressure_kpa := vessel.pressure_kpa(ambient_pressure)
 	var ph := AcidBase.compute_ph(vessel, _db)
 	for condition_value in reaction.conditions:
@@ -416,8 +431,7 @@ func _conditions_allow_reaction(reaction: ReactionDefinition, vessel: VesselStat
 					result.message = "The reaction requires an open system."
 					return false
 			"light":
-				# No dedicated lighting model exists yet; the virtual classroom treats ambient light as available.
-				if bool(condition.get("requires_light", false)) == false:
+				if bool(condition.get("value", true)) == false:
 					pass
 			"catalyst":
 				if not _has_any_chemical(vessel, str(condition.get("chemical_id", ""))):
@@ -567,7 +581,7 @@ func _participant_chemical_is_supported(participant: Dictionary) -> bool:
 	var chemical_id := str(participant.get("chemical_id", ""))
 	if chemical_id.is_empty():
 		return false
-	var chemical := _db.get_chemical(chemical_id)
+	var chemical := _db.get_chemical(chemical_id) if _db != null else null
 	return chemical != null and chemical.virtual_simulation_enabled
 
 
@@ -610,7 +624,7 @@ func _generic_products_fit(vessel: VesselState, reaction: ReactionDefinition, ex
 		if not PHASE_AMOUNT_UNITS.has(phase):
 			return false
 		var chemical_id := str(participant.get("chemical_id", ""))
-		var chemical := _db.get_chemical(chemical_id)
+		var chemical := _db.get_chemical(chemical_id) if _db != null else null
 		if chemical == null:
 			return false
 		var amount := float(participant.get("coefficient", 1.0)) * extent
@@ -634,8 +648,8 @@ func _generic_products_fit(vessel: VesselState, reaction: ReactionDefinition, ex
 	if total_gas > 0.0 and vessel.free_volume_ml() <= VesselState.EPSILON:
 		return false
 	if total_gas > 0.0:
-		var ambient_pressure := _db.constant("ambient_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA)
-		var pressure_limit := _db.constant("max_virtual_pressure_kpa", 300.0)
+		var ambient_pressure := _db.constant("ambient_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA) if _db != null else VesselState.DEFAULT_AMBIENT_PRESSURE_KPA
+		var pressure_limit := _db.constant("max_virtual_pressure_kpa", 300.0) if _db != null else 300.0
 		var projected_pressure := vessel.pressure_after_adding_gas(total_gas, ambient_pressure)
 		if not is_finite(projected_pressure) or projected_pressure > pressure_limit:
 			return false
@@ -652,95 +666,6 @@ func _append_result_observation(result: ReactionResult, vessel: VesselState, key
 	result.observations.append(entry.duplicate(true))
 	if not effect_id.is_empty():
 		result.effects.append({"effect_id": effect_id, "kind": kind, "intensity": 1.0, "source": key})
-
-
-func _reaction_message(reaction: ReactionDefinition, extent: float) -> String:
-	if reaction.observation("summary") != "":
-		return reaction.observation("summary")
-	if reaction.observation("completed") != "":
-		return reaction.observation("completed")
-	if extent > 0.0:
-		return "The registered reaction completed in the virtual model."
-	return ""
-
-
-func _reaction_quotient(reaction: ReactionDefinition, vessel: VesselState) -> float:
-	var products := 1.0
-	var reactants := 1.0
-	for participant_value in reaction.products:
-		if typeof(participant_value) != TYPE_DICTIONARY:
-			continue
-		var participant: Dictionary = participant_value
-		var amount := maxf(_participant_amount_on_vessel(participant, vessel), MIN_MOLES)
-		var coefficient := maxf(float(participant.get("coefficient", 1.0)), 1.0)
-		products *= pow(amount, 1.0 / coefficient)
-	for participant_value in reaction.reactants:
-		if typeof(participant_value) != TYPE_DICTIONARY:
-			continue
-		var participant: Dictionary = participant_value
-		var amount := maxf(_participant_amount_on_vessel(participant, vessel), MIN_MOLES)
-		var coefficient := maxf(float(participant.get("coefficient", 1.0)), 1.0)
-		reactants *= pow(amount, 1.0 / coefficient)
-	return products / maxf(reactants, MIN_MOLES)
-
-
-func _conditions_allow_reaction(reaction: ReactionDefinition, vessel: VesselState, result: ReactionResult) -> bool:
-	if reaction.conditions.is_empty():
-		return true
-	var ambient_pressure := _db.constant("ambient_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA)
-	var pressure_kpa := vessel.pressure_kpa(ambient_pressure)
-	var ph := AcidBase.compute_ph(vessel, _db)
-	for condition_value in reaction.conditions:
-		if typeof(condition_value) != TYPE_DICTIONARY:
-			continue
-		var condition: Dictionary = condition_value
-		var condition_type := str(condition.get("type", condition.get("kind", "")))
-		match condition_type:
-			"temperature":
-				if not _range_check(vessel.temperature_c, condition):
-					result.message = "The vessel temperature does not satisfy the reaction condition."
-					return false
-			"pressure":
-				if not _range_check(pressure_kpa, condition):
-					result.message = "The vessel pressure does not satisfy the reaction condition."
-					return false
-			"ph":
-				if not is_nan(ph) and not _range_check(ph, condition):
-					result.message = "The pH does not satisfy the reaction condition."
-					return false
-			"closed_system":
-				if bool(condition.get("value", true)) and not vessel.is_closed_system:
-					result.message = "The reaction requires a closed system."
-					return false
-				if not bool(condition.get("value", true)) and vessel.is_closed_system:
-					result.message = "The reaction requires an open system."
-					return false
-			"light":
-				if bool(condition.get("value", true)) == false:
-					pass
-			"catalyst":
-				if not _has_any_chemical(vessel, str(condition.get("chemical_id", ""))):
-					result.message = "The reaction requires its catalyst or promoter."
-					return false
-			_:
-				continue
-	return true
-
-
-func _range_check(value: float, condition: Dictionary) -> bool:
-	if condition.has("min") and value < float(condition.get("min", value)):
-		return false
-	if condition.has("max") and value > float(condition.get("max", value)):
-		return false
-	if condition.has("value"):
-		return is_equal_approx(value, float(condition.get("value", value)))
-	return true
-
-
-func _has_any_chemical(vessel: VesselState, chemical_id: String) -> bool:
-	if chemical_id.is_empty():
-		return true
-	return vessel.liquids.has(chemical_id) or vessel.solids.has(chemical_id) or vessel.dissolved.has(chemical_id) or vessel.gases.has(chemical_id)
 
 
 func _num(data: Dictionary, key: String, default_value: float) -> float:
