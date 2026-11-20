@@ -85,14 +85,13 @@ func _process(_delta: float) -> void:
 	if _host == null or lab_interface == null:
 		return
 	var rect := lab_interface.get_stage_rect()
-	if not rect.is_equal_approx(_last_stage_rect):
+	var local_rect := Rect2(Vector2.ZERO, rect.size)
+	if not local_rect.is_equal_approx(_last_stage_rect):
 		if _last_stage_rect.size.x <= 0.0:
-			workspace.fit_to_rect(rect)
+			workspace.fit_to_rect(local_rect)
 		else:
-			workspace.update_stage_rect(rect)
-		var stage_origin := lab_interface.stage_slot.get_global_rect().position
-		workspace.position -= stage_origin
-		_last_stage_rect = rect
+			workspace.update_stage_rect(local_rect)
+		_last_stage_rect = local_rect
 
 
 func _on_save_session_requested(path: String) -> void:
