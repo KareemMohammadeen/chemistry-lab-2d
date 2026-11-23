@@ -40,6 +40,7 @@ func _initialize() -> void:
 	_test_guided_experiment_progress()
 	_test_reaction_registry_and_matcher()
 	_test_save_load_session()
+	_test_simulation_clock()
 
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
 	quit(1 if _failures > 0 else 0)
@@ -496,6 +497,42 @@ func _test_save_load_session() -> void:
 
 
 # ---------------------------------------------------------------- helpers
+
+func _test_simulation_clock() -> void:
+	print("-- simulation clock and speed control")
+	var clock := SimulationClock.new()
+	clock.configure(0.1, 8)
+	_check(is_equal_approx(clock.speed, 1.0), "default speed is 1x")
+	_check(clock.advance(0.35) == 3, "1x: 0.35 s of real time gives 3 whole 0.1 s steps")
+	clock.set_speed(0.5)
+	var half_steps := 0
+	for _frame in range(10):
+		half_steps += clock.advance(0.1)
+	_check(half_steps == 5 or half_steps == 4, "0.5x: one real second runs about half the steps (%d)" % half_steps)
+	clock.set_speed(8.0)
+	_check(clock.advance(0.1) == 8, "8x: 0.1 s of real time gives 8 steps")
+	clock.set_speed(-3.0)
+	_check(is_equal_approx(clock.speed, 8.0), "a negative speed is ignored")
+	clock.set_speed(NAN)
+	_check(is_equal_approx(clock.speed, 8.0), "a NaN speed is ignored")
+	clock.set_speed(1000.0)
+	_check(is_equal_approx(clock.speed, SimulationClock.MAX_SPEED), "speed is clamped to the maximum")
+	var presets: Array = _host.database.constants.get("speeds", [])
+	_check(presets.size() >= 4 and float(presets.min()) < 1.0, "presets include a slow-motion speed")
+	clock.set_speed(1.0)
+	_check(is_equal_approx(clock.step_speed(1, presets), 2.0), "step up from 1x goes to 2x")
+	_check(is_equal_approx(clock.step_speed(-1, presets), 1.0), "step down from 2x goes to 1x")
+	clock.step_speed(-1, presets)
+	_check(clock.speed < 1.0, "step down from 1x reaches slow motion")
+	for _i in range(20):
+		clock.step_speed(-1, presets)
+	_check(is_equal_approx(clock.speed, float(presets.min())), "stepping down stops at the slowest preset")
+	for _i in range(20):
+		clock.step_speed(1, presets)
+	_check(is_equal_approx(clock.speed, float(presets.max())), "stepping up stops at the fastest preset")
+	clock.paused = true
+	_check(clock.advance(1.0) == 0, "a paused clock runs no steps")
+
 
 func _sim() -> LabSimulation:
 	return _host.simulation

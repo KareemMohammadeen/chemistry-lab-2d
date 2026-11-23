@@ -22,6 +22,9 @@ const SUPPORT_REACH_ABOVE := 70.0
 const SUPPORT_REACH_BELOW := 50.0
 const BENCH_EDGE_THICKNESS := 6.0
 const BENCH_SHADOW_PX := 46.0
+const EMPTY_PAN_THRESHOLD_PX := 10.0
+const KEY_PAN_STEP_PX := 60.0
+const KEY_ZOOM_FACTOR := 1.15
 const SHELF_SHADOW_PX := 40.0
 
 @export var view_scene: PackedScene
@@ -44,6 +47,15 @@ var _stage_rect: Rect2 = Rect2()
 var _base_zoom: float = 1.0
 var _zoom_factor: float = 1.0
 var _pan_active: bool = false
+## One-finger / left-button pan that starts on empty bench and only engages after a small move,
+## so a plain click still deselects. Touch screens emulate the left button, so this is also
+## the single-finger pan on tablets and phones.
+var _empty_pan_candidate: bool = false
+var _empty_pan_origin: Vector2 = Vector2.ZERO
+var _empty_pan_active: bool = false
+## Active touch points (index -> screen position) for two-finger pinch zoom and pan.
+var _touches: Dictionary = {}
+var _pinch_distance: float = 0.0
 var _flash_overlay: ColorRect
 var _flash_left_s: float = 0.0
 
@@ -234,36 +246,157 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _stage_rect.size.x <= 0.0:
 		return
 	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.button_index == MOUSE_BUTTON_MIDDLE:
-			if mouse_event.pressed and _stage_rect.has_point(mouse_event.position):
-				_pan_active = true
-				Input.set_default_cursor_shape(Input.CURSOR_MOVE)
-			elif not mouse_event.pressed:
-				_pan_active = false
+		_handle_mouse_button(event as InputEventMouseButton)
+	elif event is InputEventMouseMotion:
+		var motion := event as InputEventMouseMotion
+		if _pan_active:
+			pan_by_screen(motion.relative)
+			get_viewport().set_input_as_handled()
+		elif _empty_pan_candidate:
+			_update_empty_pan(motion)
+	elif event is InputEventScreenTouch:
+		_handle_screen_touch(event as InputEventScreenTouch)
+	elif event is InputEventScreenDrag:
+		_handle_screen_drag(event as InputEventScreenDrag)
+	elif event is InputEventMagnifyGesture:
+		var magnify := event as InputEventMagnifyGesture
+		if _stage_rect.has_point(magnify.position) and _drag_id == "":
+			zoom_at_screen(magnify.position, magnify.factor)
+			get_viewport().set_input_as_handled()
+	elif event is InputEventPanGesture:
+		var pan_gesture := event as InputEventPanGesture
+		if _drag_id == "":
+			pan_by_screen(-pan_gesture.delta * 8.0)
+			get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(InputActions.VIEW_RESET):
+		reset_view()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(InputActions.VIEW_ZOOM_IN, true):
+		zoom_by(KEY_ZOOM_FACTOR)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(InputActions.VIEW_ZOOM_OUT, true):
+		zoom_by(1.0 / KEY_ZOOM_FACTOR)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(InputActions.VIEW_PAN_LEFT, true):
+		_pan_with_key(Vector2(KEY_PAN_STEP_PX, 0.0))
+	elif event.is_action_pressed(InputActions.VIEW_PAN_RIGHT, true):
+		_pan_with_key(Vector2(-KEY_PAN_STEP_PX, 0.0))
+	elif event.is_action_pressed(InputActions.VIEW_PAN_UP, true):
+		_pan_with_key(Vector2(0.0, KEY_PAN_STEP_PX))
+	elif event.is_action_pressed(InputActions.VIEW_PAN_DOWN, true):
+		_pan_with_key(Vector2(0.0, -KEY_PAN_STEP_PX))
+
+
+## A lost focus can swallow touch-release events; forget stale fingers so panning never sticks.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		_touches.clear()
+		_pinch_distance = 0.0
+		_empty_pan_candidate = false
+		_empty_pan_active = false
+		_pan_active = false
+
+
+## Moves the view by a screen-space delta (pixels), independent of the current zoom.
+func pan_by_screen(screen_delta: Vector2) -> void:
+	position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta)
+	queue_redraw()
+
+
+func _pan_with_key(screen_delta: Vector2) -> void:
+	pan_by_screen(screen_delta)
+	get_viewport().set_input_as_handled()
+
+
+func _handle_mouse_button(mouse_event: InputEventMouseButton) -> void:
+	if mouse_event.button_index == MOUSE_BUTTON_MIDDLE:
+		if mouse_event.pressed and _stage_rect.has_point(mouse_event.position):
+			_pan_active = true
+			Input.set_default_cursor_shape(Input.CURSOR_MOVE)
+		elif not mouse_event.pressed:
+			_pan_active = false
+			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+			get_viewport().set_input_as_handled()
+		if _pan_active:
+			get_viewport().set_input_as_handled()
+		return
+	if mouse_event.button_index == MOUSE_BUTTON_LEFT:
+		if mouse_event.pressed:
+			# Unhandled, so the press did not land on a panel. Empty bench starts a pan candidate;
+			# the event is not consumed, so the controller still deselects on a plain click.
+			_empty_pan_candidate = _touches.size() < 2 and _stage_rect.has_point(mouse_event.position) \
+				and _host != null and _host.simulation != null \
+				and object_id_at(get_local_mouse_position()) == ""
+			_empty_pan_origin = mouse_event.position
+			_empty_pan_active = false
+		else:
+			var was_panning := _empty_pan_active
+			_empty_pan_candidate = false
+			_empty_pan_active = false
+			if was_panning:
 				Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 				get_viewport().set_input_as_handled()
-			if _pan_active:
-				get_viewport().set_input_as_handled()
-			return
-		if mouse_event.pressed and _stage_rect.has_point(mouse_event.position):
-			if mouse_event.button_index == MOUSE_BUTTON_WHEEL_UP:
-				zoom_at_screen(mouse_event.position, 1.12)
-				get_viewport().set_input_as_handled()
-			elif mouse_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-				zoom_at_screen(mouse_event.position, 1.0 / 1.12)
-				get_viewport().set_input_as_handled()
-	elif event is InputEventMouseMotion and _pan_active:
-		var motion := event as InputEventMouseMotion
-		var screen_delta := motion.relative
-		position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta)
-		queue_redraw()
-		get_viewport().set_input_as_handled()
-	elif event is InputEventKey:
-		var key_event := event as InputEventKey
-		if key_event.pressed and not key_event.echo and key_event.keycode == KEY_HOME:
-			reset_view()
+		return
+	if mouse_event.pressed and _stage_rect.has_point(mouse_event.position):
+		if mouse_event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			zoom_at_screen(mouse_event.position, 1.12)
 			get_viewport().set_input_as_handled()
+		elif mouse_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			zoom_at_screen(mouse_event.position, 1.0 / 1.12)
+			get_viewport().set_input_as_handled()
+
+
+func _update_empty_pan(motion: InputEventMouseMotion) -> void:
+	if _touches.size() >= 2 or _drag_id != "":
+		_empty_pan_candidate = false
+		_empty_pan_active = false
+		return
+	if not _empty_pan_active:
+		if motion.position.distance_to(_empty_pan_origin) < EMPTY_PAN_THRESHOLD_PX:
+			return
+		_empty_pan_active = true
+		Input.set_default_cursor_shape(Input.CURSOR_MOVE)
+	pan_by_screen(motion.relative)
+	get_viewport().set_input_as_handled()
+
+
+func _handle_screen_touch(touch: InputEventScreenTouch) -> void:
+	if touch.pressed:
+		_touches[touch.index] = touch.position
+	else:
+		_touches.erase(touch.index)
+	_pinch_distance = _touch_distance()
+	if _touches.size() >= 2:
+		# A second finger turns the gesture into pinch/pan; drop any one-finger pan state.
+		_empty_pan_candidate = false
+		_empty_pan_active = false
+
+
+func _handle_screen_drag(drag: InputEventScreenDrag) -> void:
+	if not _touches.has(drag.index):
+		return
+	_touches[drag.index] = drag.position
+	if _touches.size() != 2 or _drag_id != "":
+		return
+	var distance := _touch_distance()
+	var center := _touch_center()
+	if _pinch_distance > 1.0 and distance > 1.0:
+		zoom_at_screen(center, distance / _pinch_distance)
+	pan_by_screen(drag.relative * 0.5)
+	_pinch_distance = distance
+	get_viewport().set_input_as_handled()
+
+
+func _touch_distance() -> float:
+	if _touches.size() < 2:
+		return 0.0
+	var points: Array = _touches.values()
+	return (points[0] as Vector2).distance_to(points[1] as Vector2)
+
+
+func _touch_center() -> Vector2:
+	var points: Array = _touches.values()
+	return ((points[0] as Vector2) + (points[1] as Vector2)) * 0.5
 
 
 ## Adds a compact read-only element specimen under the workbench transform so it pans and zooms with the lab.

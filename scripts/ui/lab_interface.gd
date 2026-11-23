@@ -32,7 +32,7 @@ const INSPECTOR_WIDTH_FRACTION := 0.20
 const INSPECTOR_WIDTH_MIN := 300.0
 const INSPECTOR_WIDTH_MAX := 370.0
 const LIBRARY_OPEN_MIN_WIDTH := 1120.0
-const SPEED_BUTTON_WIDTH := 48.0
+const SPEED_BUTTON_WIDTH := 44.0
 const SPECIMEN_MARGIN := 18.0
 const SPECIMEN_CELL := Vector2(342.0, 154.0)
 const MENU_SAVE := 10
@@ -58,6 +58,7 @@ const MENU_SOUND := 13
 @export var hint_label: Label
 
 var _host: SimulationHost
+var _speed_buttons: Dictionary = {}
 var _toast_left_s: float = 0.0
 var _info_style: StyleBoxFlat
 var _warning_style: StyleBoxFlat
@@ -152,6 +153,8 @@ func _process(delta: float) -> void:
 	undo_button.disabled = not _host.commands.can_undo()
 	redo_button.disabled = not _host.commands.can_redo()
 	pause_button.set_pressed_no_signal(_host.clock.paused)
+	for speed_button in _speed_buttons:
+		(speed_button as Button).set_pressed_no_signal(is_equal_approx(float(_speed_buttons[speed_button]), _host.clock.speed))
 	pause_button.icon = _play_icon if _host.clock.paused else _pause_icon
 	pause_button.text = "Resume" if _host.clock.paused else "Pause"
 	var time_text := UnitFormat.time_mmss(_host.simulation.state.time_s)
@@ -183,6 +186,7 @@ func _on_library_toggled(pressed: bool) -> void:
 
 
 func _build_speed_buttons(speeds: Array) -> void:
+	_speed_buttons.clear()
 	var group := ButtonGroup.new()
 	for entry in speeds:
 		var speed := float(entry)
@@ -197,6 +201,7 @@ func _build_speed_buttons(speeds: Array) -> void:
 		button.button_pressed = is_equal_approx(speed, _host.clock.speed)
 		button.pressed.connect(func() -> void: speed_selected.emit(speed))
 		speed_box.add_child(button)
+		_speed_buttons[button] = speed
 
 
 func _on_periodic_element_dropped(element_data: Dictionary, drop_position: Vector2) -> void:

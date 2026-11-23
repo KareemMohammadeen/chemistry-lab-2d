@@ -42,7 +42,7 @@ Exit code 0 means all checks passed.
 - [ ] Drag the beaker onto the hot plate, select the plate, Switch on; temperature rises; "HOT" label appears above 60 degC.
 - [ ] Put the thermometer into the beaker (drop it on the beaker); it follows the beaker when moved and reads its temperature.
 - [ ] Pour acid and base into the flask: pH about 7 and a small warming.
-- [ ] Ctrl+Z / Ctrl+Y and the buttons; Reset bench; Space pauses; 2x and 4x speed.
+- [ ] Ctrl+Z / Ctrl+Y and the buttons; Reset bench; Space pauses; 0.25x, 0.5x, 2x, 4x and 8x speed; `[`, `]` and `\` change speed and the top-bar buttons follow.
 - [ ] Resize the window (16:9 and 4:3): the workbench remains usable and the Inspector stays readable.
 - [ ] Open **Session**: Save an experiment, change the bench, then reopen the saved file; check positions, contents, temperatures and observations are restored.
 - [ ] Open **Experiment Log**: confirm accepted and refused commands plus chemistry observations appear in time order.
@@ -75,3 +75,9 @@ the expected scientific/safety and Ministry source catalogue.
 - Senior 1: Integrated Science is confirmed by the Ministry statement dated 2026-09-01.
 - Senior 2: do not infer one chemistry map without selecting General Secondary or the Egyptian Baccalaureate pathway.
 - The application currently labels the selected grade and evidence status; lesson-level mapping remains pending until the exact official books are reviewed.
+
+## Touch and view navigation (manual)
+- [ ] Drag empty bench with the left mouse button: the view pans; a plain click still deselects.
+- [ ] Touch device: one finger on empty bench pans, two fingers pinch-zoom and pan, one finger on an object still drags it.
+- [ ] Arrow keys pan, + / - zoom, Home resets the view. Trackpad pinch and two-finger scroll work.
+- [ ] Top bar still fits at the minimum window size with the six speed buttons.

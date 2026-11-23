@@ -30,10 +30,11 @@ The rebuilt **Studio Workbench** uses a compact command header, a left materials
 | Add equipment or reagents | Drag an equipment card to spawn it; drag water / table salt onto a vessel to add it |
 | Pour with the Inspector | Select a vessel, press **Pour**, click the target vessel |
 | Mix | Select a vessel containing liquid and press **Mix** in the Inspector |
-| Pan / zoom | Middle-mouse drag / wheel; use −, +, Center or Home for view controls |
+| Pan / zoom | Middle-mouse drag, or drag empty bench with the left button / one finger; wheel, two-finger pinch/pan or trackpad gestures; arrow keys, + / − and Home; or the −, +, Center buttons |
 | Undo / redo | Ctrl+Z / Ctrl+Y or the top bar |
 | Deselect / cancel | Esc |
-| Pause simulated time | Space or the top bar (speeds 1x, 2x, 4x) |
+| Pause simulated time | Space or the top bar |
+| Simulation speed | Top bar presets 0.25x to 8x; `[` slower, `]` faster, `\` back to 1x |
 
 Every refused action shows its reason at the bottom of the screen. Object creation and reagent additions are undoable commands. The classroom Library includes water and sodium chloride plus a separately enabled, software-only carbon-dioxide gas sample; the 118 periodic-table entries remain visual references.
 

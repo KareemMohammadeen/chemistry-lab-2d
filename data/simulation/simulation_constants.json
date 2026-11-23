@@ -5,9 +5,12 @@
     "fixed_step_s": 0.1,
     "max_steps_per_frame": 8,
     "speeds": [
+      0.25,
+      0.5,
       1,
       2,
-      4
+      4,
+      8
     ],
     "specific_heat_water_j_per_g_k": 4.184,
     "specific_heat_glass_j_per_g_k": 0.84,
