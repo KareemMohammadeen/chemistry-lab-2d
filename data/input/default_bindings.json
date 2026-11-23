@@ -38,6 +38,104 @@
           "key": "Space"
         }
       ]
+    },
+    "speed_up": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "BracketRight"
+        }
+      ]
+    },
+    "speed_down": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "BracketLeft"
+        }
+      ]
+    },
+    "speed_normal": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Backslash"
+        }
+      ]
+    },
+    "view_zoom_in": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Equal"
+        },
+        {
+          "type": "key",
+          "key": "KP_Add"
+        }
+      ]
+    },
+    "view_zoom_out": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Minus"
+        },
+        {
+          "type": "key",
+          "key": "KP_Subtract"
+        }
+      ]
+    },
+    "view_reset": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Home"
+        }
+      ]
+    },
+    "view_pan_left": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Left"
+        }
+      ]
+    },
+    "view_pan_right": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Right"
+        }
+      ]
+    },
+    "view_pan_up": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Up"
+        }
+      ]
+    },
+    "view_pan_down": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "Down"
+        }
+      ]
     }
   }
 }

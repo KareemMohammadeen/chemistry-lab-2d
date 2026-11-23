@@ -34,7 +34,7 @@
 - `LabState` / `LabObject` / `VesselState`: the serialisable truth. A vessel is a ledger: millilitres per liquid id,
   grams per solid id, grams dissolved per id. pH and colour are derived, never stored.
 - `LabSimulation`: spawns objects from a setup, steps the world, snapshots/restores state, forwards observations.
-- `SimulationHost` (Node): the only thing that advances time (fixed step 0.1 s, speed 1x/2x/4x, pause).
+- `SimulationHost` (Node): the only thing that advances time (fixed step 0.1 s, speed presets 0.25x–8x from `simulation_constants.json`, pause).
 - `CommandStack`: executes `LabCommand`s; every attempt (also refused ones) is logged with a reason. Undo and redo
   restore full snapshots (chemistry is not reversible by inverse operations). The log is the base for replay and reports.
 - `ReactionEngine`: the per-step chemistry authority. It drives enabled continuous reactions from the registry and currently handles

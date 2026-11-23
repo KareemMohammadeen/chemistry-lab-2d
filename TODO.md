@@ -33,7 +33,7 @@ Status:
 - [ ] Add graduated cylinder, burette, funnel and filter-paper/filter assembly with validated interactions.
 - [ ] Add pH indicator and pH meter readouts with clear model precision/limitations.
 - [ ] Review the need for watch glass, crucible and other school-level accessories; add only with a defined safe educational use.
-- [ ] Add right-click context actions, double-click shortcuts and touch support (tap, long-press and tap-and-drag).
+- [ ] Add right-click context actions and double-click shortcuts. (Touch pan/pinch and drag are implemented; long-press is not.)
 - [ ] Ensure every apparatus has data-driven properties, supported interactions, an Inspector view and regression tests.
 
 ## P3 — Guided learning, classroom roles and assessment workflow

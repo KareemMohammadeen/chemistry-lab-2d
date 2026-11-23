@@ -1,3 +1,9 @@
+## Speed control and navigation (2026-11-23) - awaiting Godot verification
+- Speed control: added slow-motion presets (0.25x, 0.5x) and 8x; `SimulationClock.set_speed` clamps and rejects invalid values; `[` / `]` / `\` shortcuts; top-bar buttons follow the active speed.
+- Navigation: empty-bench drag pan, two-finger pinch/pan, trackpad gestures, keyboard pan/zoom; bindings are data-driven in `data/input/default_bindings.json`.
+- Tests: clock/speed scenarios in `tests/run_simulation_tests.gd`; `validate_project.py` now checks input bindings, speed presets, setup equipment ids and `res://` paths; `validate_teacher_demo.py` accepts the sucrose guided activity.
+- Not yet verified in the Godot editor or headless runner.
+
 ## Reaction Engine V3 foundation (2026-11-16) - awaiting Godot verification
 - Added a versioned, explicit reaction registry outside the legacy reaction-definition directory; registry entries validate reaction IDs, handler/type mappings, enable flags and virtual-only scope.
 - Added a read-only matcher for approved chemical participants and phase-aware vessel ledgers, including bounded virtual quantity requirements and temperature comparisons.

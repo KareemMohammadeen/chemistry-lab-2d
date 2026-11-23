@@ -80,7 +80,7 @@ def main() -> int:
     guided = read_json(ROOT / "data/learning/guided_experiments.json")
     assert guided.get("safety_scope") == "virtual_only_classroom_model"
     allowed_commands = {"pour", "add_solid", "mix"}
-    allowed_materials = {"water", "sodium_chloride"}
+    allowed_materials = {"water", "sodium_chloride", "sucrose"}
     allowed_vessels = {"beaker_250ml", "erlenmeyer_flask_250ml", "test_tube_20ml"}
     assert guided.get("experiments"), "Guided experiment list must not be empty"
     for activity in guided["experiments"]:

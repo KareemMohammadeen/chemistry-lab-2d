@@ -58,6 +58,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		_select("")
 	elif event.is_action_pressed(InputActions.TOGGLE_PAUSE):
 		_on_pause_toggled(not _host.clock.paused)
+	elif event.is_action_pressed(InputActions.SPEED_UP):
+		_step_speed(1)
+	elif event.is_action_pressed(InputActions.SPEED_DOWN):
+		_step_speed(-1)
+	elif event.is_action_pressed(InputActions.SPEED_NORMAL):
+		_on_speed_selected(SimulationClock.NORMAL_SPEED)
 
 
 func _process(_delta: float) -> void:
@@ -438,7 +444,14 @@ func _on_pause_toggled(paused: bool) -> void:
 
 
 func _on_speed_selected(speed: float) -> void:
-	_host.clock.speed = speed
+	_host.clock.set_speed(speed)
+	_say("Simulation speed: %gx" % _host.clock.speed, &"info")
+
+
+func _step_speed(direction: int) -> void:
+	var presets: Array = _host.database.constants.get("speeds", [SimulationClock.NORMAL_SPEED])
+	_host.clock.step_speed(direction, presets)
+	_say("Simulation speed: %gx" % _host.clock.speed, &"info")
 
 
 # ---------------------------------------------------------------- helpers
