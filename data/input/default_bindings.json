@@ -136,6 +136,35 @@
           "key": "Down"
         }
       ]
+    },
+    "toggle_library": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "L"
+        }
+      ]
+    },
+    "save_session": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "S",
+          "ctrl": true
+        }
+      ]
+    },
+    "open_session": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "O",
+          "ctrl": true
+        }
+      ]
     }
   }
 }

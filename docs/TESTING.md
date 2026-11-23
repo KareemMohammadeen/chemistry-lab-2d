@@ -81,3 +81,10 @@ the expected scientific/safety and Ministry source catalogue.
 - [ ] Touch device: one finger on empty bench pans, two fingers pinch-zoom and pan, one finger on an object still drags it.
 - [ ] Arrow keys pan, + / - zoom, Home resets the view. Trackpad pinch and two-finger scroll work.
 - [ ] Top bar still fits at the minimum window size with the six speed buttons.
+
+## Layering and desktop layout (manual)
+- [ ] Drop a beaker from the Library near each corner of the stage: it appears where released, stays after the drop, and is selectable.
+- [ ] Pan far away and drop items; they stay visible above the grid. Items never render over the Library, Inspector or top bar.
+- [ ] Click and drag over the header, side margins and status bar: nothing on the bench can be picked from there.
+- [ ] Resize from 960x540 up to 2560x1440: the top bar never overflows; icon-only buttons keep tooltips.
+- [ ] L toggles the Library, Ctrl+S / Ctrl+O open the save / open dialogs.

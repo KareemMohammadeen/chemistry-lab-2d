@@ -63,11 +63,11 @@ func _gui_input(event: InputEvent) -> void:
 		if mouse_event.pressed and parent_item != null:
 			_drag_offset = _parent_pointer_position(parent_item) - position
 			_dragging = true
-			z_index = 1800
+			z_index = LabWorkspace.SPECIMEN_DRAG_Z
 			accept_event()
 		elif not mouse_event.pressed:
 			_dragging = false
-			z_index = 1200
+			z_index = LabWorkspace.SPECIMEN_Z
 			accept_event()
 
 
@@ -82,7 +82,7 @@ func _process(_delta: float) -> void:
 		position = _parent_pointer_position(parent_item) - _drag_offset
 	else:
 		_dragging = false
-		z_index = 1200
+		z_index = LabWorkspace.SPECIMEN_Z
 
 
 func _parent_pointer_position(parent_item: CanvasItem) -> Vector2:

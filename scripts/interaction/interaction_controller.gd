@@ -44,6 +44,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _host == null:
 		return
 	if event is InputEventMouseButton and event.pressed:
+		if _is_over_interface():
+			return
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_on_press(_pointer_position())
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
@@ -93,10 +95,15 @@ func _pointer_position() -> Vector2:
 	return _workspace.get_local_mouse_position()
 
 
-## True when the pointer is over a panel. The panels live in screen coordinates while `pointer`
-## is in laboratory pixels (the stage is scaled to fit), so the screen position is used here.
+## True when the pointer is NOT over the visible stage, or is over a panel. Only the stage
+## responds to the pointer: anything outside it (margins, header, status bar, objects hidden
+## behind a panel) must never be picked, dragged or dropped on. The panels live in screen
+## coordinates while `pointer` is in laboratory pixels (the stage is scaled to fit), so the
+## screen position is used here.
 func _is_over_interface() -> bool:
 	var screen_point := _workspace.get_viewport().get_mouse_position()
+	if not _interface.get_stage_rect().has_point(screen_point):
+		return true
 	for rect in _interface.get_blocking_rects():
 		if (rect as Rect2).has_point(screen_point):
 			return true
@@ -175,7 +182,7 @@ func _finish_drag(pointer: Vector2) -> void:
 	_workspace.end_drag(dragged_id)
 	if _is_over_interface():
 		_host.simulation.release_held()
-		_say("Drop objects on the shelves or the bench.", &"warning")
+		_say("Drop objects on the workbench.", &"warning")
 		return
 	var plan := _plan_drop(dragged_id, pointer, pointer + _grab_offset)
 	if plan["command"] == null:

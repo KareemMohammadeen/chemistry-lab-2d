@@ -1,3 +1,11 @@
+## Workspace layering, input gating and desktop UI (2026-11-23) - awaiting Godot verification
+- Root cause of invisible/ghost objects: `main.tscn` gave the workspace `z_index = -1000`, then `main.gd` moved it into the clipped stage slot of the UI tree. Equipment was depth-sorted with `z = int(position.y)`, so every object with y < 1000 (and the bench backdrop itself) was drawn *behind* the opaque stage-frame panel, while the controller still hit-tested it. Items only showed while dragged (z 1500) and vanished on drop; element tokens (Controls) stayed clickable while hidden.
+- Layering: workspace z values are now explicit (`VIEW_Z_BASE`/`VIEW_Z_SPAN`, specimens, drag, effects), clamped so far-away objects stay valid (Godot rejects |z| > 4096), the scene no longer sets a negative z, and stage overlays (toast, hint, pinned references, welcome overlay) sit above the workspace.
+- Coordinates: the stage rect is now kept in screen space everywhere (it was passed as a 0-based local rect, which broke wheel/pan gating, zoom centre, background coverage and the flash overlay). Moving the slot moves the workspace automatically, so the old position compensation was removed.
+- Input: only the visible stage responds to the pointer; presses, hover, drops and `object_id_at` reject anything outside it (panels, header, margins, scrolled-off objects).
+- Desktop UI: the top bar sheds optional content level by level (app label, text labels, curriculum chip, title, brand) until it fits, so it no longer overflows small windows with the six speed buttons; shortcuts L (Library), Ctrl+S / Ctrl+O (save / open); shorter hint text.
+- Validation: `validate_project.py` checks z ordering/ranges and the absence of a negative workspace z.
+
 ## Speed control and navigation (2026-11-23) - awaiting Godot verification
 - Speed control: added slow-motion presets (0.25x, 0.5x) and 8x; `SimulationClock.set_speed` clamps and rejects invalid values; `[` / `]` / `\` shortcuts; top-bar buttons follow the active speed.
 - Navigation: empty-bench drag pan, two-finger pinch/pan, trackpad gestures, keyboard pan/zoom; bindings are data-driven in `data/input/default_bindings.json`.

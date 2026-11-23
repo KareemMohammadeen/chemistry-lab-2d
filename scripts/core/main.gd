@@ -67,6 +67,7 @@ func _ready() -> void:
 func _show_welcome_overlay() -> void:
 	_welcome_overlay = WELCOME_OVERLAY_SCRIPT.new() as WelcomeOverlay
 	_welcome_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_welcome_overlay.z_index = 4000
 	_welcome_overlay.mode_selected.connect(_on_welcome_mode_selected)
 	lab_interface.add_child(_welcome_overlay)
 
@@ -81,17 +82,17 @@ func _on_welcome_mode_selected(mode: String) -> void:
 
 ## The laboratory is scaled and centred inside the stage slot between the side panels. Done
 ## here, once the layout has settled, because container sizes are only known after a frame.
+## The stage rect is passed in screen coordinates; the workspace is a child of the stage slot.
 func _process(_delta: float) -> void:
 	if _host == null or lab_interface == null:
 		return
 	var rect := lab_interface.get_stage_rect()
-	var local_rect := Rect2(Vector2.ZERO, rect.size)
-	if not local_rect.is_equal_approx(_last_stage_rect):
+	if not rect.is_equal_approx(_last_stage_rect):
 		if _last_stage_rect.size.x <= 0.0:
-			workspace.fit_to_rect(local_rect)
+			workspace.fit_to_rect(rect)
 		else:
-			workspace.update_stage_rect(local_rect)
-		_last_stage_rect = local_rect
+			workspace.update_stage_rect(rect)
+		_last_stage_rect = rect
 
 
 func _on_save_session_requested(path: String) -> void:

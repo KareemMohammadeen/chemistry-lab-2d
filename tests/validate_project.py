@@ -69,6 +69,29 @@ def check_resource_paths() -> list[str]:
     return errors
 
 
+def check_workspace_layering() -> list[str]:
+    """The workspace lives inside the UI tree, so its z values must be ordered and in range.
+
+    Equipment must stay above the backdrop (z 0) however far from the origin it is, drag and
+    effects above equipment, and everything inside Godot's +-4096 z limit.
+    """
+    source = (ROOT / "scripts/ui/lab_workspace.gd").read_text(encoding="utf-8")
+    z = {n: int(v) for n, v in re.findall(r"^const (\w*Z\w*|VIEW_Z_SPAN) := (-?\d+)", source, re.M)}
+    errors: list[str] = []
+    needed = ["VIEW_Z_BASE", "VIEW_Z_SPAN", "SPECIMEN_Z", "SPECIMEN_DRAG_Z", "DRAG_Z"]
+    missing = [n for n in needed if n not in z]
+    if missing:
+        return [f"lab_workspace.gd is missing z constants: {missing}"]
+    if z["VIEW_Z_BASE"] - z["VIEW_Z_SPAN"] <= 0:
+        errors.append("equipment z range must stay above the backdrop (z 0)")
+    if not z["VIEW_Z_BASE"] + z["VIEW_Z_SPAN"] + 2 < z["SPECIMEN_Z"] < z["SPECIMEN_DRAG_Z"] < z["DRAG_Z"] < 2000:
+        errors.append("z order must be equipment < specimens < dragged specimen < dragged equipment < effects (2000)")
+    scene = (ROOT / "scenes/main.tscn").read_text(encoding="utf-8")
+    if re.search(r'instance=ExtResource\("2"\)\]\s*\nz_index = -', scene):
+        errors.append("main.tscn must not give the workspace a negative z_index (it hides the bench behind the stage frame)")
+    return errors
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -84,6 +107,7 @@ def main() -> int:
     errors.extend(check_speed_presets())
     errors.extend(check_setups())
     errors.extend(check_resource_paths())
+    errors.extend(check_workspace_layering())
 
     if errors:
         for error in errors:

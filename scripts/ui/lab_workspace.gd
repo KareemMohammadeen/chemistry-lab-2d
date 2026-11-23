@@ -4,7 +4,17 @@ extends Node2D
 ## EquipmentView per simulated object, and answers "what is under the pointer?" for the
 ## interaction controller. It displays the simulation and never changes it.
 
-const DRAG_Z := 1500
+## Depth layering inside the workspace. The workspace lives inside the clipped stage slot of the UI
+## tree, so its z values are compared with every other canvas item. The backdrop is drawn at z 0
+## (above the stage frame's panel, which is drawn earlier in the tree); equipment sits in
+## [VIEW_Z_BASE - VIEW_Z_SPAN, VIEW_Z_BASE + VIEW_Z_SPAN] so it is always above the backdrop,
+## however far from the origin it is; drag/reference/effects stay above that. The y-to-z
+## mapping is clamped because Godot rejects z_index values outside +-4096.
+const VIEW_Z_BASE := 1000
+const VIEW_Z_SPAN := 800
+const SPECIMEN_Z := 1850
+const SPECIMEN_DRAG_Z := 1940
+const DRAG_Z := 1950
 const WALL_TILE_PX := 110.0
 const BENCH_GRID_SPACING := 80.0
 const SHELF_THICKNESS := 14.0
@@ -135,7 +145,7 @@ func _z_for(sim: LabSimulation, item: LabObject) -> int:
 		var host_item := sim.state.get_object(host_id)
 		if host_item != null:
 			return _z_for(sim, host_item) + 1
-	return int(item.position.y)
+	return VIEW_Z_BASE + clampi(int(item.position.y), -VIEW_Z_SPAN, VIEW_Z_SPAN)
 
 
 # ---------------------------------------------------------------- queries
@@ -144,6 +154,8 @@ func _z_for(sim: LabSimulation, item: LabObject) -> int:
 ## the caller is looking for a drop target: inserted items (a thermometer in a beaker) are
 ## skipped so that the vessel itself can be targeted.
 func object_id_at(point: Vector2, exclude_id: String = "") -> String:
+	if not is_point_on_stage(point):
+		return ""
 	var hits: Array = []
 	for object_id in _views.keys():
 		var view: EquipmentView = _views[object_id]
@@ -160,6 +172,14 @@ func object_id_at(point: Vector2, exclude_id: String = "") -> String:
 			if item != null and item.inserted_in == "":
 				return (candidate as EquipmentView).object_id
 	return (hits[0] as EquipmentView).object_id
+
+
+## True when a laboratory-pixel point is inside the visible stage. Anything outside it (under a
+## panel, behind the header, scrolled off screen) is not clickable, whatever its visibility.
+func is_point_on_stage(point: Vector2) -> bool:
+	if _stage_rect.size.x <= 0.0:
+		return false
+	return _stage_rect.has_point(get_global_transform_with_canvas() * point)
 
 
 ## The appliance (hot plate) whose top the dragged object's base point is over, or "".
@@ -189,6 +209,8 @@ func support_target_at(source_id: String, base_point: Vector2) -> String:
 
 ## Fits the starting lab coordinate area into the stage once, then the operator can pan/zoom
 ## freely. The original canvas only defines the starting camera view, not a placement boundary.
+## `rect` is the visible stage in SCREEN (canvas) coordinates. The workspace is a child of the stage
+## slot, so its own `position` is relative to the slot's top-left corner.
 func fit_to_rect(rect: Rect2) -> void:
 	if _host == null or _host.database == null or rect.size.x <= 0.0 or rect.size.y <= 0.0:
 		return
@@ -197,7 +219,7 @@ func fit_to_rect(rect: Rect2) -> void:
 	_base_zoom = maxf(minf(rect.size.x / canvas.x, rect.size.y / canvas.y), 0.01)
 	_zoom_factor = 1.0
 	scale = Vector2.ONE * _base_zoom
-	position = rect.position + (rect.size - canvas * _base_zoom) * 0.5
+	position = (rect.size - canvas * _base_zoom) * 0.5
 	view_changed.emit(100)
 	queue_redraw()
 
@@ -206,12 +228,11 @@ func screen_to_workspace(screen_position: Vector2) -> Vector2:
 	return get_global_transform_with_canvas().affine_inverse() * screen_position
 
 
+## Called whenever the stage moves or is resized. Moving the slot already moves the workspace (it is
+## its child), so only the screen-space rect used for clipping, hit tests and drawing is refreshed.
 func update_stage_rect(rect: Rect2) -> void:
 	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
 		return
-	if _stage_rect.size.x > 0.0:
-		var screen_delta := rect.position - _stage_rect.position
-		position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta)
 	_stage_rect = rect
 	queue_redraw()
 
@@ -407,7 +428,7 @@ func add_reference_sample(payload: Dictionary, screen_position: Vector2) -> void
 	specimen.setup(payload)
 	add_child(specimen)
 	specimen.position = screen_to_workspace(screen_position) - specimen.size * 0.5
-	specimen.z_index = 1200
+	specimen.z_index = SPECIMEN_Z
 
 
 func _on_observation_added(_object_id: String, entry: Dictionary) -> void:
