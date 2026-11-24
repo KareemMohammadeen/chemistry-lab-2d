@@ -32,6 +32,7 @@ const STAGE_OVERLAY_Z := 3500
 const TOPBAR_MARGIN_PX := 36.0
 const TOPBAR_MAX_LEVEL := 4
 const TOPBAR_COMPACT_BUTTON_PX := 44.0
+const STAGE_MAX_LEVEL := 3
 const ICON_PATH := "res://assets/icons/%s.svg"
 const LIBRARY_WIDTH_FRACTION := 0.18
 const LIBRARY_WIDTH_MIN := 268.0
@@ -132,7 +133,7 @@ func _ready() -> void:
 
 func bind(host: SimulationHost) -> void:
 	_host = host
-	title_label.text = "WORKBENCH  /  CHEMISTRY LAB"
+	title_label.text = "WORKBENCH"
 	inspector.bind(host)
 	library.bind(host)
 	_curriculum_catalog = CurriculumCatalog.new()
@@ -199,6 +200,7 @@ func _apply_responsive_layout() -> void:
 	if width <= 0.0:
 		return
 	_apply_topbar_density()
+	call_deferred("_apply_stage_density")
 	library.custom_minimum_size.x = clampf(width * LIBRARY_WIDTH_FRACTION, LIBRARY_WIDTH_MIN, LIBRARY_WIDTH_MAX)
 	inspector.custom_minimum_size.x = clampf(width * INSPECTOR_WIDTH_FRACTION, INSPECTOR_WIDTH_MIN, INSPECTOR_WIDTH_MAX)
 	if not _library_user_choice:
@@ -216,6 +218,29 @@ func _apply_topbar_density() -> void:
 	for level in range(TOPBAR_MAX_LEVEL + 1):
 		_set_topbar_level(level)
 		if row.get_combined_minimum_size().x <= available:
+			return
+
+
+## The stage header (title, zoom controls, drop hint) and the side panels shed content until the
+## whole interface fits the window width, so small desktop windows never push it off screen.
+func _apply_stage_density() -> void:
+	if stage_slot == null or size.x <= 0.0:
+		return
+	var root := get_node_or_null("Root") as Control
+	var header_row := stage_slot.get_parent().get_node_or_null("StageHeader/StageHeaderRow")
+	if root == null or header_row == null:
+		return
+	for level in range(STAGE_MAX_LEVEL + 1):
+		var drop_chip := header_row.get_node_or_null("DropChip") as Control
+		var title_box := header_row.get_node_or_null("StageTitleBox") as Control
+		if drop_chip != null:
+			drop_chip.visible = level < 1
+		if title_box != null:
+			title_box.visible = level < 2
+		if level >= 3 and library != null and library.visible:
+			library.visible = false
+			library_toggle.set_pressed_no_signal(false)
+		if root.get_combined_minimum_size().x <= size.x + 0.5:
 			return
 
 
@@ -263,10 +288,10 @@ func _build_speed_buttons(speeds: Array) -> void:
 	for entry in speeds:
 		var speed := float(entry)
 		var button := Button.new()
-		button.text = "%gx" % speed
+		button.text = UnitFormat.speed(speed)
 		button.theme_type_variation = &"ToolButton"
 		button.custom_minimum_size = Vector2(SPEED_BUTTON_WIDTH, 38.0)
-		button.tooltip_text = "Run the simulation at %gx speed" % speed
+		button.tooltip_text = "Run the simulation at %s speed" % UnitFormat.speed(speed)
 		button.toggle_mode = true
 		button.button_group = group
 		button.focus_mode = Control.FOCUS_NONE
@@ -394,6 +419,7 @@ func _build_session_dialogs() -> void:
 func _build_experiment_log_window() -> void:
 	_log_window = Window.new()
 	_log_window.title = "Experiment Log"
+	_log_window.visible = false
 	_log_window.size = Vector2i(820, 620)
 	_log_window.min_size = Vector2i(540, 380)
 	_log_window.close_requested.connect(_on_log_window_close_requested)

@@ -1,11 +1,11 @@
-extends SceneTree
+extends Node
 ## Headless scenario tests for the simulation core. No window, no views: it drives the same
 ## commands the interface uses and checks the laboratory state.
 ##
 ## One-time setup (creates the class cache; also done by opening the project in the editor):
 ##   godot --headless --path . --import
-## Run:
-##   godot --headless --path . -s tests/run_simulation_tests.gd
+## Run (as a scene so the EventBus / InputManager autoloads exist before any script compiles):
+##   godot --headless --path . res://tests/run_simulation_tests.tscn
 ## Exit code is 0 when every check passes.
 
 const SETUP_PATH := "res://data/setups/first_demo.json"
@@ -19,8 +19,7 @@ var _checks: int = 0
 var _failures: int = 0
 
 
-## Autoloads (EventBus) exist by the time _initialize runs, which the command stack needs.
-func _initialize() -> void:
+func _ready() -> void:
 	var content := ContentDatabase.new()
 	content.load_all()
 	_check(content.errors.is_empty(), "content loads without errors: %s" % str(content.errors))
@@ -43,7 +42,7 @@ func _initialize() -> void:
 	_test_simulation_clock()
 
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
-	quit(1 if _failures > 0 else 0)
+	get_tree().quit(1 if _failures > 0 else 0)
 
 
 # ---------------------------------------------------------------- scenarios

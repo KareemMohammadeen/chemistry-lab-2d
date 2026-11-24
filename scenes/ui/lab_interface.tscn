@@ -63,7 +63,7 @@ layout_mode = 2
 toggle_mode = true
 button_pressed = true
 text = "Library"
-icon_alignment = 1
+icon_alignment = 0
 
 [node name="Brand" type="HBoxContainer" parent="Root/TopBar/Margin/Row"]
 layout_mode = 2

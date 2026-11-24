@@ -75,7 +75,7 @@
         },
         {
           "type": "key",
-          "key": "KP_Add"
+          "key": "Kp Add"
         }
       ]
     },
@@ -88,7 +88,7 @@
         },
         {
           "type": "key",
-          "key": "KP_Subtract"
+          "key": "Kp Subtract"
         }
       ]
     },

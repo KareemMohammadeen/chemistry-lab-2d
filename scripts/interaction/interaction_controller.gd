@@ -452,13 +452,13 @@ func _on_pause_toggled(paused: bool) -> void:
 
 func _on_speed_selected(speed: float) -> void:
 	_host.clock.set_speed(speed)
-	_say("Simulation speed: %gx" % _host.clock.speed, &"info")
+	_say("Simulation speed: %s" % UnitFormat.speed(_host.clock.speed), &"info")
 
 
 func _step_speed(direction: int) -> void:
 	var presets: Array = _host.database.constants.get("speeds", [SimulationClock.NORMAL_SPEED])
 	_host.clock.step_speed(direction, presets)
-	_say("Simulation speed: %gx" % _host.clock.speed, &"info")
+	_say("Simulation speed: %s" % UnitFormat.speed(_host.clock.speed), &"info")
 
 
 # ---------------------------------------------------------------- helpers
