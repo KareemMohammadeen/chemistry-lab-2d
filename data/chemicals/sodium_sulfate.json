@@ -7,10 +7,18 @@
   "formula_display": "Na2SO4",
   "state": "solid",
   "category": "salt",
-  "color": [0.97, 0.97, 0.98, 1.0],
+  "color": [
+    0.97,
+    0.97,
+    0.98,
+    1.0
+  ],
   "color_status": "display",
   "density_g_ml": 2.66,
-  "label_lines": ["Sodium sulfate", "Na2SO4"],
+  "label_lines": [
+    "Sodium sulfate",
+    "Na2SO4"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "A common classroom salt used in safe virtual chemistry.",
@@ -24,5 +32,16 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "solubility_in_water": {
+    "unit": "g/100 mL",
+    "status": "unverified_reference",
+    "source": "commonly quoted textbook value for anhydrous sodium sulfate near room temperature; check a primary source before citing",
+    "curve": [
+      [
+        20,
+        19.5
+      ]
+    ]
   }
 }

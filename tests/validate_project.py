@@ -92,6 +92,67 @@ def check_workspace_layering() -> list[str]:
     return errors
 
 
+def check_reactions() -> list[str]:
+    """Static consistency of reaction definitions, the V3 registry and chemical data."""
+    errors: list[str] = []
+    registry = load_json("data/reaction_registry_v3.json")
+    handlers = registry.get("handlers", {})
+    entries = {entry["id"]: entry for entry in registry.get("reactions", [])}
+    chemicals = {p.stem: load_json(rel(p)) for p in sorted((ROOT / "data/chemicals").glob("*.json"))}
+    compounds = {}
+    for path in sorted((ROOT / "data/compounds").glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        compounds[data.get("id", path.stem)] = data
+    definitions = {}
+    for path in sorted((ROOT / "data/reactions").glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if "reactions" in data or data.get("id") is None:
+            continue  # the legacy index file lists reactions; it is not a definition
+        definitions[data["id"]] = data
+        if path.stem != data["id"]:
+            errors.append(f"{rel(path)}: file name does not match id '{data['id']}'")
+    supported_conditions = {"temperature", "pressure", "ph", "closed_system", "catalyst"}
+    for reaction_id, data in definitions.items():
+        entry = entries.get(reaction_id)
+        if entry is None:
+            errors.append(f"reaction '{reaction_id}' is not in the V3 registry")
+            continue
+        handler = handlers.get(entry.get("handler_id"))
+        if handler is None:
+            errors.append(f"reaction '{reaction_id}' uses unknown handler '{entry.get('handler_id')}'")
+        elif handler.get("reaction_type") != data.get("type"):
+            errors.append(f"reaction '{reaction_id}' has type '{data.get('type')}' but its handler expects '{handler.get('reaction_type')}'")
+        enabled = bool(entry.get("enabled", False))
+        if not enabled and not entry.get("disabled_reason"):
+            errors.append(f"reaction '{reaction_id}' is disabled without a disabled_reason")
+        if data.get("type") == "visual_demo":
+            continue
+        participants = list(data.get("reactants", [])) + list(data.get("products", []))
+        for key in ("solute", "substance"):
+            if data.get(key):
+                participants.append({"chemical_id": data[key], "phase": "solid" if key == "solute" else "liquid"})
+        for participant in participants:
+            chemical = chemicals.get(participant.get("chemical_id"))
+            if chemical is None:
+                errors.append(f"reaction '{reaction_id}' refers to unknown chemical '{participant.get('chemical_id')}'")
+                continue
+            if enabled and data.get("reactants") and participant.get("phase") != "gas":
+                # Mirrors ReactionEngineFinal._moles_per_ledger_unit: a prepared solution needs its
+                # concentration, anything else needs a molar mass on the chemical or its compound record.
+                has_mass = "molar_mass_g_mol" in chemical or "molar_mass_g_mol" in compounds.get(participant["chemical_id"], {})
+                is_solution = participant.get("phase") == "liquid" and "concentration_mol_per_l" in chemical
+                if not (has_mass or is_solution):
+                    errors.append(f"enabled reaction '{reaction_id}': '{participant['chemical_id']}' has no molar mass or solution concentration for mole conversion")
+        if enabled:
+            for condition in data.get("conditions", []):
+                if not isinstance(condition, dict) or condition.get("type") not in supported_conditions:
+                    errors.append(f"enabled reaction '{reaction_id}' has an unsupported condition {condition}")
+    for reaction_id in entries:
+        if reaction_id not in definitions:
+            errors.append(f"registry entry '{reaction_id}' has no definition file")
+    return errors
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -108,6 +169,7 @@ def main() -> int:
     errors.extend(check_setups())
     errors.extend(check_resource_paths())
     errors.extend(check_workspace_layering())
+    errors.extend(check_reactions())
 
     if errors:
         for error in errors:

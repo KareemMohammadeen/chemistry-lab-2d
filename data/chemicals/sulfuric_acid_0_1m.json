@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "id": "sulfuric_acid_0_1m",
+  "name": "Sulfuric acid, 0.1 mol/L",
+  "short_name": "Sulfuric acid",
+  "formula": "H2SO4(aq)",
+  "formula_display": "H2SO4(aq)",
+  "state": "liquid",
+  "category": "dilute acid",
+  "color": [
+    0.78,
+    0.89,
+    0.97,
+    0.38
+  ],
+  "color_status": "display",
+  "density_g_ml": {
+    "value": 1,
+    "status": "derived",
+    "unit": "g/mL",
+    "source": "a 0.1 mol/L solution is within about 1 % of the density of water"
+  },
+  "is_aqueous_solvent": true,
+  "acid_base": {
+    "h_plus_mol_per_l": 0.2,
+    "oh_minus_mol_per_l": 0,
+    "status": "idealised",
+    "note": "Each H2SO4 is treated as releasing two hydrogen ions (fully dissociated, strong electrolyte); real solutions deviate slightly, especially for the second ion."
+  },
+  "label_lines": [
+    "Sulfuric acid",
+    "0.1 mol/L"
+  ],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "Dilute strong acid. Irritating to eyes and skin, so wear goggles. Rinse spills with plenty of water.",
+    "storage": "Closed, labelled container, away from bases and metals.",
+    "source": "General laboratory safety guidance written for this project; check the supplier's safety data sheet before real use."
+  },
+  "display": {
+    "summary": "A dilute strong acid. Its pH is calculated from its concentration."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  },
+  "concentration_mol_per_l": {
+    "value": 0.1,
+    "status": "reference",
+    "unit": "mol/L",
+    "source": "Nominal concentration given by the solution's name and label"
+  }
+}

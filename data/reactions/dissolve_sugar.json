@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "dissolve_sugar",
+  "type": "dissolution",
+  "name": "Dissolving sugar in water",
+  "solute": "sugar",
+  "tier": "stoichiometric_with_timescale",
+  "time_constant_s": {
+    "value": 8,
+    "status": "placeholder",
+    "unit": "s",
+    "source": "teaching-pace timescale, not a measured rate"
+  },
+  "observations": {
+    "started": "The white crystals begin to dissolve.",
+    "colour": "",
+    "saturated": "No more sugar dissolves: the solution is saturated and crystals remain at the bottom.",
+    "completed": "All the sugar has dissolved. The solution stays colourless."
+  },
+  "explanation": "Water molecules separate the sugar molecules from the crystal and spread them through the liquid. Dissolved sugar molecules are colourless, so the liquid looks the same as before.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 1e-06,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sugar",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 1e-06,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "sugar",
+      "coefficient": 1,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
+}

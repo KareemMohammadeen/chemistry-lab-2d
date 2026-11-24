@@ -7,7 +7,12 @@
   "formula_display": "CH3COOH(aq)",
   "state": "liquid",
   "category": "dilute acid",
-  "color": [0.95, 0.97, 0.99, 0.35],
+  "color": [
+    0.95,
+    0.97,
+    0.99,
+    0.35
+  ],
   "color_status": "display",
   "density_g_ml": {
     "value": 1,
@@ -22,7 +27,10 @@
     "status": "idealised",
     "note": "Educational model of a dilute acid for classroom simulation."
   },
-  "label_lines": ["Acetic acid", "0.1 mol/L"],
+  "label_lines": [
+    "Acetic acid",
+    "0.1 mol/L"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "A dilute acid used in classroom chemistry models. Wear goggles and avoid skin contact.",
@@ -36,5 +44,11 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "concentration_mol_per_l": {
+    "value": 0.1,
+    "status": "reference",
+    "unit": "mol/L",
+    "source": "Nominal concentration given by the solution's name and label"
   }
 }

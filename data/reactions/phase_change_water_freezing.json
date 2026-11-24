@@ -17,7 +17,7 @@
       "chemical_id": "water",
       "coefficient": 1,
       "phase": "liquid",
-      "minimum_amount": 0.000001,
+      "minimum_amount": 1e-06,
       "minimum_amount_unit": "mL"
     }
   ],
@@ -28,5 +28,12 @@
       "phase": "solid"
     }
   ],
-  "conditions": []
+  "conditions": [
+    {
+      "type": "temperature",
+      "max": -0.01,
+      "unit": "C"
+    }
+  ],
+  "condition_note": "Freezing only proceeds at or below 0 °C (a small margin avoids flipping with melting at exactly 0 °C)."
 }

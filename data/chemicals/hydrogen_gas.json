@@ -7,15 +7,23 @@
   "formula_display": "H2",
   "state": "gas",
   "category": "gas",
-  "color": [0.92, 0.98, 1.0, 0.1],
+  "color": [
+    0.92,
+    0.98,
+    1.0,
+    0.1
+  ],
   "color_status": "display",
   "density_g_ml": {
-    "value": 0.00009,
+    "value": 9e-05,
     "status": "reference",
     "unit": "g/mL",
     "source": "Educational classroom reference value used for the simulation"
   },
-  "label_lines": ["Hydrogen", "H2"],
+  "label_lines": [
+    "Hydrogen",
+    "H2"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "A light gas used only as a virtual product in the simulation.",
@@ -29,5 +37,11 @@
     "enabled": true,
     "role": "classroom_product",
     "scope": "approved virtual teaching subset"
+  },
+  "molar_mass_g_mol": {
+    "value": 2.016,
+    "status": "reference",
+    "unit": "g/mol",
+    "source": "Sum of IUPAC standard atomic weights for the formula"
   }
 }

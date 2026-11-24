@@ -3,7 +3,7 @@
   "id": "dissolution_sodium_carbonate_classroom",
   "type": "dissolution",
   "name": "Dissolution of sodium carbonate",
-  "substance": "sodium_carbonate",
+  "solute": "sodium_carbonate",
   "tier": "qualitative",
   "observations": {
     "summary": "Sodium carbonate dissolves in the water.",
@@ -17,7 +17,7 @@
       "chemical_id": "sodium_carbonate",
       "coefficient": 1,
       "phase": "solid",
-      "minimum_amount": 0.000001,
+      "minimum_amount": 1e-06,
       "minimum_amount_unit": "g"
     }
   ],

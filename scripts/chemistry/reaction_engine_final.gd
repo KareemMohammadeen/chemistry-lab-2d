@@ -4,6 +4,9 @@ extends RefCounted
 ## Supports condition checks, stoichiometry, kinetics, equilibrium and pH-aware reporting.
 
 const MIN_AMOUNT_G := 0.001
+## Smallest reaction extent worth applying. VesselState.EPSILON (1e-6) is a ledger tolerance in
+## mL/g and is far too coarse when the extent is measured in moles.
+const MIN_EXTENT_MOL := 1.0e-9
 const MIN_MOLES := 1.0e-9
 const MIN_PROGRESS := 0.02
 const DEFAULT_BOILING_POINT_C := 100.0
@@ -156,7 +159,7 @@ func _execute_reaction(reaction: ReactionDefinition, vessel: VesselState, dt: fl
 		return result
 
 	if not _conditions_allow_reaction(reaction, vessel, result):
-		result.status = ReactionResult.Status.NOT_MATCHED
+		result.status = ReactionResult.Status.INVALID if not result.errors.is_empty() else ReactionResult.Status.NOT_MATCHED
 		if result.message.is_empty():
 			result.message = "The reaction conditions are not satisfied."
 		return result
@@ -284,8 +287,15 @@ func _execute_generic_reaction(reaction: ReactionDefinition, vessel: VesselState
 	result.reaction_name = reaction.display_name
 	result.reaction_type = reaction.type
 
+	var missing_data := _participants_missing_conversion_data(reaction)
+	if not missing_data.is_empty():
+		result.status = ReactionResult.Status.INVALID
+		result.message = "Reaction '%s' cannot run: no molar mass or concentration data for %s." % [reaction.id, ", ".join(missing_data)]
+		result.errors.append(result.message)
+		return result
+
 	var reactant_extent := _reactant_extent(reaction, vessel)
-	if reactant_extent <= VesselState.EPSILON:
+	if reactant_extent <= MIN_EXTENT_MOL:
 		result.status = ReactionResult.Status.NOT_MATCHED
 		result.message = "The required reactants are not present in enough quantity."
 		return result
@@ -293,7 +303,7 @@ func _execute_generic_reaction(reaction: ReactionDefinition, vessel: VesselState
 	var progress := _reaction_progress(reaction, vessel, dt)
 	result.progress = progress
 	var extent := reactant_extent * progress
-	if extent <= VesselState.EPSILON:
+	if extent <= MIN_EXTENT_MOL:
 		result.status = ReactionResult.Status.NOT_MATCHED
 		result.message = "The reaction would proceed only negligibly at this time step."
 		return result
@@ -322,7 +332,7 @@ func _execute_generic_reaction(reaction: ReactionDefinition, vessel: VesselState
 		var participant: Dictionary = participant_value
 		var chemical_id := str(participant.get("chemical_id", ""))
 		var phase := str(participant.get("phase", ""))
-		var amount := float(participant.get("coefficient", 1.0)) * extent
+		var amount := _ledger_amount(participant, extent)
 		if amount <= 0.0:
 			continue
 		if not _remove_from_phase_ledger(vessel, phase, chemical_id, amount):
@@ -337,7 +347,7 @@ func _execute_generic_reaction(reaction: ReactionDefinition, vessel: VesselState
 		var participant: Dictionary = participant_value
 		var chemical_id := str(participant.get("chemical_id", ""))
 		var phase := str(participant.get("phase", ""))
-		var amount := float(participant.get("coefficient", 1.0)) * extent
+		var amount := _ledger_amount(participant, extent)
 		if amount <= 0.0:
 			continue
 		match phase:
@@ -372,6 +382,63 @@ func _execute_generic_reaction(reaction: ReactionDefinition, vessel: VesselState
 	return result
 
 
+## Names the participants whose amounts cannot be converted to moles (missing data).
+func _participants_missing_conversion_data(reaction: ReactionDefinition) -> Array:
+	var missing: Array = []
+	for participant_value in reaction.reactants + reaction.products:
+		if typeof(participant_value) != TYPE_DICTIONARY:
+			continue
+		var participant: Dictionary = participant_value
+		var chemical_id := str(participant.get("chemical_id", ""))
+		var chemical := _db.get_chemical(chemical_id) if _db != null else null
+		if chemical != null and chemical.virtual_simulation_enabled and _moles_per_ledger_unit(participant) <= 0.0 \
+				and not missing.has(chemical_id):
+			missing.append(chemical_id)
+	return missing
+
+
+## Molar mass of a participant: the chemical's own value, else its compound record.
+func _molar_mass_g_mol(chemical_id: String) -> float:
+	var chemical := _db.get_chemical(chemical_id) if _db != null else null
+	if chemical != null and is_finite(chemical.molar_mass_g_mol) and chemical.molar_mass_g_mol > 0.0:
+		return chemical.molar_mass_g_mol
+	var compound := _db.get_compound(chemical_id) if _db != null else null
+	if compound != null and is_finite(compound.molar_mass_g_mol) and compound.molar_mass_g_mol > 0.0:
+		return compound.molar_mass_g_mol
+	return NAN
+
+
+## Moles represented by one ledger unit of the participant (1 mL, 1 g or 1 mol, by phase).
+## Returns 0 when the data needed for the conversion is missing, so the reaction fails closed.
+func _moles_per_ledger_unit(participant: Dictionary) -> float:
+	var chemical_id := str(participant.get("chemical_id", ""))
+	var chemical := _db.get_chemical(chemical_id) if _db != null else null
+	if chemical == null:
+		return 0.0
+	match str(participant.get("phase", "")):
+		"gas":
+			return 1.0
+		"solid", "dissolved":
+			var molar_mass := _molar_mass_g_mol(chemical_id)
+			return 1.0 / molar_mass if is_finite(molar_mass) else 0.0
+		"liquid":
+			if chemical.concentration_mol_per_l > 0.0:
+				return chemical.concentration_mol_per_l / 1000.0
+			var liquid_molar_mass := _molar_mass_g_mol(chemical_id)
+			if not is_finite(liquid_molar_mass) or chemical.density_g_ml <= 0.0:
+				return 0.0
+			return chemical.density_g_ml / liquid_molar_mass
+	return 0.0
+
+
+## Ledger amount (mL, g or mol) that corresponds to `extent` moles of reaction.
+func _ledger_amount(participant: Dictionary, extent: float) -> float:
+	var moles_per_unit := _moles_per_ledger_unit(participant)
+	if moles_per_unit <= 0.0:
+		return 0.0
+	return float(participant.get("coefficient", 1.0)) * extent / moles_per_unit
+
+
 func _product_moles_total(reaction: ReactionDefinition, extent: float) -> float:
 	var total := 0.0
 	for participant_value in reaction.products:
@@ -402,60 +469,13 @@ func _reaction_progress(reaction: ReactionDefinition, vessel: VesselState, dt: f
 func _conditions_allow_reaction(reaction: ReactionDefinition, vessel: VesselState, result: ReactionResult) -> bool:
 	if reaction.conditions.is_empty():
 		return true
-	var ambient_pressure := _db.constant("ambient_pressure_kpa", VesselState.DEFAULT_AMBIENT_PRESSURE_KPA) if _db != null else VesselState.DEFAULT_AMBIENT_PRESSURE_KPA
-	var pressure_kpa := vessel.pressure_kpa(ambient_pressure)
-	var ph := AcidBase.compute_ph(vessel, _db)
-	for condition_value in reaction.conditions:
-		if typeof(condition_value) != TYPE_DICTIONARY:
-			continue
-		var condition: Dictionary = condition_value
-		var condition_type := str(condition.get("type", condition.get("kind", "")))
-		match condition_type:
-			"temperature":
-				if not _range_check(vessel.temperature_c, condition):
-					result.message = "The vessel temperature does not satisfy the reaction condition."
-					return false
-			"pressure":
-				if not _range_check(pressure_kpa, condition):
-					result.message = "The vessel pressure does not satisfy the reaction condition."
-					return false
-			"ph":
-				if not is_nan(ph) and not _range_check(ph, condition):
-					result.message = "The pH does not satisfy the reaction condition."
-					return false
-			"closed_system":
-				if bool(condition.get("value", true)) and not vessel.is_closed_system:
-					result.message = "The reaction requires a closed system."
-					return false
-				if not bool(condition.get("value", true)) and vessel.is_closed_system:
-					result.message = "The reaction requires an open system."
-					return false
-			"light":
-				if bool(condition.get("value", true)) == false:
-					pass
-			"catalyst":
-				if not _has_any_chemical(vessel, str(condition.get("chemical_id", ""))):
-					result.message = "The reaction requires its catalyst or promoter."
-					return false
-			_:
-				continue
-	return true
-
-
-func _range_check(value: float, condition: Dictionary) -> bool:
-	if condition.has("min") and value < float(condition.get("min", value)):
-		return false
-	if condition.has("max") and value > float(condition.get("max", value)):
-		return false
-	if condition.has("value"):
-		return is_equal_approx(value, float(condition.get("value", value)))
-	return true
-
-
-func _has_any_chemical(vessel: VesselState, chemical_id: String) -> bool:
-	if chemical_id.is_empty():
+	var check := ReactionConditions.evaluate(reaction.conditions, vessel, _db)
+	if bool(check["ok"]):
 		return true
-	return vessel.liquids.has(chemical_id) or vessel.solids.has(chemical_id) or vessel.dissolved.has(chemical_id) or vessel.gases.has(chemical_id)
+	result.message = str(check["message"])
+	if not bool(check["unsatisfied"]):
+		result.errors.append(result.message)
+	return false
 
 
 func _reaction_quotient(reaction: ReactionDefinition, vessel: VesselState) -> float:
@@ -498,7 +518,7 @@ func _ledger_for(participants: Array, extent: float) -> Dictionary:
 		var chemical_id := str(participant.get("chemical_id", ""))
 		if phase.is_empty() or chemical_id.is_empty():
 			continue
-		var amount := float(participant.get("coefficient", 1.0)) * extent
+		var amount := _ledger_amount(participant, extent)
 		if amount <= 0.0:
 			continue
 		if not ledger.has(phase):
@@ -582,7 +602,9 @@ func _participant_chemical_is_supported(participant: Dictionary) -> bool:
 	if chemical_id.is_empty():
 		return false
 	var chemical := _db.get_chemical(chemical_id) if _db != null else null
-	return chemical != null and chemical.virtual_simulation_enabled
+	if chemical == null or not chemical.virtual_simulation_enabled:
+		return false
+	return _moles_per_ledger_unit(participant) > 0.0
 
 
 func _reactant_extent(reaction: ReactionDefinition, vessel: VesselState) -> float:
@@ -608,7 +630,7 @@ func _reactant_extent(reaction: ReactionDefinition, vessel: VesselState) -> floa
 		var required_amount := float(participant.get("minimum_amount", VesselState.EPSILON))
 		if available_amount + VesselState.EPSILON < required_amount:
 			return 0.0
-		extent = minf(extent, available_amount / coefficient)
+		extent = minf(extent, available_amount * _moles_per_ledger_unit(participant) / coefficient)
 	return 0.0 if extent == INF else extent
 
 
@@ -642,9 +664,21 @@ func _generic_products_fit(vessel: VesselState, reaction: ReactionDefinition, ex
 				if chemical.state != "solid":
 					return false
 			"dissolved":
-				pass
+				if chemical.state != "solid":
+					return false
 			_:
 				return false
+	var net_liquid_ml := 0.0
+	for participant_value in reaction.products:
+		var product: Dictionary = participant_value
+		if str(product.get("phase", "")) == "liquid":
+			net_liquid_ml += _ledger_amount(product, extent)
+	for participant_value in reaction.reactants:
+		var reactant: Dictionary = participant_value
+		if str(reactant.get("phase", "")) == "liquid":
+			net_liquid_ml -= _ledger_amount(reactant, extent)
+	if vessel.liquid_volume_ml() + net_liquid_ml > vessel.capacity_ml + VesselState.EPSILON:
+		return false
 	if total_gas > 0.0 and vessel.free_volume_ml() <= VesselState.EPSILON:
 		return false
 	if total_gas > 0.0:

@@ -17,7 +17,7 @@
       "chemical_id": "ice",
       "coefficient": 1,
       "phase": "solid",
-      "minimum_amount": 0.000001,
+      "minimum_amount": 1e-06,
       "minimum_amount_unit": "g"
     }
   ],
@@ -28,5 +28,12 @@
       "phase": "liquid"
     }
   ],
-  "conditions": []
+  "conditions": [
+    {
+      "type": "temperature",
+      "min": 0.01,
+      "unit": "C"
+    }
+  ],
+  "condition_note": "Melting only proceeds above 0 °C."
 }
