@@ -42,7 +42,7 @@
   ],
   "conditions": [
     {
-      "kind": "ignition",
+      "type": "ignition",
       "detail": "spark or flame in the virtual model"
     }
   ]

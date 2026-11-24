@@ -7,13 +7,26 @@
   "formula_display": "Na2SO4(aq)",
   "state": "liquid",
   "category": "salt solution",
-  "color": [0.80, 0.90, 0.97, 0.38],
+  "color": [
+    0.8,
+    0.9,
+    0.97,
+    0.38
+  ],
   "color_status": "display",
-  "solution_color": [0.80, 0.90, 0.97, 0.38],
+  "solution_color": [
+    0.8,
+    0.9,
+    0.97,
+    0.38
+  ],
   "color_full_at_g_per_100ml": 1,
   "density_g_ml": 1.0,
   "is_aqueous_solvent": true,
-  "label_lines": ["Sodium sulfate", "0.1 mol/L"],
+  "label_lines": [
+    "Sodium sulfate",
+    "0.1 mol/L"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "A dilute salt solution used in safe virtual reactions.",
@@ -27,5 +40,11 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "concentration_mol_per_l": {
+    "value": 0.1,
+    "status": "reference",
+    "unit": "mol/L",
+    "source": "Nominal concentration given by the solution's name and label"
   }
 }

@@ -7,9 +7,17 @@
   "formula_display": "C₁₂H₂₂O₁₁",
   "state": "solid",
   "category": "carbohydrate",
-  "color": [0.99, 0.98, 0.94, 1.0],
+  "color": [
+    0.99,
+    0.98,
+    0.94,
+    1.0
+  ],
   "color_status": "display",
-  "label_lines": ["Sugar", "C₁₂H₂₂O₁₁"],
+  "label_lines": [
+    "Sugar",
+    "C₁₂H₂₂O₁₁"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "Low hazard classroom solid. Fine crystals can be sticky if spilled.",
@@ -23,5 +31,28 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "solubility_in_water": {
+    "unit": "g/100 mL",
+    "status": "unverified_reference",
+    "source": "commonly quoted textbook value; check a primary source before citing",
+    "curve": [
+      [
+        20,
+        204
+      ]
+    ]
+  },
+  "density_g_ml": {
+    "value": 1.587,
+    "status": "unverified_reference",
+    "unit": "g/mL",
+    "source": "commonly quoted textbook value; check a primary source before citing"
+  },
+  "molar_mass_g_mol": {
+    "value": 342.3,
+    "status": "reference",
+    "unit": "g/mol",
+    "source": "Sum of IUPAC standard atomic weights for C12H22O11"
   }
 }

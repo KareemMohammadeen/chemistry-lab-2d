@@ -7,7 +7,12 @@
   "formula_display": "CH3COONa",
   "state": "solid",
   "category": "salt",
-  "color": [0.97, 0.97, 0.96, 1.0],
+  "color": [
+    0.97,
+    0.97,
+    0.96,
+    1.0
+  ],
   "color_status": "display",
   "density_g_ml": {
     "value": 1.53,
@@ -20,15 +25,36 @@
     "status": "reference",
     "source": "Educational classroom reference value used for the simulation",
     "curve": [
-      [0, 119.0],
-      [20, 170.0],
-      [40, 258.0],
-      [60, 338.0],
-      [80, 410.0],
-      [100, 500.0]
+      [
+        0,
+        119.0
+      ],
+      [
+        20,
+        170.0
+      ],
+      [
+        40,
+        258.0
+      ],
+      [
+        60,
+        338.0
+      ],
+      [
+        80,
+        410.0
+      ],
+      [
+        100,
+        500.0
+      ]
     ]
   },
-  "label_lines": ["Sodium acetate", "CH3COONa"],
+  "label_lines": [
+    "Sodium acetate",
+    "CH3COONa"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "A common salt used as a classroom reaction product. Keep dust out of the eyes.",
@@ -42,5 +68,11 @@
     "enabled": true,
     "role": "classroom_product",
     "scope": "approved virtual teaching subset"
+  },
+  "molar_mass_g_mol": {
+    "value": 82.034,
+    "status": "reference",
+    "unit": "g/mol",
+    "source": "Sum of IUPAC standard atomic weights for the formula"
   }
 }

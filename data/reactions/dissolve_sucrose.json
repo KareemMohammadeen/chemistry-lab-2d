@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "dissolve_sucrose",
+  "type": "dissolution",
+  "name": "Dissolving sucrose in water",
+  "solute": "sucrose",
+  "tier": "stoichiometric_with_timescale",
+  "time_constant_s": {
+    "value": 8,
+    "status": "placeholder",
+    "unit": "s",
+    "source": "teaching-pace timescale, not a measured rate"
+  },
+  "observations": {
+    "started": "The white crystals begin to dissolve.",
+    "colour": "",
+    "saturated": "No more sucrose dissolves: the solution is saturated and crystals remain at the bottom.",
+    "completed": "All the sucrose has dissolved. The solution stays colourless."
+  },
+  "explanation": "Water molecules separate the sucrose molecules from the crystal and spread them through the liquid. Dissolved sucrose molecules are colourless, so the liquid looks the same as before.",
+  "level": "middle_school",
+  "reactants": [
+    {
+      "chemical_id": "water",
+      "coefficient": 1,
+      "phase": "liquid",
+      "minimum_amount": 1e-06,
+      "minimum_amount_unit": "mL"
+    },
+    {
+      "chemical_id": "sucrose",
+      "coefficient": 1,
+      "phase": "solid",
+      "minimum_amount": 1e-06,
+      "minimum_amount_unit": "g"
+    }
+  ],
+  "products": [
+    {
+      "chemical_id": "sucrose",
+      "coefficient": 1,
+      "phase": "dissolved"
+    }
+  ],
+  "conditions": []
+}

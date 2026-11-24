@@ -7,10 +7,18 @@
   "formula_display": "CaSO4",
   "state": "solid",
   "category": "salt",
-  "color": [0.95, 0.95, 0.96, 1.0],
+  "color": [
+    0.95,
+    0.95,
+    0.96,
+    1.0
+  ],
   "color_status": "display",
   "density_g_ml": 2.96,
-  "label_lines": ["Calcium sulfate", "CaSO4"],
+  "label_lines": [
+    "Calcium sulfate",
+    "CaSO4"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "A sparingly soluble salt used as a precipitate in the virtual lab.",
@@ -24,5 +32,11 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "molar_mass_g_mol": {
+    "value": 136.14,
+    "status": "reference",
+    "unit": "g/mol",
+    "source": "Sum of IUPAC standard atomic weights for the formula"
   }
 }

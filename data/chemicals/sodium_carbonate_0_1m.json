@@ -7,7 +7,12 @@
   "formula_display": "Na₂CO₃(aq)",
   "state": "liquid",
   "category": "dilute salt solution",
-  "color": [0.95, 0.97, 0.99, 0.38],
+  "color": [
+    0.95,
+    0.97,
+    0.99,
+    0.38
+  ],
   "color_status": "display",
   "density_g_ml": {
     "value": 1.0,
@@ -22,7 +27,10 @@
     "status": "idealised",
     "note": "Simplified alkaline solution used only for classroom simulation."
   },
-  "label_lines": ["Sodium carbonate", "0.1 mol/L"],
+  "label_lines": [
+    "Sodium carbonate",
+    "0.1 mol/L"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "A classroom salt solution. Keep out of the eyes and label clearly.",
@@ -36,5 +44,11 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "concentration_mol_per_l": {
+    "value": 0.1,
+    "status": "reference",
+    "unit": "mol/L",
+    "source": "Nominal concentration given by the solution's name and label"
   }
 }

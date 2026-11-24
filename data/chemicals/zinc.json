@@ -7,7 +7,12 @@
   "formula_display": "Zn",
   "state": "solid",
   "category": "metal",
-  "color": [0.82, 0.83, 0.85, 1.0],
+  "color": [
+    0.82,
+    0.83,
+    0.85,
+    1.0
+  ],
   "color_status": "display",
   "density_g_ml": {
     "value": 7.14,
@@ -15,7 +20,10 @@
     "unit": "g/mL",
     "source": "Educational classroom reference value used for the simulation"
   },
-  "label_lines": ["Zinc", "Zn"],
+  "label_lines": [
+    "Zinc",
+    "Zn"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "A common classroom metal used in virtual displacement examples.",
@@ -29,5 +37,11 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "molar_mass_g_mol": {
+    "value": 65.38,
+    "status": "reference",
+    "unit": "g/mol",
+    "source": "Sum of IUPAC standard atomic weights for the formula"
   }
 }

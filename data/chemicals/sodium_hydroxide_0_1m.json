@@ -44,5 +44,11 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "concentration_mol_per_l": {
+    "value": 0.1,
+    "status": "reference",
+    "unit": "mol/L",
+    "source": "Nominal concentration given by the solution's name and label"
   }
 }

@@ -20,6 +20,10 @@ var density_g_ml: float = 1.0
 ## NAN when unknown.
 var boiling_point_c: float = NAN
 var is_aqueous_solvent: bool = false
+## NAN when unknown. Needed to convert grams or millilitres of this substance to moles.
+var molar_mass_g_mol: float = NAN
+## Molarity of a prepared solution (mol of the named solute per litre); 0 for pure substances.
+var concentration_mol_per_l: float = 0.0
 var h_plus_mol_per_l: float = 0.0
 var oh_minus_mol_per_l: float = 0.0
 ## [[temperature_c, grams_per_100_ml], ...] sorted by temperature. Empty when unknown.
@@ -53,6 +57,8 @@ static func from_dictionary(data: Dictionary) -> ChemicalDefinition:
 	chemical.color_full_at_g_per_100ml = float(data.get("color_full_at_g_per_100ml", 1.0))
 	chemical.density_g_ml = DataValue.number(data, "density_g_ml", 1.0)
 	chemical.boiling_point_c = DataValue.number(data, "boiling_point_c", NAN)
+	chemical.molar_mass_g_mol = DataValue.number(data, "molar_mass_g_mol", NAN)
+	chemical.concentration_mol_per_l = DataValue.number(data, "concentration_mol_per_l", 0.0)
 	chemical.is_aqueous_solvent = bool(data.get("is_aqueous_solvent", false))
 	var acid_base: Dictionary = data.get("acid_base", {})
 	chemical.h_plus_mol_per_l = float(acid_base.get("h_plus_mol_per_l", 0.0))
