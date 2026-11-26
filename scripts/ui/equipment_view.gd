@@ -48,6 +48,9 @@ const DRAG_EASE_SPEED := 14.0
 const DROP_PULSE_SPEED := 3.6
 
 var object_id: String = ""
+## Equipment definition this view was built for. Geometry, drawing and the hit box are all cached from it
+## in bind(), so the workspace must replace the view when the object behind `object_id` is not this equipment.
+var bound_equipment_id: String = ""
 var is_selected: bool = false
 var is_hovered: bool = false
 var is_being_dragged: bool = false
@@ -86,6 +89,7 @@ func bind(sim: LabSimulation, new_object_id: String) -> void:
 	_sim = sim
 	object_id = new_object_id
 	var item := sim.state.get_object(object_id)
+	bound_equipment_id = item.equipment_id
 	_equipment = sim.database.get_equipment(item.equipment_id)
 	_profile = _equipment.visual.get("profile", [])
 	_graduations = _build_graduations()

@@ -88,3 +88,12 @@ the expected scientific/safety and Ministry source catalogue.
 - [ ] Click and drag over the header, side margins and status bar: nothing on the bench can be picked from there.
 - [ ] Resize from 960x540 up to 2560x1440: the top bar never overflows; icon-only buttons keep tooltips.
 - [ ] L toggles the Library, Ctrl+S / Ctrl+O open the save / open dialogs.
+
+## Ghost-interaction checks
+Automated (needs a display, e.g. xvfb): `tests/ui_probe.tscn` now sweeps the whole window with objects everywhere and
+asserts that no point outside the stage picks anything, and replays Open/Reset/Undo to prove views, selection,
+samples and remembered amounts follow the state. Manual:
+- [ ] Place several items, drop an element sample, Save, change the bench, Open the file: no leftover sample, every item matches its saved type, nothing is clickable where nothing is drawn.
+- [ ] Reset: the sample disappears and the Inspector shows no stale selection.
+- [ ] Select a spawned item, press Ctrl+Z: it disappears and nothing remains selected.
+- [ ] If a ghost still appears, put the cursor on the spot and press F9 (debug build); send the Output log lines starting `[pointer diagnostic]`.

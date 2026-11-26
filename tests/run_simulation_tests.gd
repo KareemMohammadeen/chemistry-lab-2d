@@ -39,6 +39,7 @@ func _ready() -> void:
 	_test_guided_experiment_progress()
 	_test_reaction_registry_and_matcher()
 	_test_save_load_session()
+	_test_state_replacement_contract()
 	_test_generic_stoichiometry()
 	_test_every_registered_reaction()
 	_test_simulation_clock()
@@ -516,6 +517,38 @@ func _test_save_load_session() -> void:
 	_check(_sim().capture_snapshot() == before_invalid_load, "an invalid session cannot replace the live laboratory")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(SESSION_TEST_PATH))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(INVALID_SESSION_TEST_PATH))
+
+
+## Views and the interaction controller reconcile themselves on `state_restored`, and object ids are
+## reused after a replacement; these checks pin down that contract and the loader's cycle refusal.
+func _test_state_replacement_contract() -> void:
+	_fresh()
+	print("-- state replacement contract")
+	var emitted := [0]
+	var counter := func() -> void: emitted[0] += 1
+	_sim().state_restored.connect(counter)
+	var snapshot: Dictionary = _sim().capture_snapshot()
+	var spawned := _sim().spawn_object("beaker_250ml", Vector2(900.0, 500.0))
+	_check(spawned != null, "a beaker can be spawned for the id-reuse check")
+	var spawned_id := spawned.id
+	_sim().restore_snapshot(snapshot)
+	_check(emitted[0] == 1, "restore_snapshot emits state_restored exactly once (%d)" % emitted[0])
+	_check(_sim().state.get_object(spawned_id) == null, "restoring removes the object spawned after the snapshot")
+	var reused := _sim().spawn_object("thermometer_general", Vector2(900.0, 500.0))
+	_check(reused.id == spawned_id and reused.equipment_id == "thermometer_general",
+		"after a restore the same id is reused by different equipment (%s)" % reused.id)
+	_host.reset()
+	_check(emitted[0] == 2, "reset emits state_restored (%d)" % emitted[0])
+	_sim().state_restored.disconnect(counter)
+
+	var plate_a := _sim().spawn_object("hot_plate_basic", Vector2(300.0, 600.0))
+	var plate_b := _sim().spawn_object("hot_plate_basic", Vector2(700.0, 600.0))
+	var circular: Dictionary = _sim().capture_snapshot()
+	circular["objects"][plate_a.id]["supported_by"] = plate_b.id
+	circular["objects"][plate_b.id]["supported_by"] = plate_a.id
+	var message := LabSessionStore._validate_snapshot(circular, _host.database)
+	_check(message.contains("circular"), "a circular support chain in a session file is refused (%s)" % message)
+	_fresh()
 
 
 # ---------------------------------------------------------------- helpers

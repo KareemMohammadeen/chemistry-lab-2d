@@ -92,6 +92,31 @@ def check_workspace_layering() -> list[str]:
     return errors
 
 
+def check_ghost_interaction_guards() -> list[str]:
+    """Structural guards against objects that are drawn (or hit-tested) for state that no longer exists."""
+    workspace = (ROOT / "scripts/ui/lab_workspace.gd").read_text(encoding="utf-8")
+    controller = (ROOT / "scripts/interaction/interaction_controller.gd").read_text(encoding="utf-8")
+    view = (ROOT / "scripts/ui/equipment_view.gd").read_text(encoding="utf-8")
+    main = (ROOT / "scripts/core/main.gd").read_text(encoding="utf-8")
+    errors: list[str] = []
+    if "bound_equipment_id" not in view or "view.bound_equipment_id != item.equipment_id" not in workspace:
+        errors.append("lab_workspace.gd must rebuild a view whose object id now holds different equipment")
+    if "state_restored.connect(_on_state_restored)" not in workspace:
+        errors.append("lab_workspace.gd must reconcile its views on LabSimulation.state_restored")
+    if "state_restored.connect(_on_state_restored)" not in controller:
+        errors.append("interaction_controller.gd must reconcile remembered object ids on state_restored")
+    body = re.search(r"func object_id_at\(.*?\n\n\n", workspace, re.S)
+    if body is None or "is_point_on_stage(point)" not in body.group(0):
+        errors.append("object_id_at must refuse points outside the visible stage")
+    if "_stage_rect.has_point" in workspace:
+        errors.append("lab_workspace.gd must gate pointer input with is_screen_point_on_stage, not the pushed stage copy")
+    if "clear_reference_samples" not in controller or "on_lab_replaced" not in main:
+        errors.append("Reset and Open experiment must clear reference samples (on_lab_replaced)")
+    if re.search(r"(?<!_samples_root\.)add_child\(specimen\)", workspace):
+        errors.append("reference samples must be added to the ReferenceSamples node so they can be cleared")
+    return errors
+
+
 def check_reactions() -> list[str]:
     """Static consistency of reaction definitions, the V3 registry and chemical data."""
     errors: list[str] = []
@@ -169,6 +194,7 @@ def main() -> int:
     errors.extend(check_setups())
     errors.extend(check_resource_paths())
     errors.extend(check_workspace_layering())
+    errors.extend(check_ghost_interaction_guards())
     errors.extend(check_reactions())
 
     if errors:

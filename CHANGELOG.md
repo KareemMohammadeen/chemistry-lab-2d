@@ -60,6 +60,16 @@ Simulation suite: 295 checks, 0 failures (was 215 checks with 13 failures); UI p
 
 # Changelog
 
+## Ghost-interaction audit (2026-11-26) - NOT verified in Godot (no engine was available)
+Builds on `fix/stability-and-tests` (PR #22/#23). Found by reading the code; each item needs the probe or a manual run.
+- Views were matched to objects by id only. Ids are reused after Open experiment, Reset and Undo/Redo, so a view kept the geometry, drawing and hit box of the equipment that used to own the id. `LabWorkspace._sync_view_set` now rebuilds a view when its equipment differs, removes dead views from the tree at once, and runs synchronously on `LabSimulation.state_restored`.
+- Reference samples (periodic-table tokens) were never cleared by Reset or Open experiment and stayed draggable. They now live in a `ReferenceSamples` node cleared by `InteractionController.on_lab_replaced()`.
+- The controller kept selection, drag, hover, armed pour and per-object pour amounts by id across Undo/Redo/Reset/Open. It now reconciles on `state_restored`; amounts are dropped when the lab is replaced.
+- Picking: ties between equal z are broken by sibling order (matches painting); views of missing objects never answer a pick; the stage rectangle is read live from the stage slot and every pointer feature (pick, pan, zoom, magnify) uses the same check.
+- Session files with circular support chains are refused, and `_z_for` is depth-limited.
+- Debug builds: F9 prints a pointer diagnostic (what is under the cursor, view/object audit) to the Output log.
+- Tests: `tests/ui_probe.gd` gains an off-stage sweep and a state-replacement scenario; `run_simulation_tests.gd` checks `state_restored` and cycle refusal; `validate_project.py` guards the structure.
+
 ## Infinite workbench and Library drag/drop (2026-11-14) - awaiting Godot verification
 - Added an infinite, lab-styled work surface with a world-space grid, middle-mouse panning, cursor-anchored wheel zoom, zoom buttons, Center and Home reset.
 - Library equipment cards can be dragged onto the stage to spawn additional movable glassware and instruments.

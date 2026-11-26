@@ -247,7 +247,29 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 			if relation == "inserted_in":
 				if related_item.get("vessel") == null or not bool(database.get_equipment(str(item.get("equipment_id", ""))).placement.get("insert_into_vessel", false)):
 					return "A saved insertion relationship is not supported by the equipment definitions."
+	for object_key in objects.keys():
+		if _has_relation_cycle(objects, str(object_key)):
+			return "A saved object is part of a circular support or insertion chain."
 	return ""
+
+
+## True when following supported_by / inserted_in from `start_id` ever returns to an object already seen.
+static func _has_relation_cycle(objects: Dictionary, start_id: String) -> bool:
+	var seen: Dictionary = {}
+	var current_id := start_id
+	while current_id != "":
+		if seen.has(current_id):
+			return true
+		seen[current_id] = true
+		var raw_item: Variant = objects.get(current_id, {})
+		if typeof(raw_item) != TYPE_DICTIONARY:
+			return false
+		var item: Dictionary = raw_item
+		var next_id := str(item.get("supported_by", ""))
+		if next_id.is_empty():
+			next_id = str(item.get("inserted_in", ""))
+		current_id = next_id
+	return false
 
 
 ## JSON has a single number type, so an integer written by the game is read

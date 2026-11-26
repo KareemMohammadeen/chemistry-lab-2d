@@ -123,7 +123,7 @@ func _on_load_session_requested(path: String) -> void:
 	var result := LabSessionStore.load_from_path(
 		_host.simulation, _host.commands, _host.database, path)
 	if bool(result.get("ok", false)) and _controller != null:
-		_controller.clear_selection()
+		_controller.on_lab_replaced()
 	lab_interface.show_message(str(result.get("message", "Open failed.")),
 		&"info" if bool(result.get("ok", false)) else &"warning")
 

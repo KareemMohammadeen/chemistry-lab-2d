@@ -137,6 +137,15 @@
         }
       ]
     },
+    "diagnose_pointer": {
+      "deadzone": 0.5,
+      "events": [
+        {
+          "type": "key",
+          "key": "F9"
+        }
+      ]
+    },
     "toggle_library": {
       "deadzone": 0.5,
       "events": [

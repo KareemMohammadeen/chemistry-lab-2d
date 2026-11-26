@@ -81,6 +81,8 @@ func _run() -> void:
 	await _frames(6)
 	await _test_placement(iface, workspace, controller, host)
 	await _test_input_gating(iface, workspace, controller, host)
+	await _test_offstage_sweep(iface, workspace, host)
+	await _test_state_replacement(iface, workspace, controller, host)
 
 
 func _test_placement(iface: LabInterface, workspace: LabWorkspace, controller: InteractionController, host: SimulationHost) -> void:
@@ -186,3 +188,100 @@ func _test_input_gating(iface: LabInterface, workspace: LabWorkspace, controller
 		await _frames(2)
 		_check(_selected_events.has(visible_obj.id), "clicking a visible object on the stage still selects it")
 	await _shot("input_gating")
+
+
+## Property test: whatever is on the bench, a point outside the visible stage must never pick anything.
+func _test_offstage_sweep(iface: LabInterface, workspace: LabWorkspace, host: SimulationHost) -> void:
+	host.reset()
+	workspace.reset_view()
+	await _frames(4)
+	var stage := iface.get_stage_rect()
+	var window_size := get_viewport().get_visible_rect().size
+	# Cover the whole window (and beyond) with objects so every screen point has something under it.
+	var step := 70.0
+	var y := -200.0
+	while y < window_size.y + 200.0:
+		var x := -200.0
+		while x < window_size.x + 200.0:
+			host.simulation.spawn_object("beaker_250ml", workspace.screen_to_workspace(Vector2(x, y)))
+			x += step
+		y += step
+	await _frames(4)
+	_check(workspace.audit_views().is_empty(), "view registry matches the simulation after a mass spawn: %s" % str(workspace.audit_views()))
+	var leaks := 0
+	var on_stage_hits := 0
+	var probe_step := 23.0
+	var py := 0.0
+	while py < window_size.y:
+		var px := 0.0
+		while px < window_size.x:
+			var point := Vector2(px, py)
+			var picked := workspace.object_id_at(workspace.screen_to_workspace(point))
+			if stage.has_point(point):
+				if picked != "":
+					on_stage_hits += 1
+			elif picked != "":
+				leaks += 1
+			px += probe_step
+		py += probe_step
+	_check(leaks == 0, "no screen point outside the stage picks an object (%d leaks)" % leaks)
+	_check(on_stage_hits > 0, "points on the stage still pick objects (%d hits)" % on_stage_hits)
+	host.reset()
+	await _frames(4)
+
+
+func _test_state_replacement(iface: LabInterface, workspace: LabWorkspace, controller: InteractionController, host: SimulationHost) -> void:
+	host.reset()
+	workspace.reset_view()
+	await _frames(4)
+	var stage := iface.get_stage_rect()
+	var spot := workspace.screen_to_workspace(stage.get_center())
+	# 1. An id reused by different equipment must get a different view (this is what Open experiment does).
+	var beaker := host.simulation.spawn_object("beaker_250ml", spot)
+	var reused_id := beaker.id
+	await _frames(3)
+	var beaker_snapshot: Dictionary = host.simulation.capture_snapshot()
+	host.reset()
+	var thermometer := host.simulation.spawn_object("thermometer_general", spot)
+	_check(thermometer.id == reused_id, "the id %s is reused by a thermometer after reset" % reused_id)
+	await _frames(3)
+	host.simulation.restore_snapshot(beaker_snapshot)
+	# no frame wait: the views must already follow the state
+	_check(workspace.audit_views().is_empty(), "views follow the state at once after a restore: %s" % str(workspace.audit_views()))
+	var views_for_id := 0
+	for child in workspace.get_node("Views").get_children():
+		if (child as EquipmentView).object_id == reused_id and not child.is_queued_for_deletion():
+			views_for_id += 1
+	_check(views_for_id == 1, "exactly one live view exists for %s (%d)" % [reused_id, views_for_id])
+	var restored: LabObject = host.simulation.state.get_object(reused_id)
+	_check(restored.equipment_id == "beaker_250ml", "the restored object is a beaker")
+	_check(workspace.object_id_at(spot + Vector2(0.0, -40.0)) == reused_id, "the restored beaker is picked where it stands")
+	await _frames(3)
+	_check(workspace.audit_views().is_empty(), "views stay consistent a few frames later")
+
+	# 2. Reset and Open must remove the reference samples, and forget chosen amounts.
+	workspace.add_reference_sample({"symbol": "Fe", "name": "Iron", "atomic_number": 26}, stage.get_center())
+	await _frames(2)
+	_check(workspace.reference_sample_count() == 1, "a reference sample is on the bench")
+	controller.call("_select", reused_id)
+	controller.call("_on_action_requested", &"amount_changed", {"unit": "mL", "value": 123.0})
+	_check(not (controller.get("_amounts") as Dictionary).is_empty(), "a chosen pour amount is remembered")
+	iface.reset_requested.emit()
+	await _frames(3)
+	_check(workspace.reference_sample_count() == 0, "Reset removes the reference samples")
+	_check((controller.get("_amounts") as Dictionary).is_empty(), "Reset forgets amounts chosen for the old objects")
+	_check(str(controller.get("_selected_id")) == "", "Reset clears the selection")
+	_check(workspace.audit_views().is_empty(), "views are consistent after Reset")
+
+	# 3. Undo of a spawn while the spawned object is selected must not leave a stale selection.
+	var spawn := SpawnObjectCommand.new()
+	spawn.context = InteractionContext.create(&"spawn", "", "", {"device": "test"}, {
+		"equipment_id": "beaker_250ml", "position": spot, "contents": {}}, host.simulation.state.time_s)
+	host.submit(spawn)
+	controller.call("_select", spawn.created_object_id)
+	await _frames(2)
+	host.undo()
+	_check(str(controller.get("_selected_id")) == "", "Undo of the selected object's spawn clears the selection")
+	_check(workspace.audit_views().is_empty(), "views are consistent after Undo")
+	_selected_events.clear()
+	await _shot("state_replacement")
