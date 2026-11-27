@@ -33,6 +33,7 @@ The rebuilt **Studio Workbench** uses a compact command header, a left materials
 | Pan / zoom | Middle-mouse drag, or drag empty bench with the left button / one finger; wheel, two-finger pinch/pan or trackpad gestures; arrow keys, + / − and Home; or the −, +, Center buttons |
 | Undo / redo | Ctrl+Z / Ctrl+Y or the top bar |
 | Deselect / cancel | Esc |
+| Library / save / open | L / Ctrl+S / Ctrl+O |
 | Pause simulated time | Space or the top bar |
 | Simulation speed | Top bar presets 0.25x to 8x; `[` slower, `]` faster, `\` back to 1x |
 

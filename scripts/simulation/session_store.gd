@@ -27,7 +27,8 @@ static func save_to_path(simulation: LabSimulation, command_stack: CommandStack,
 		"state": simulation.capture_snapshot(),
 		"history": command_stack.history.duplicate(true),
 	}
-	var serialised := JSON.stringify(document, "\t")
+	# full_precision keeps every digit of a double, so a reload restores the exact state.
+	var serialised := JSON.stringify(document, "\t", true, true)
 	if serialised.to_utf8_buffer().size() > MAX_FILE_BYTES:
 		return _failure("This experiment is too large to save as one session file.")
 	var file := FileAccess.open(target_path, FileAccess.WRITE)
@@ -109,7 +110,7 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 	if objects.size() > MAX_SAVED_OBJECTS:
 		return "This session contains too many laboratory objects."
 	var next_index: Variant = snapshot.get("next_index", 1)
-	if typeof(next_index) != TYPE_INT or int(next_index) < 1:
+	if not _is_whole_number(next_index) or int(next_index) < 1:
 		return "The saved object counter is invalid."
 	var highest_object_index := 0
 
@@ -246,7 +247,37 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 			if relation == "inserted_in":
 				if related_item.get("vessel") == null or not bool(database.get_equipment(str(item.get("equipment_id", ""))).placement.get("insert_into_vessel", false)):
 					return "A saved insertion relationship is not supported by the equipment definitions."
+	for object_key in objects.keys():
+		if _has_relation_cycle(objects, str(object_key)):
+			return "A saved object is part of a circular support or insertion chain."
 	return ""
+
+
+## True when following supported_by / inserted_in from `start_id` ever returns to an object already seen.
+static func _has_relation_cycle(objects: Dictionary, start_id: String) -> bool:
+	var seen: Dictionary = {}
+	var current_id := start_id
+	while current_id != "":
+		if seen.has(current_id):
+			return true
+		seen[current_id] = true
+		var raw_item: Variant = objects.get(current_id, {})
+		if typeof(raw_item) != TYPE_DICTIONARY:
+			return false
+		var item: Dictionary = raw_item
+		var next_id := str(item.get("supported_by", ""))
+		if next_id.is_empty():
+			next_id = str(item.get("inserted_in", ""))
+		current_id = next_id
+	return false
+
+
+## JSON has a single number type, so an integer written by the game is read
+## back as a float. A counter is valid when it is finite and has no fraction.
+static func _is_whole_number(value: Variant) -> bool:
+	if not _is_finite_number(value):
+		return false
+	return is_equal_approx(float(value), roundf(float(value)))
 
 
 static func _is_finite_number(value: Variant) -> bool:

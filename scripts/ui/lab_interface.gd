@@ -24,6 +24,15 @@ const TOAST_FADE_SECONDS := 0.6
 const TOAST_RADIUS := 12
 const TOAST_PADDING_PX := 14
 const FALLBACK_SPEEDS: Array = [1.0]
+## Stage overlays (toast, hint, pinned references) must stay above the workspace's equipment, whose
+## z values run up to about 2000 inside the stage slot; the welcome overlay covers everything.
+const STAGE_OVERLAY_Z := 3500
+## Top bar density: the bar sheds optional content one level at a time until it fits the window,
+## so it never overflows on small desktop windows and shows everything on large ones.
+const TOPBAR_MARGIN_PX := 36.0
+const TOPBAR_MAX_LEVEL := 4
+const TOPBAR_COMPACT_BUTTON_PX := 44.0
+const STAGE_MAX_LEVEL := 3
 const ICON_PATH := "res://assets/icons/%s.svg"
 const LIBRARY_WIDTH_FRACTION := 0.18
 const LIBRARY_WIDTH_MIN := 268.0
@@ -68,6 +77,7 @@ var _library_user_choice: bool = false
 var _curriculum_catalog: CurriculumCatalog
 var _selected_curriculum_profile: Dictionary = {}
 var _teacher_guide_button: Button
+var _topbar_original: Dictionary = {}
 var _reference_pin_count: int = 0
 var _specimen_count: int = 0
 var _session_menu: MenuButton
@@ -88,11 +98,14 @@ func _ready() -> void:
 	reset_button.icon = _load_icon("reset")
 	pause_button.icon = _pause_icon
 	library_toggle.icon = _load_icon("library")
+	library_toggle.tooltip_text = "Show or hide the Library (L)"
 	logo.texture = _load_icon("logo")
 	_info_style = _make_toast_style(LabColors.PANEL_RAISED, LabColors.PANEL_BORDER_STRONG)
 	_warning_style = _make_toast_style(Color("#3A2D12"), LabColors.WARNING)
 	toast_label.visible = false
-	hint_label.text = "Drag equipment or water / table-salt cards from Library onto this infinite workbench. Drop a reagent on a vessel to add it. Middle-drag to pan · mouse wheel to zoom · Home to centre. Periodic-table samples remain reference-only."
+	toast_label.z_index = STAGE_OVERLAY_Z
+	(hint_label.get_parent() as Control).z_index = STAGE_OVERLAY_Z
+	hint_label.text = "Drag items from the Library onto the bench; drop a reagent on a vessel to add it.  Drag empty bench or middle-drag to pan · wheel to zoom · Home to centre · [ ] speed · L library"
 	hint_label.visible = true
 	undo_button.pressed.connect(undo_requested.emit)
 	redo_button.pressed.connect(redo_requested.emit)
@@ -120,7 +133,7 @@ func _ready() -> void:
 
 func bind(host: SimulationHost) -> void:
 	_host = host
-	title_label.text = "WORKBENCH  /  CHEMISTRY LAB"
+	title_label.text = "WORKBENCH"
 	inspector.bind(host)
 	library.bind(host)
 	_curriculum_catalog = CurriculumCatalog.new()
@@ -129,9 +142,23 @@ func bind(host: SimulationHost) -> void:
 		push_error("Curriculum: %s" % message)
 	_populate_grade_selector()
 	_build_speed_buttons(host.database.constants.get("speeds", FALLBACK_SPEEDS))
+	_apply_topbar_density()
 	EventBus.feedback_message_requested.connect(_show_toast)
 	EventBus.observation_added.connect(_on_observation_added)
 	EventBus.command_logged.connect(_on_command_logged)
+
+
+## Desktop shortcuts for the interface itself (data/input/default_bindings.json).
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(InputActions.TOGGLE_LIBRARY):
+		library_toggle.button_pressed = not library_toggle.button_pressed
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(InputActions.SAVE_SESSION):
+		_on_session_menu_id_pressed(MENU_SAVE)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(InputActions.OPEN_SESSION):
+		_on_session_menu_id_pressed(MENU_OPEN)
+		get_viewport().set_input_as_handled()
 
 
 ## Screen-space panels that should reject placement from the simulation pointer controller.
@@ -172,12 +199,82 @@ func _apply_responsive_layout() -> void:
 	var width := size.x
 	if width <= 0.0:
 		return
+	_apply_topbar_density()
+	call_deferred("_apply_stage_density")
 	library.custom_minimum_size.x = clampf(width * LIBRARY_WIDTH_FRACTION, LIBRARY_WIDTH_MIN, LIBRARY_WIDTH_MAX)
 	inspector.custom_minimum_size.x = clampf(width * INSPECTOR_WIDTH_FRACTION, INSPECTOR_WIDTH_MIN, INSPECTOR_WIDTH_MAX)
 	if not _library_user_choice:
 		var open := width >= LIBRARY_OPEN_MIN_WIDTH
 		library.visible = open
 		library_toggle.set_pressed_no_signal(open)
+
+
+## Sheds optional top-bar content, level by level, until the bar fits the window width.
+func _apply_topbar_density() -> void:
+	if top_bar == null or reset_button == null or size.x <= 0.0:
+		return
+	var row := reset_button.get_parent() as HBoxContainer
+	var available := size.x - TOPBAR_MARGIN_PX
+	for level in range(TOPBAR_MAX_LEVEL + 1):
+		_set_topbar_level(level)
+		if row.get_combined_minimum_size().x <= available:
+			return
+
+
+## The stage header (title, zoom controls, drop hint) and the side panels shed content until the
+## whole interface fits the window width, so small desktop windows never push it off screen.
+func _apply_stage_density() -> void:
+	if stage_slot == null or size.x <= 0.0:
+		return
+	var root := get_node_or_null("Root") as Control
+	var header_row := stage_slot.get_parent().get_node_or_null("StageHeader/StageHeaderRow")
+	if root == null or header_row == null:
+		return
+	for level in range(STAGE_MAX_LEVEL + 1):
+		var drop_chip := header_row.get_node_or_null("DropChip") as Control
+		var title_box := header_row.get_node_or_null("StageTitleBox") as Control
+		if drop_chip != null:
+			drop_chip.visible = level < 1
+		if title_box != null:
+			title_box.visible = level < 2
+		if level >= 3 and library != null and library.visible:
+			library.visible = false
+			library_toggle.set_pressed_no_signal(false)
+		if root.get_combined_minimum_size().x <= size.x + 0.5:
+			return
+
+
+func _set_topbar_level(level: int) -> void:
+	var brand_title_box := title_label.get_parent() as Control
+	var app_label := brand_title_box.get_node_or_null("AppLabel") as Control
+	if app_label != null:
+		app_label.visible = level < 1
+	if not _topbar_original.has(title_label):
+		_topbar_original[title_label] = title_label.custom_minimum_size.x
+	title_label.custom_minimum_size.x = float(_topbar_original[title_label]) if level < 1 else 110.0
+	var compact := level >= 2
+	for button in [library_toggle, undo_button, redo_button, reset_button]:
+		_set_button_compact(button as Button, compact)
+	if _teacher_guide_button != null:
+		if not _topbar_original.has(_teacher_guide_button):
+			_topbar_original[_teacher_guide_button] = [_teacher_guide_button.text, _teacher_guide_button.custom_minimum_size.x]
+		var saved: Array = _topbar_original[_teacher_guide_button]
+		_teacher_guide_button.text = "Guide" if compact else str(saved[0])
+		_teacher_guide_button.custom_minimum_size.x = 70.0 if compact else float(saved[1])
+	var grade_chip := grade_selector.get_parent().get_parent() as Control
+	grade_chip.visible = level < 3
+	brand_title_box.visible = level < 3
+	var brand := brand_title_box.get_parent() as Control
+	brand.visible = level < 4
+
+
+## Icon-only when compact (the tooltips keep the names), original text and width otherwise.
+func _set_button_compact(button: Button, compact: bool) -> void:
+	if not _topbar_original.has(button):
+		_topbar_original[button] = [button.text, button.custom_minimum_size.x]
+	var saved: Array = _topbar_original[button]
+	button.text = "" if compact else str(saved[0])
+	button.custom_minimum_size.x = TOPBAR_COMPACT_BUTTON_PX if compact else float(saved[1])
 
 
 func _on_library_toggled(pressed: bool) -> void:
@@ -191,10 +288,10 @@ func _build_speed_buttons(speeds: Array) -> void:
 	for entry in speeds:
 		var speed := float(entry)
 		var button := Button.new()
-		button.text = "%gx" % speed
+		button.text = UnitFormat.speed(speed)
 		button.theme_type_variation = &"ToolButton"
 		button.custom_minimum_size = Vector2(SPEED_BUTTON_WIDTH, 38.0)
-		button.tooltip_text = "Run the simulation at %gx speed" % speed
+		button.tooltip_text = "Run the simulation at %s speed" % UnitFormat.speed(speed)
 		button.toggle_mode = true
 		button.button_group = group
 		button.focus_mode = Control.FOCUS_NONE
@@ -286,8 +383,8 @@ func _build_session_menu() -> void:
 	_session_menu.custom_minimum_size = Vector2(88.0, 40.0)
 	_session_menu.focus_mode = Control.FOCUS_NONE
 	var popup := _session_menu.get_popup()
-	popup.add_item("Save experiment…", MENU_SAVE)
-	popup.add_item("Open experiment…", MENU_OPEN)
+	popup.add_item("Save experiment…   Ctrl+S", MENU_SAVE)
+	popup.add_item("Open experiment…   Ctrl+O", MENU_OPEN)
 	popup.add_item("Experiment log", MENU_LOG)
 	popup.add_separator()
 	popup.add_check_item("Sound effects", MENU_SOUND)
@@ -322,6 +419,7 @@ func _build_session_dialogs() -> void:
 func _build_experiment_log_window() -> void:
 	_log_window = Window.new()
 	_log_window.title = "Experiment Log"
+	_log_window.visible = false
 	_log_window.size = Vector2i(820, 620)
 	_log_window.min_size = Vector2i(540, 380)
 	_log_window.close_requested.connect(_on_log_window_close_requested)
@@ -514,6 +612,7 @@ func _add_teacher_guide_button() -> void:
 	teacher_button.theme_type_variation = &"ToolButton"
 	teacher_button.custom_minimum_size = Vector2(118.0, 38.0)
 	teacher_button.focus_mode = Control.FOCUS_NONE
+	_teacher_guide_button = teacher_button
 	teacher_button.pressed.connect(_open_teacher_guide)
 	top_row.add_child(teacher_button)
 	top_row.move_child(teacher_button, grade_chip.get_index() + 1)
@@ -543,6 +642,7 @@ func _on_reference_pin_requested(reference: Dictionary) -> void:
 	var index := _reference_pin_count
 	badge.position = Vector2(18.0 + float(index % columns) * 300.0, 18.0 + float(index / columns) * 148.0)
 	badge.removed.connect(_on_reference_badge_removed)
+	badge.z_index = STAGE_OVERLAY_Z
 	stage_slot.add_child(badge)
 	_reference_pin_count += 1
 

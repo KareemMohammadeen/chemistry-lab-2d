@@ -192,6 +192,99 @@
       "enabled": false,
       "safety_scope": "virtual_only_classroom_model",
       "disabled_reason": "This remains a separate qualitative visual demonstration, not a generic executable reaction."
+    },
+    {
+      "id": "acid_carbonate_hydrochloric_calcium_carbonate",
+      "handler_id": "acid_carbonate_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "combustion_ethanol_oxygen",
+      "handler_id": "combustion_v1",
+      "enabled": false,
+      "safety_scope": "virtual_only_classroom_model",
+      "disabled_reason": "The model has no ignition or oxygen-supply condition yet, so combustion cannot be executed safely."
+    },
+    {
+      "id": "dissolution_ammonium_chloride_classroom",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "dissolution_magnesium_sulfate_classroom",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "dissolution_sodium_carbonate_classroom",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "dissolution_sodium_sulfate_classroom",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "dissolve_sucrose",
+      "handler_id": "dissolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "gas_evolution_hydrochloric_sodium_carbonate_classroom",
+      "handler_id": "gas_evolution_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "neutralisation_ammonia_hydrochloric_acid",
+      "handler_id": "neutralisation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "neutralisation_sulfuric_acid_sodium_hydroxide",
+      "handler_id": "neutralisation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "phase_change_water_condensation_classroom",
+      "handler_id": "phase_change_v1",
+      "enabled": false,
+      "safety_scope": "virtual_only_classroom_model",
+      "disabled_reason": "Condensation needs the same vapour model as evaporation and stays disabled with it."
+    },
+    {
+      "id": "phase_change_water_evaporation_classroom",
+      "handler_id": "phase_change_v1",
+      "enabled": false,
+      "safety_scope": "virtual_only_classroom_model",
+      "disabled_reason": "Evaporation would need an open-system vapour model; adding vapour currently seals the vessel, so it stays disabled."
+    },
+    {
+      "id": "precipitation_calcium_chloride_sodium_sulfate",
+      "handler_id": "precipitation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "precipitation_calcium_chloride_sodium_sulfate_classroom",
+      "handler_id": "precipitation_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
+    },
+    {
+      "id": "single_displacement_zinc_hydrochloric_acid_classroom",
+      "handler_id": "single_displacement_v1",
+      "enabled": true,
+      "safety_scope": "virtual_only_classroom_model"
     }
   ]
 }

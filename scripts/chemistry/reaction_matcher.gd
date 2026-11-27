@@ -116,7 +116,9 @@ func match_reaction(reaction_id: String, vessel: VesselState) -> ReactionResult:
 			"required_unit": amount_unit,
 			"coefficient": float(participant.get("coefficient", 1.0)),
 		}
-		if available_amount + VesselState.EPSILON >= minimum_amount:
+		# Not is_equal_approx(): near zero it uses an absolute 1e-5 epsilon, which
+		# is larger than the 1e-6 minimum amounts and would match an empty ledger.
+		if available_amount >= minimum_amount * (1.0 - 1e-9):
 			result.matched_reactants.append(participant_result)
 		else:
 			participant_result["reason"] = "Required material or phase is not present in sufficient model quantity."
@@ -148,29 +150,4 @@ func match_reaction(reaction_id: String, vessel: VesselState) -> ReactionResult:
 
 
 func _check_conditions(conditions: Array, vessel: VesselState) -> Dictionary:
-	for condition_value in conditions:
-		if typeof(condition_value) != TYPE_DICTIONARY:
-			return {"ok": false, "unsatisfied": false, "message": "Reaction condition is not a dictionary."}
-		var condition: Dictionary = condition_value
-		var property_name := str(condition.get("property", ""))
-		var operator := str(condition.get("operator", ""))
-		var value: Variant = condition.get("value", null)
-		if property_name != "temperature_c":
-			return {"ok": false, "unsatisfied": false, "message": "Unsupported reaction condition '%s'." % property_name}
-		if (typeof(value) != TYPE_INT and typeof(value) != TYPE_FLOAT) or not is_finite(float(value)):
-			return {"ok": false, "unsatisfied": false, "message": "Temperature condition has an invalid numeric value."}
-		var expected := float(value)
-		var actual := vessel.temperature_c
-		var satisfied := false
-		match operator:
-			"gte":
-				satisfied = actual >= expected
-			"lte":
-				satisfied = actual <= expected
-			"eq":
-				satisfied = is_equal_approx(actual, expected)
-			_:
-				return {"ok": false, "unsatisfied": false, "message": "Unsupported temperature comparison '%s'." % operator}
-		if not satisfied:
-			return {"ok": false, "unsatisfied": true, "message": "The vessel temperature does not satisfy the registered reaction condition."}
-	return {"ok": true, "unsatisfied": false, "message": ""}
+	return ReactionConditions.evaluate(conditions, vessel, _database)

@@ -42,5 +42,9 @@ jobs:
           "$RUNNER_TEMP/godot/Godot_v4.3-stable_linux.x86_64" --version
       - name: Import project resources
         run: '"$GODOT_BIN" --headless --path . --import'
+      - name: Install a virtual display
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq xvfb
+      - name: Run UI probe (layout, placement, input gating) on a virtual display
+        run: xvfb-run -a -s "-screen 0 2600x1500x24" "$GODOT_BIN" --path . --rendering-driver opengl3 res://tests/ui_probe.tscn -- "$RUNNER_TEMP/probe"
       - name: Run headless simulation scenarios
-        run: '"$GODOT_BIN" --headless --path . -s tests/run_simulation_tests.gd'
+        run: '"$GODOT_BIN" --headless --path . res://tests/run_simulation_tests.tscn'

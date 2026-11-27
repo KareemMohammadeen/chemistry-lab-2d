@@ -4,7 +4,19 @@ extends Node2D
 ## EquipmentView per simulated object, and answers "what is under the pointer?" for the
 ## interaction controller. It displays the simulation and never changes it.
 
-const DRAG_Z := 1500
+## Depth layering inside the workspace. The workspace lives inside the clipped stage slot of the UI
+## tree, so its z values are compared with every other canvas item. The backdrop is drawn at z 0
+## (above the stage frame's panel, which is drawn earlier in the tree); equipment sits in
+## [VIEW_Z_BASE - VIEW_Z_SPAN, VIEW_Z_BASE + VIEW_Z_SPAN] so it is always above the backdrop,
+## however far from the origin it is; drag/reference/effects stay above that. The y-to-z
+## mapping is clamped because Godot rejects z_index values outside +-4096.
+const VIEW_Z_BASE := 1000
+const VIEW_Z_SPAN := 800
+const SPECIMEN_Z := 1850
+const SPECIMEN_DRAG_Z := 1940
+const DRAG_Z := 1950
+## Longest support/insertion chain followed when ordering views (a beaker on a plate is depth 1).
+const MAX_RELATION_DEPTH := 8
 const WALL_TILE_PX := 110.0
 const BENCH_GRID_SPACING := 80.0
 const SHELF_THICKNESS := 14.0
@@ -58,12 +70,22 @@ var _touches: Dictionary = {}
 var _pinch_distance: float = 0.0
 var _flash_overlay: ColorRect
 var _flash_left_s: float = 0.0
+## Holds the reference-only periodic-table samples dropped on the bench. They are not part of the
+## simulation (and not saved), so they live in their own node and are removed whenever the lab is
+## replaced (Reset, Open experiment); otherwise they would stay behind as ghosts of the old lab.
+var _samples_root: Node2D
 
 
 func bind(host: SimulationHost) -> void:
 	_host = host
 	EventBus.object_selected.connect(_on_object_selected)
 	_host.simulation.observation_added.connect(_on_observation_added)
+	# The views must follow the simulation the moment its state is replaced (Open experiment, Reset,
+	# Undo/Redo), not on the next frame, so a click can never reach the view of an object that is gone.
+	_host.simulation.state_restored.connect(_on_state_restored)
+	_samples_root = Node2D.new()
+	_samples_root.name = "ReferenceSamples"
+	add_child(_samples_root)
 	_flash_overlay = ColorRect.new()
 	_flash_overlay.name = "VirtualDemoFlash"
 	_flash_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -104,17 +126,62 @@ func _process(delta: float) -> void:
 		view.is_hovered = str(object_id) == _hovered_id
 
 
+## Makes the set of views match the simulation exactly: one view per object, built for that object's
+## equipment. An object id is NOT a stable identity: opening a session, resetting the bench or an
+## undo/redo that crosses a spawn replaces the whole state, and ids such as "obj_12" are then reused
+## by different equipment. A view only caches the geometry of what it was bound to, so a view whose
+## id survived but whose equipment did not would draw, and be hit-tested as, an object that is gone.
 func _sync_view_set(sim: LabSimulation) -> void:
 	for object_id in _views.keys():
-		if sim.state.get_object(str(object_id)) == null:
-			(_views[object_id] as EquipmentView).queue_free()
-			_views.erase(object_id)
+		var stored: Variant = _views[object_id]
+		var view: EquipmentView = null
+		if is_instance_valid(stored):
+			view = stored as EquipmentView
+		var item := sim.state.get_object(str(object_id))
+		if view == null or item == null or view.bound_equipment_id != item.equipment_id:
+			_discard_view(object_id)
 	for object_id in sim.state.objects.keys():
 		if not _views.has(object_id):
 			var view := view_scene.instantiate() as EquipmentView
 			views_root.add_child(view)
 			view.bind(sim, str(object_id))
 			_views[object_id] = view
+
+
+## Removes a view from the registry and from the scene tree at once. Leaving it in the tree until
+## queue_free() runs would keep a drawn (and, for a moment, pickable) copy of a dead object around.
+func _discard_view(object_id: Variant) -> void:
+	var stored: Variant = _views.get(object_id)
+	_views.erase(object_id)
+	if not is_instance_valid(stored):
+		return
+	var view := stored as EquipmentView
+	if view == null:
+		return
+	if view.get_parent() != null:
+		view.get_parent().remove_child(view)
+	view.queue_free()
+
+
+## The state was replaced (setup loaded, session opened, undo, redo). Reconcile the views right away
+## and drop every piece of transient view state that referred to objects which no longer exist.
+func _on_state_restored() -> void:
+	if _host == null or _host.simulation == null or view_scene == null or views_root == null:
+		return
+	var state := _host.simulation.state
+	_sync_view_set(_host.simulation)
+	if _drag_id != "" and state.get_object(_drag_id) == null:
+		_drag_id = ""
+		_drag_tilt_target = 0.0
+	if _drop_preview_id != "" and state.get_object(_drop_preview_id) == null:
+		_drop_preview_id = ""
+		_drop_preview_valid = false
+		_drop_preview_surface_id = ""
+	if _selected_id != "" and state.get_object(_selected_id) == null:
+		_selected_id = ""
+	if _hovered_id != "" and state.get_object(_hovered_id) == null:
+		_hovered_id = ""
+	queue_redraw()
 
 
 func _anchor_for(sim: LabSimulation, item: LabObject) -> Vector2:
@@ -125,17 +192,19 @@ func _anchor_for(sim: LabSimulation, item: LabObject) -> Vector2:
 	return item.position
 
 
-func _z_for(sim: LabSimulation, item: LabObject) -> int:
+## `depth` stops a circular support/insertion chain (only possible in a hand-edited session file) from
+## recursing forever; saved sessions with such a cycle are also refused by the session loader.
+func _z_for(sim: LabSimulation, item: LabObject, depth: int = 0) -> int:
 	if item.id == _drag_id:
 		return DRAG_Z
 	if _drag_id != "" and item.inserted_in == _drag_id:
 		return DRAG_Z + 1
 	var host_id := item.supported_by if item.supported_by != "" else item.inserted_in
-	if host_id != "":
+	if host_id != "" and depth < MAX_RELATION_DEPTH:
 		var host_item := sim.state.get_object(host_id)
 		if host_item != null:
-			return _z_for(sim, host_item) + 1
-	return int(item.position.y)
+			return _z_for(sim, host_item, depth + 1) + 1
+	return VIEW_Z_BASE + clampi(int(item.position.y), -VIEW_Z_SPAN, VIEW_Z_SPAN)
 
 
 # ---------------------------------------------------------------- queries
@@ -144,22 +213,62 @@ func _z_for(sim: LabSimulation, item: LabObject) -> int:
 ## the caller is looking for a drop target: inserted items (a thermometer in a beaker) are
 ## skipped so that the vessel itself can be targeted.
 func object_id_at(point: Vector2, exclude_id: String = "") -> String:
+	if _host == null or _host.simulation == null or not is_point_on_stage(point):
+		return ""
+	var state := _host.simulation.state
 	var hits: Array = []
 	for object_id in _views.keys():
 		var view: EquipmentView = _views[object_id]
 		if str(object_id) == exclude_id or str(object_id) == _drag_id:
 			continue
+		# A view whose object no longer exists is a leftover and must never answer a pick.
+		if state.get_object(str(object_id)) == null:
+			continue
 		if view.contains_point(point):
 			hits.append(view)
 	if hits.is_empty():
 		return ""
-	hits.sort_custom(func(a: EquipmentView, b: EquipmentView) -> bool: return a.z_index > b.z_index)
+	hits.sort_custom(_is_drawn_above)
 	if exclude_id != "":
 		for candidate in hits:
 			var item := _host.simulation.state.get_object((candidate as EquipmentView).object_id)
 			if item != null and item.inserted_in == "":
 				return (candidate as EquipmentView).object_id
 	return (hits[0] as EquipmentView).object_id
+
+
+## Ordering used for picking: higher z is painted on top; equal z falls back to sibling order (a later
+## sibling is painted on top). A pick therefore always agrees with what is on screen, instead of
+## depending on the arbitrary order sort_custom() gives to equal elements.
+func _is_drawn_above(a: EquipmentView, b: EquipmentView) -> bool:
+	if a.z_index != b.z_index:
+		return a.z_index > b.z_index
+	return a.get_index() > b.get_index()
+
+
+## The visible stage in screen (canvas) coordinates. The workspace is a child of the clipped stage slot,
+## so the slot's own rectangle is exactly what is painted. It is read live from the slot, not from a copy
+## pushed in by Main once per layout change, so a hit test can never use a stale rectangle.
+func visible_stage_rect() -> Rect2:
+	var slot := get_parent() as Control
+	if slot != null and slot.is_inside_tree():
+		var slot_transform := slot.get_global_transform_with_canvas()
+		return Rect2(slot_transform.origin, slot_transform.basis_xform(slot.size))
+	return _stage_rect
+
+
+## True when a laboratory-pixel point is inside the visible stage. Anything outside it (under a
+## panel, behind the header, scrolled off screen) is not clickable, whatever its visibility.
+func is_point_on_stage(point: Vector2) -> bool:
+	return is_screen_point_on_stage(get_global_transform_with_canvas() * point)
+
+
+## True when a screen (viewport) position is inside the visible stage.
+func is_screen_point_on_stage(screen_point: Vector2) -> bool:
+	if not is_visible_in_tree():
+		return false
+	var stage := visible_stage_rect()
+	return stage.size.x > 0.0 and stage.size.y > 0.0 and stage.has_point(screen_point)
 
 
 ## The appliance (hot plate) whose top the dragged object's base point is over, or "".
@@ -189,6 +298,8 @@ func support_target_at(source_id: String, base_point: Vector2) -> String:
 
 ## Fits the starting lab coordinate area into the stage once, then the operator can pan/zoom
 ## freely. The original canvas only defines the starting camera view, not a placement boundary.
+## `rect` is the visible stage in SCREEN (canvas) coordinates. The workspace is a child of the stage
+## slot, so its own `position` is relative to the slot's top-left corner.
 func fit_to_rect(rect: Rect2) -> void:
 	if _host == null or _host.database == null or rect.size.x <= 0.0 or rect.size.y <= 0.0:
 		return
@@ -197,7 +308,7 @@ func fit_to_rect(rect: Rect2) -> void:
 	_base_zoom = maxf(minf(rect.size.x / canvas.x, rect.size.y / canvas.y), 0.01)
 	_zoom_factor = 1.0
 	scale = Vector2.ONE * _base_zoom
-	position = rect.position + (rect.size - canvas * _base_zoom) * 0.5
+	position = (rect.size - canvas * _base_zoom) * 0.5
 	view_changed.emit(100)
 	queue_redraw()
 
@@ -206,12 +317,11 @@ func screen_to_workspace(screen_position: Vector2) -> Vector2:
 	return get_global_transform_with_canvas().affine_inverse() * screen_position
 
 
+## Called whenever the stage moves or is resized. Moving the slot already moves the workspace (it is
+## its child), so only the screen-space rect used for clipping, hit tests and drawing is refreshed.
 func update_stage_rect(rect: Rect2) -> void:
 	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
 		return
-	if _stage_rect.size.x > 0.0:
-		var screen_delta := rect.position - _stage_rect.position
-		position += get_viewport().get_canvas_transform().basis_xform_inv(screen_delta)
 	_stage_rect = rect
 	queue_redraw()
 
@@ -260,7 +370,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_handle_screen_drag(event as InputEventScreenDrag)
 	elif event is InputEventMagnifyGesture:
 		var magnify := event as InputEventMagnifyGesture
-		if _stage_rect.has_point(magnify.position) and _drag_id == "":
+		if is_screen_point_on_stage(magnify.position) and _drag_id == "":
 			zoom_at_screen(magnify.position, magnify.factor)
 			get_viewport().set_input_as_handled()
 	elif event is InputEventPanGesture:
@@ -310,7 +420,7 @@ func _pan_with_key(screen_delta: Vector2) -> void:
 
 func _handle_mouse_button(mouse_event: InputEventMouseButton) -> void:
 	if mouse_event.button_index == MOUSE_BUTTON_MIDDLE:
-		if mouse_event.pressed and _stage_rect.has_point(mouse_event.position):
+		if mouse_event.pressed and is_screen_point_on_stage(mouse_event.position):
 			_pan_active = true
 			Input.set_default_cursor_shape(Input.CURSOR_MOVE)
 		elif not mouse_event.pressed:
@@ -324,7 +434,7 @@ func _handle_mouse_button(mouse_event: InputEventMouseButton) -> void:
 		if mouse_event.pressed:
 			# Unhandled, so the press did not land on a panel. Empty bench starts a pan candidate;
 			# the event is not consumed, so the controller still deselects on a plain click.
-			_empty_pan_candidate = _touches.size() < 2 and _stage_rect.has_point(mouse_event.position) \
+			_empty_pan_candidate = _touches.size() < 2 and is_screen_point_on_stage(mouse_event.position) \
 				and _host != null and _host.simulation != null \
 				and object_id_at(get_local_mouse_position()) == ""
 			_empty_pan_origin = mouse_event.position
@@ -337,7 +447,7 @@ func _handle_mouse_button(mouse_event: InputEventMouseButton) -> void:
 				Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 				get_viewport().set_input_as_handled()
 		return
-	if mouse_event.pressed and _stage_rect.has_point(mouse_event.position):
+	if mouse_event.pressed and is_screen_point_on_stage(mouse_event.position):
 		if mouse_event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			zoom_at_screen(mouse_event.position, 1.12)
 			get_viewport().set_input_as_handled()
@@ -401,13 +511,91 @@ func _touch_center() -> Vector2:
 
 ## Adds a compact read-only element specimen under the workbench transform so it pans and zooms with the lab.
 func add_reference_sample(payload: Dictionary, screen_position: Vector2) -> void:
-	if payload.is_empty():
+	if payload.is_empty() or _samples_root == null:
 		return
 	var specimen := ElementSpecimen.new()
 	specimen.setup(payload)
-	add_child(specimen)
+	_samples_root.add_child(specimen)
 	specimen.position = screen_to_workspace(screen_position) - specimen.size * 0.5
-	specimen.z_index = 1200
+	specimen.z_index = SPECIMEN_Z
+
+
+## Removes every reference sample. Samples are not simulation state and are not saved, so they must not
+## survive the lab being replaced (Reset, Open experiment) as draggable leftovers of the old bench.
+func clear_reference_samples() -> void:
+	if _samples_root == null:
+		return
+	for sample in _samples_root.get_children():
+		_samples_root.remove_child(sample)
+		sample.queue_free()
+
+
+func reference_sample_count() -> int:
+	return 0 if _samples_root == null else _samples_root.get_child_count()
+
+
+## Cross-checks the view registry against the simulation and the scene tree. Returns one line per
+## inconsistency and an empty array when everything agrees. Used by the probe and by the pointer
+## diagnostic; a non-empty result means a view could draw, or answer a click for, the wrong object.
+func audit_views() -> PackedStringArray:
+	var problems := PackedStringArray()
+	if _host == null or _host.simulation == null or views_root == null:
+		return problems
+	var state := _host.simulation.state
+	var in_tree: Dictionary = {}
+	for child in views_root.get_children():
+		var node_view := child as EquipmentView
+		if node_view == null or node_view.is_queued_for_deletion():
+			continue
+		if in_tree.has(node_view.object_id):
+			problems.append("two view nodes exist for %s" % node_view.object_id)
+		in_tree[node_view.object_id] = node_view
+	for object_id in state.objects.keys():
+		var item := state.get_object(str(object_id))
+		if not _views.has(object_id):
+			problems.append("%s has no view" % object_id)
+			continue
+		var view := _views[object_id] as EquipmentView
+		if view.bound_equipment_id != item.equipment_id:
+			problems.append("%s is a %s but its view was built for %s" % [object_id, item.equipment_id, view.bound_equipment_id])
+		if in_tree.get(object_id) != view:
+			problems.append("the view of %s is not the node in the scene tree" % object_id)
+	for object_id in _views.keys():
+		if state.get_object(str(object_id)) == null:
+			problems.append("a view exists for %s, which is not in the simulation" % object_id)
+	for object_id in in_tree.keys():
+		if not _views.has(object_id):
+			problems.append("a view node for %s is in the scene tree but not in the registry" % object_id)
+	return problems
+
+
+## Everything that decides what a click at a screen position would do, for bug reports and tests.
+func describe_pick(screen_position: Vector2) -> Dictionary:
+	var point := screen_to_workspace(screen_position)
+	var candidates: Array = []
+	if _host != null and _host.simulation != null:
+		for object_id in _views.keys():
+			var view := _views[object_id] as EquipmentView
+			if view != null and view.contains_point(point):
+				var item := _host.simulation.state.get_object(str(object_id))
+				candidates.append({
+					"id": str(object_id),
+					"equipment": "(object missing)" if item == null else item.equipment_id,
+					"bound_equipment": view.bound_equipment_id,
+					"z": view.z_index,
+				})
+	return {
+		"screen_position": screen_position,
+		"workspace_position": point,
+		"stage_rect": visible_stage_rect(),
+		"on_stage": is_screen_point_on_stage(screen_position),
+		"picked": object_id_at(point),
+		"candidates_under_point": candidates,
+		"view_count": _views.size(),
+		"object_count": 0 if _host == null else _host.simulation.state.objects.size(),
+		"reference_samples": reference_sample_count(),
+		"audit": audit_views(),
+	}
 
 
 func _on_observation_added(_object_id: String, entry: Dictionary) -> void:

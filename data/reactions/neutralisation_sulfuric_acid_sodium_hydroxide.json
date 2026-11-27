@@ -14,18 +14,18 @@
   "level": "middle_school",
   "reactants": [
     {
-      "chemical_id": "sulfuric_acid",
+      "chemical_id": "sulfuric_acid_0_1m",
       "coefficient": 1,
       "phase": "liquid",
-      "minimum_amount": 0.000001,
+      "minimum_amount": 1e-06,
       "minimum_amount_unit": "mL"
     },
     {
-      "chemical_id": "sodium_hydroxide",
+      "chemical_id": "sodium_hydroxide_0_1m",
       "coefficient": 2,
-      "phase": "dissolved",
-      "minimum_amount": 0.000001,
-      "minimum_amount_unit": "g"
+      "phase": "liquid",
+      "minimum_amount": 1e-06,
+      "minimum_amount_unit": "mL"
     }
   ],
   "products": [

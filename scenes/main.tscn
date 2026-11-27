@@ -10,7 +10,6 @@ workspace = NodePath("LabWorkspace")
 lab_interface = NodePath("UiLayer/LabInterface")
 
 [node name="LabWorkspace" parent="." instance=ExtResource("2")]
-z_index = -1000
 
 [node name="UiLayer" type="CanvasLayer" parent="."]
 layer = 10

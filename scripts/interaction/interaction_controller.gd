@@ -38,12 +38,15 @@ func setup(host: SimulationHost, workspace: LabWorkspace, lab_interface: LabInte
 	_interface.speed_selected.connect(_on_speed_selected)
 	_interface.action_requested.connect(_on_action_requested)
 	_interface.object_focus_requested.connect(_select)
+	_host.simulation.state_restored.connect(_on_state_restored)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _host == null:
 		return
 	if event is InputEventMouseButton and event.pressed:
+		if _is_over_interface():
+			return
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_on_press(_pointer_position())
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
@@ -53,6 +56,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_on_undo_requested()
 	elif event.is_action_pressed(InputActions.REDO):
 		_on_redo_requested()
+	elif OS.is_debug_build() and event.is_action_pressed(InputActions.DIAGNOSE_POINTER):
+		_print_pointer_diagnostic()
 	elif event.is_action_pressed(InputActions.DESELECT):
 		_cancel_armed_action()
 		_select("")
@@ -93,10 +98,15 @@ func _pointer_position() -> Vector2:
 	return _workspace.get_local_mouse_position()
 
 
-## True when the pointer is over a panel. The panels live in screen coordinates while `pointer`
-## is in laboratory pixels (the stage is scaled to fit), so the screen position is used here.
+## True when the pointer is NOT over the visible stage, or is over a panel. Only the stage
+## responds to the pointer: anything outside it (margins, header, status bar, objects hidden
+## behind a panel) must never be picked, dragged or dropped on. The panels live in screen
+## coordinates while `pointer` is in laboratory pixels (the stage is scaled to fit), so the
+## screen position is used here.
 func _is_over_interface() -> bool:
 	var screen_point := _workspace.get_viewport().get_mouse_position()
+	if not _workspace.is_screen_point_on_stage(screen_point):
+		return true
 	for rect in _interface.get_blocking_rects():
 		if (rect as Rect2).has_point(screen_point):
 			return true
@@ -131,7 +141,7 @@ func _update_hover(pointer: Vector2) -> void:
 	Input.set_default_cursor_shape(cursor)
 
 
-## Called after a session is loaded so the Inspector cannot keep a stale object selection.
+## Forgets every transient interaction (press, drag, hover, armed action, selection).
 func clear_selection() -> void:
 	_cancel_armed_action()
 	_press_object_id = ""
@@ -142,7 +152,60 @@ func clear_selection() -> void:
 	if not dragged_id.is_empty():
 		_workspace.end_drag(dragged_id)
 	_host.simulation.release_held()
+	_hovered_id = ""
+	_workspace.set_hovered("")
 	_select("")
+
+
+## The whole lab was swapped for another one (Reset, Open experiment). Object ids are reused by
+## unrelated objects afterwards, so nothing remembered by id (selection, chosen amounts) may survive,
+## and the reference samples, which are not part of the saved state, are cleared with it.
+func on_lab_replaced() -> void:
+	clear_selection()
+	_amounts.clear()
+	_workspace.clear_reference_samples()
+
+
+## The state was replaced (Undo, Redo, Reset, Open). Re-check everything remembered by object id: a
+## stale id points at nothing (a later drop would dereference null) or, after a replacement, at an
+## unrelated object that happens to reuse the id.
+func _on_state_restored() -> void:
+	var state := _host.simulation.state
+	if _press_object_id != "" and state.get_object(_press_object_id) == null:
+		_press_object_id = ""
+	if _dragging and state.get_object(_drag_object_id) == null:
+		var dragged_id := _drag_object_id
+		_dragging = false
+		_drag_object_id = ""
+		_press_object_id = ""
+		_workspace.end_drag(dragged_id)
+	if _hovered_id != "" and state.get_object(_hovered_id) == null:
+		_hovered_id = ""
+		_workspace.set_hovered("")
+	if _selected_id != "" and state.get_object(_selected_id) == null:
+		_select("")
+	if _selected_id == "":
+		_cancel_armed_action()
+	for key in _amounts.keys():
+		if state.get_object(str(key).get_slice(":", 0)) == null:
+			_amounts.erase(key)
+
+
+## Debug builds only (F9): prints everything that decides what a click under the pointer would do.
+func _print_pointer_diagnostic() -> void:
+	var screen_point := _workspace.get_viewport().get_mouse_position()
+	var report := _workspace.describe_pick(screen_point)
+	var viewport := _workspace.get_viewport()
+	var hovered: Variant = null
+	if viewport.has_method("gui_get_hovered_control"):
+		hovered = viewport.call("gui_get_hovered_control")
+	report["gui_control_under_pointer"] = "(unavailable)" if not viewport.has_method("gui_get_hovered_control") \
+		else ("(none)" if hovered == null else str((hovered as Node).get_path()))
+	report["over_interface"] = _is_over_interface()
+	report["selected"] = _selected_id
+	report["dragging"] = _drag_object_id if _dragging else ""
+	print("[pointer diagnostic] ", JSON.stringify(report, "  "))
+	_say("Pointer diagnostic written to the Output log.", &"info")
 
 
 func _select(object_id: String) -> void:
@@ -175,7 +238,7 @@ func _finish_drag(pointer: Vector2) -> void:
 	_workspace.end_drag(dragged_id)
 	if _is_over_interface():
 		_host.simulation.release_held()
-		_say("Drop objects on the shelves or the bench.", &"warning")
+		_say("Drop objects on the workbench.", &"warning")
 		return
 	var plan := _plan_drop(dragged_id, pointer, pointer + _grab_offset)
 	if plan["command"] == null:
@@ -435,7 +498,7 @@ func _on_redo_requested() -> void:
 
 func _on_reset_requested() -> void:
 	_host.reset()
-	_select("")
+	on_lab_replaced()
 	_say("The bench was reset.", &"info")
 
 
@@ -445,13 +508,13 @@ func _on_pause_toggled(paused: bool) -> void:
 
 func _on_speed_selected(speed: float) -> void:
 	_host.clock.set_speed(speed)
-	_say("Simulation speed: %gx" % _host.clock.speed, &"info")
+	_say("Simulation speed: %s" % UnitFormat.speed(_host.clock.speed), &"info")
 
 
 func _step_speed(direction: int) -> void:
 	var presets: Array = _host.database.constants.get("speeds", [SimulationClock.NORMAL_SPEED])
 	_host.clock.step_speed(direction, presets)
-	_say("Simulation speed: %gx" % _host.clock.speed, &"info")
+	_say("Simulation speed: %s" % UnitFormat.speed(_host.clock.speed), &"info")
 
 
 # ---------------------------------------------------------------- helpers

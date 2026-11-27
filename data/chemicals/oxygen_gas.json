@@ -7,7 +7,12 @@
   "formula_display": "O2",
   "state": "gas",
   "category": "gas",
-  "color": [0.88, 0.95, 1.0, 0.12],
+  "color": [
+    0.88,
+    0.95,
+    1.0,
+    0.12
+  ],
   "color_status": "display",
   "density_g_ml": {
     "value": 0.00143,
@@ -15,7 +20,10 @@
     "unit": "g/mL",
     "source": "Educational classroom reference value used for the simulation"
   },
-  "label_lines": ["Oxygen", "O2"],
+  "label_lines": [
+    "Oxygen",
+    "O2"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "An oxidising gas used in safe classroom combustion models.",
@@ -29,5 +37,11 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "molar_mass_g_mol": {
+    "value": 31.998,
+    "status": "reference",
+    "unit": "g/mol",
+    "source": "Sum of IUPAC standard atomic weights for the formula"
   }
 }

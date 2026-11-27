@@ -1,3 +1,28 @@
+## Stability pass (2026-11-24) - verified in Godot 4.7.2
+Simulation suite: 295 checks, 0 failures (was 215 checks with 13 failures); UI probe 61/61; `validate_project.py`, `validate_curriculum.py`, `validate_teacher_demo.py` pass; all 84 scripts compile; no runtime errors or exit-time leak warnings.
+- **Save/Load ("The saved object counter is invalid")**: `JSON.parse` returns every number as a float, but the loader required `TYPE_INT`, so every correctly saved file was refused. It now accepts whole-number values (`_is_whole_number`). Sessions are written with `full_precision`; Godot's JSON writer can still move a double by one ulp, so reload equality is within 1e-12 relative.
+- **Generic reaction executor mixed units**: the extent was `available / coefficient` in raw ledger units (mL, g) but was applied to products as moles, so 0.2 g CaCO3 became "0.2 mol" of CO2 (about 100x too much) and the pressure guard refused every gas reaction; reactants were also removed in the wrong units. The executor now works in moles using `molar_mass_g_mol` / `concentration_mol_per_l` (new optional chemical fields; molar mass falls back to the compound record), converts back to mL/g/mol at the ledger, and fails closed with a named error when a participant lacks the data. Extents use a mole-scale threshold (`MIN_EXTENT_MOL`) instead of the 1e-6 mL/g ledger epsilon.
+- **Matcher accepted an empty ledger**: `is_equal_approx(0, 1e-6)` is true (absolute epsilon 1e-5), so "water but no salt" matched. Replaced with an explicit relative tolerance.
+- **Two condition schemas**: engine and matcher each evaluated conditions differently (and `ph`/`catalyst`/`closed_system` were ignored by one). Both now call `ReactionConditions.evaluate`; unknown condition types fail closed.
+- **Water froze at room temperature**: freezing/melting had no temperature conditions.
+- **Content integrity**: 15 reactions were unregistered; 4 dissolutions used the wrong key (`substance` instead of `solute`); missing chemicals (`sulfuric_acid_0_1m`) and definitions (`dissolve_sugar`, `dissolve_sucrose`); sulfuric-acid neutralisation fixed; a duplicate evaporation definition removed; the ethanol-combustion condition used `kind` instead of `type`; disabled reactions now all carry a `disabled_reason`; molar masses added for zinc, magnesium, magnesium chloride/oxide, sodium acetate/nitrate, zinc chloride, calcium sulfate, ice, sugar, hydrogen and oxygen.
+- **Tests**: stale guided-pack and boiling assertions updated to the shipped data; new stoichiometry test with hand-computed moles; new audit that builds a vessel from each enabled reaction's own reactants/conditions and runs the real engine (33/33 execute, ledgers stay finite and non-negative); the runner now frees its un-parented `SimulationHost` (it was reported as 1300 leaked objects at exit; the game itself exited clean and resets did not grow the object count).
+- **Validator**: `validate_project.py` now checks reaction/registry consistency (registration, handler/type match, chemical ids, disabled reasons, supported conditions, mole-conversion data).
+- Known limit: evaporation, condensation and combustion remain disabled (they need an open-system vapour model and an ignition condition).
+
+## Verified in Godot 4.7.2 (2026-11-24)
+- Added `tests/ui_probe.tscn`: boots the real main scene on a virtual display, resizes to 960x540 ... 2560x1440, and checks the top bar and six speed buttons fit, beakers dropped on the stage land where released (also after a far pan), clicks outside the stage cannot pick or drag objects, and a click on a visible object still selects it. 61 checks pass; the same probe fails 19 checks on the pre-fix code.
+- Fixed found by that probe: speed labels rendered as `%gx` (GDScript has no `%g`), the Experiment Log window was open at startup, the stage header made the main area wider than a 960x540 window, the Library button text overlapped its icon, the title was truncated, and `KP_Add`/`KP_Subtract` were invalid key names.
+- The simulation test suite is now a scene (`res://tests/run_simulation_tests.tscn`): as a `-s` script it could not compile under 4.7 (autoloads missing) and hung. It runs: 215 checks, 13 pre-existing failures remain (content data and session-load issues, unrelated to this change).
+
+## Workspace layering, input gating and desktop UI (2026-11-23) - awaiting Godot verification
+- Root cause of invisible/ghost objects: `main.tscn` gave the workspace `z_index = -1000`, then `main.gd` moved it into the clipped stage slot of the UI tree. Equipment was depth-sorted with `z = int(position.y)`, so every object with y < 1000 (and the bench backdrop itself) was drawn *behind* the opaque stage-frame panel, while the controller still hit-tested it. Items only showed while dragged (z 1500) and vanished on drop; element tokens (Controls) stayed clickable while hidden.
+- Layering: workspace z values are now explicit (`VIEW_Z_BASE`/`VIEW_Z_SPAN`, specimens, drag, effects), clamped so far-away objects stay valid (Godot rejects |z| > 4096), the scene no longer sets a negative z, and stage overlays (toast, hint, pinned references, welcome overlay) sit above the workspace.
+- Coordinates: the stage rect is now kept in screen space everywhere (it was passed as a 0-based local rect, which broke wheel/pan gating, zoom centre, background coverage and the flash overlay). Moving the slot moves the workspace automatically, so the old position compensation was removed.
+- Input: only the visible stage responds to the pointer; presses, hover, drops and `object_id_at` reject anything outside it (panels, header, margins, scrolled-off objects).
+- Desktop UI: the top bar sheds optional content level by level (app label, text labels, curriculum chip, title, brand) until it fits, so it no longer overflows small windows with the six speed buttons; shortcuts L (Library), Ctrl+S / Ctrl+O (save / open); shorter hint text.
+- Validation: `validate_project.py` checks z ordering/ranges and the absence of a negative workspace z.
+
 ## Speed control and navigation (2026-11-23) - awaiting Godot verification
 - Speed control: added slow-motion presets (0.25x, 0.5x) and 8x; `SimulationClock.set_speed` clamps and rejects invalid values; `[` / `]` / `\` shortcuts; top-bar buttons follow the active speed.
 - Navigation: empty-bench drag pan, two-finger pinch/pan, trackpad gestures, keyboard pan/zoom; bindings are data-driven in `data/input/default_bindings.json`.
@@ -34,6 +59,16 @@
 - Added headless regression coverage for gas auto-sealing, pressure, vent/undo/redo, session round-trip and the magnesium visual-demo state. Godot 4.3 CI/runtime results are pending.
 
 # Changelog
+
+## Ghost-interaction audit (2026-11-26) - NOT verified in Godot (no engine was available)
+Builds on `fix/stability-and-tests` (PR #22/#23). Found by reading the code; each item needs the probe or a manual run.
+- Views were matched to objects by id only. Ids are reused after Open experiment, Reset and Undo/Redo, so a view kept the geometry, drawing and hit box of the equipment that used to own the id. `LabWorkspace._sync_view_set` now rebuilds a view when its equipment differs, removes dead views from the tree at once, and runs synchronously on `LabSimulation.state_restored`.
+- Reference samples (periodic-table tokens) were never cleared by Reset or Open experiment and stayed draggable. They now live in a `ReferenceSamples` node cleared by `InteractionController.on_lab_replaced()`.
+- The controller kept selection, drag, hover, armed pour and per-object pour amounts by id across Undo/Redo/Reset/Open. It now reconciles on `state_restored`; amounts are dropped when the lab is replaced.
+- Picking: ties between equal z are broken by sibling order (matches painting); views of missing objects never answer a pick; the stage rectangle is read live from the stage slot and every pointer feature (pick, pan, zoom, magnify) uses the same check.
+- Session files with circular support chains are refused, and `_z_for` is depth-limited.
+- Debug builds: F9 prints a pointer diagnostic (what is under the cursor, view/object audit) to the Output log.
+- Tests: `tests/ui_probe.gd` gains an off-stage sweep and a state-replacement scenario; `run_simulation_tests.gd` checks `state_restored` and cycle refusal; `validate_project.py` guards the structure.
 
 ## Infinite workbench and Library drag/drop (2026-11-14) - awaiting Godot verification
 - Added an infinite, lab-styled work surface with a world-space grid, middle-mouse panning, cursor-anchored wheel zoom, zoom buttons, Center and Home reset.

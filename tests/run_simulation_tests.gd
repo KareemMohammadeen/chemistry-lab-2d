@@ -1,11 +1,11 @@
-extends SceneTree
+extends Node
 ## Headless scenario tests for the simulation core. No window, no views: it drives the same
 ## commands the interface uses and checks the laboratory state.
 ##
 ## One-time setup (creates the class cache; also done by opening the project in the editor):
 ##   godot --headless --path . --import
-## Run:
-##   godot --headless --path . -s tests/run_simulation_tests.gd
+## Run (as a scene so the EventBus / InputManager autoloads exist before any script compiles):
+##   godot --headless --path . res://tests/run_simulation_tests.tscn
 ## Exit code is 0 when every check passes.
 
 const SETUP_PATH := "res://data/setups/first_demo.json"
@@ -19,8 +19,7 @@ var _checks: int = 0
 var _failures: int = 0
 
 
-## Autoloads (EventBus) exist by the time _initialize runs, which the command stack needs.
-func _initialize() -> void:
+func _ready() -> void:
 	var content := ContentDatabase.new()
 	content.load_all()
 	_check(content.errors.is_empty(), "content loads without errors: %s" % str(content.errors))
@@ -40,10 +39,16 @@ func _initialize() -> void:
 	_test_guided_experiment_progress()
 	_test_reaction_registry_and_matcher()
 	_test_save_load_session()
+	_test_state_replacement_contract()
+	_test_generic_stoichiometry()
+	_test_every_registered_reaction()
 	_test_simulation_clock()
 
 	print("\n%d check(s), %d failure(s)" % [_checks, _failures])
-	quit(1 if _failures > 0 else 0)
+	# The host is a Node that was never added to the tree, so nothing else frees it.
+	_host.free()
+	_host = null
+	get_tree().quit(1 if _failures > 0 else 0)
 
 
 # ---------------------------------------------------------------- scenarios
@@ -332,10 +337,21 @@ func _test_guided_experiment_progress() -> void:
 	print("-- guided virtual experiment progress")
 	var pack: Dictionary = JsonDataLoader.load_dictionary("res://data/learning/guided_experiments.json")
 	var activities: Array = pack.get("experiments", [])
-	_check(activities.size() == 1, "the guided activity pack loads one approved classroom activity")
+	var activity_ids: Array = []
+	var all_approved := true
+	for listed in activities:
+		activity_ids.append(str(listed.get("id", "")))
+		if not bool(listed.get("enabled", false)) or str(listed.get("safety_scope", "")) != "virtual_only_classroom_model":
+			all_approved = false
+	_check(activities.size() >= 2 and all_approved and activity_ids.has("water_and_salt_guided") \
+		and activity_ids.has("sucrose_and_water_guided") and activity_ids.size() == activity_ids.duplicate().size(),
+		"the guided activity pack loads only approved, virtual-only classroom activities (%s)" % str(activity_ids))
 	if activities.is_empty():
 		return
-	var activity: Dictionary = activities[0]
+	var activity: Dictionary = {}
+	for listed in activities:
+		if str(listed.get("id", "")) == "water_and_salt_guided":
+			activity = listed
 	var start_index: int = _host.commands.history.size()
 	var progress: Dictionary = GuidedExperimentTracker.evaluate(activity, _host.commands.history, start_index, _sim())
 	_check(int(progress.get("progress", -1)) == 0, "guided tracking begins at step zero")
@@ -381,7 +397,8 @@ func _test_reaction_registry_and_matcher() -> void:
 		return
 	_check(registry.is_enabled("dissolve_sodium_chloride"), "the reviewed sodium-chloride dissolution handler is allowlisted")
 	_check(registry.is_enabled("neutralisation_strong_acid_strong_base"), "the existing neutralisation handler is allowlisted")
-	_check(not registry.is_enabled("boil_water"), "boiling stays disabled until a dedicated reaction handler exists")
+	_check(registry.is_enabled("boil_water") and registry.get_handler_id("boil_water") == "boiling_observation_v1",
+		"boiling is enabled only through its reviewed observation handler")
 	_check(not registry.is_enabled("magnesium_combustion_virtual_demo"), "the magnesium visual demo cannot be enabled as a generic reaction")
 
 	var matcher := ReactionMatcher.new(_host.database, registry)
@@ -427,7 +444,8 @@ func _test_reaction_registry_and_matcher() -> void:
 		{"amount_ml": 50.0}, "prepare a vessel with water only")
 	var missing: ReactionResult = matcher.match_reaction("dissolve_sodium_chloride", beaker.vessel)
 	_check(missing.status == ReactionResult.Status.NOT_MATCHED and missing.missing_reactants.size() == 1,
-		"matcher reports the missing solid when the solvent is present")
+		"matcher reports the missing solid when the solvent is present (status %d, missing %s, errors %s)" % [
+			missing.status, str(missing.missing_reactants), str(missing.errors)])
 
 	_fresh()
 	var flask := _find("erlenmeyer_flask_250ml")
@@ -470,7 +488,8 @@ func _test_save_load_session() -> void:
 
 	_check(_host.undo().is_success, "change the session state before reloading")
 	beaker = _find("beaker_250ml")
-	_near(beaker.vessel.liquid_volume_ml(), 0.0, "the changed session is now empty")
+	_check(not beaker.vessel.has_gas() and _sim().capture_snapshot() != expected_state,
+		"undoing the gas addition changes the session away from the saved state")
 
 	var load_result := LabSessionStore.load_from_path(_sim(), _host.commands, _host.database, SESSION_TEST_PATH)
 	_check(bool(load_result.get("ok", false)), "session load succeeds: %s" % str(load_result.get("message", "")))
@@ -480,7 +499,11 @@ func _test_save_load_session() -> void:
 		"loading restores the closed-system state and retained gas ledger")
 	_check(beaker.vessel.pressure_kpa() > _host.database.constant("ambient_pressure_kpa", 101.325),
 		"loading restores the calculated virtual pressure")
-	_check(_sim().capture_snapshot() == expected_state, "loading restores the complete simulation snapshot")
+	var restored_state: Dictionary = _sim().capture_snapshot()
+	# Godot's JSON writer emits at most 16-17 significant digits, so a double may
+	# come back one ulp (~1e-16 relative) away. Compare with a 1e-12 tolerance.
+	var snapshot_difference := _first_difference(expected_state, restored_state, "state")
+	_check(snapshot_difference == "same", "loading restores the complete simulation snapshot (%s)" % snapshot_difference)
 	_check(_host.commands.history.size() == expected_history_size, "loading restores the experiment action log")
 	_check(not _host.commands.can_undo() and not _host.commands.can_redo(),
 		"loaded history is reportable without stale undo snapshots")
@@ -496,7 +519,204 @@ func _test_save_load_session() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(INVALID_SESSION_TEST_PATH))
 
 
+## Views and the interaction controller reconcile themselves on `state_restored`, and object ids are
+## reused after a replacement; these checks pin down that contract and the loader's cycle refusal.
+func _test_state_replacement_contract() -> void:
+	_fresh()
+	print("-- state replacement contract")
+	var emitted := [0]
+	var counter := func() -> void: emitted[0] += 1
+	_sim().state_restored.connect(counter)
+	var snapshot: Dictionary = _sim().capture_snapshot()
+	var spawned := _sim().spawn_object("beaker_250ml", Vector2(900.0, 500.0))
+	_check(spawned != null, "a beaker can be spawned for the id-reuse check")
+	var spawned_id := spawned.id
+	_sim().restore_snapshot(snapshot)
+	_check(emitted[0] == 1, "restore_snapshot emits state_restored exactly once (%d)" % emitted[0])
+	_check(_sim().state.get_object(spawned_id) == null, "restoring removes the object spawned after the snapshot")
+	var reused := _sim().spawn_object("thermometer_general", Vector2(900.0, 500.0))
+	_check(reused.id == spawned_id and reused.equipment_id == "thermometer_general",
+		"after a restore the same id is reused by different equipment (%s)" % reused.id)
+	_host.reset()
+	_check(emitted[0] == 2, "reset emits state_restored (%d)" % emitted[0])
+	_sim().state_restored.disconnect(counter)
+
+	var plate_a := _sim().spawn_object("hot_plate_basic", Vector2(300.0, 600.0))
+	var plate_b := _sim().spawn_object("hot_plate_basic", Vector2(700.0, 600.0))
+	var circular: Dictionary = _sim().capture_snapshot()
+	circular["objects"][plate_a.id]["supported_by"] = plate_b.id
+	circular["objects"][plate_b.id]["supported_by"] = plate_a.id
+	var message := LabSessionStore._validate_snapshot(circular, _host.database)
+	_check(message.contains("circular"), "a circular support chain in a session file is refused (%s)" % message)
+	_fresh()
+
+
 # ---------------------------------------------------------------- helpers
+
+## Names the first path at which two nested values differ, for readable failures.
+func _first_difference(expected: Variant, actual: Variant, path: String) -> String:
+	if typeof(expected) == TYPE_DICTIONARY and typeof(actual) == TYPE_DICTIONARY:
+		for key in (expected as Dictionary).keys():
+			if not (actual as Dictionary).has(key):
+				return "%s.%s missing" % [path, str(key)]
+			var nested := _first_difference(expected[key], actual[key], "%s.%s" % [path, str(key)])
+			if nested != "same":
+				return nested
+		for key in (actual as Dictionary).keys():
+			if not (expected as Dictionary).has(key):
+				return "%s.%s unexpected" % [path, str(key)]
+		return "same"
+	if typeof(expected) == TYPE_ARRAY and typeof(actual) == TYPE_ARRAY:
+		if (expected as Array).size() != (actual as Array).size():
+			return "%s size %d vs %d" % [path, (expected as Array).size(), (actual as Array).size()]
+		for index in (expected as Array).size():
+			var nested := _first_difference(expected[index], actual[index], "%s[%d]" % [path, index])
+			if nested != "same":
+				return nested
+		return "same"
+	if typeof(expected) == TYPE_FLOAT and typeof(actual) == TYPE_FLOAT:
+		var scale := maxf(absf(expected), absf(actual))
+		if absf(expected - actual) <= 1e-12 * maxf(scale, 1e-12):
+			return "same"
+		return "%s: %s vs %s" % [path, String.num(expected, 17), String.num(actual, 17)]
+	if typeof(expected) != typeof(actual) or expected != actual:
+		return "%s: %s (%s) vs %s (%s)" % [path, str(expected), type_string(typeof(expected)), str(actual), type_string(typeof(actual))]
+	return "same"
+
+
+func _test_generic_stoichiometry() -> void:
+	_fresh()
+	print("-- generic executor stoichiometry is done in moles")
+	var database: ContentDatabase = _host.database
+	var engine := ReactionEngineAdvanced.new(database)
+	# 20 mL of 0.1 mol/L HCl is 0.002 mol; 1 g NaHCO3 is 0.0119 mol, so the acid limits.
+	var vessel := VesselState.new()
+	vessel.capacity_ml = 250.0
+	vessel.add_liquid("hydrochloric_acid_0_1m", 20.0)
+	vessel.add_solid("sodium_bicarbonate", 1.0)
+	var result: ReactionResult = engine.execute_registered_reaction("acid_carbonate_hydrochloric_sodium_bicarbonate", vessel)
+	_check(result.status == ReactionResult.Status.EXECUTED, "acid + bicarbonate executes (status %d, %s)" % [result.status, str(result.errors)])
+	_near(float(vessel.gases.get("carbon_dioxide", 0.0)), 0.002, "0.002 mol of acid releases 0.002 mol of CO2")
+	_near(float(vessel.solids.get("sodium_bicarbonate", 0.0)), 1.0 - 0.002 * 84.006, "bicarbonate is consumed by moles, not by the raw mL number")
+	_check(not vessel.liquids.has("hydrochloric_acid_0_1m") or float(vessel.liquids["hydrochloric_acid_0_1m"]) < 1e-6, "the limiting acid is used up")
+	_check(vessel.is_closed_system, "the evolved gas is retained in a sealed vessel")
+	# Zinc: Zn + 2 HCl -> ZnCl2 + H2. 50 mL of 0.1 M acid is 0.005 mol HCl -> 0.0025 mol H2.
+	var zinc_vessel := VesselState.new()
+	zinc_vessel.capacity_ml = 250.0
+	zinc_vessel.add_liquid("hydrochloric_acid_0_1m", 50.0)
+	zinc_vessel.add_solid("zinc", 1.0)
+	var zinc_result: ReactionResult = engine.execute_registered_reaction("gas_evolution_zinc_hydrochloric_acid", zinc_vessel)
+	_check(zinc_result.status == ReactionResult.Status.EXECUTED, "zinc + acid executes (status %d, %s)" % [zinc_result.status, str(zinc_result.errors)])
+	_near(float(zinc_vessel.gases.get("hydrogen_gas", 0.0)), 0.0025, "the 2:1 acid-to-zinc coefficient gives 0.0025 mol of hydrogen")
+	_near(float(zinc_vessel.solids.get("zinc", 0.0)), 1.0 - 0.0025 * 65.38, "zinc is consumed by moles")
+	# A participant without a molar mass must make the reaction fail closed rather than guess.
+	var broken := VesselState.new()
+	broken.capacity_ml = 250.0
+	broken.add_liquid("hydrochloric_acid_0_1m", 20.0)
+	broken.add_solid("sodium_bicarbonate", 1.0)
+	var chemical: ChemicalDefinition = database.get_chemical("sodium_bicarbonate")
+	var kept_mass: float = chemical.molar_mass_g_mol
+	chemical.molar_mass_g_mol = NAN
+	var compound := database.get_compound("sodium_bicarbonate")
+	var kept_compound_mass := NAN
+	if compound != null:
+		kept_compound_mass = compound.molar_mass_g_mol
+		compound.molar_mass_g_mol = NAN
+	var refused: ReactionResult = engine.execute_registered_reaction("acid_carbonate_hydrochloric_sodium_bicarbonate", broken)
+	_check(refused.status != ReactionResult.Status.EXECUTED and is_equal_approx(float(broken.solids.get("sodium_bicarbonate", 0.0)), 1.0),
+		"a participant with no molar mass is not executed and nothing is consumed")
+	chemical.molar_mass_g_mol = kept_mass
+	if compound != null:
+		compound.molar_mass_g_mol = kept_compound_mass
+	engine = null
+
+
+func _test_every_registered_reaction() -> void:
+	_fresh()
+	print("-- every registered reaction: integrity and execution")
+	var database: ContentDatabase = _host.database
+	var registry: ReactionRegistryV3 = database.reaction_registry
+	var engine := ReactionEngineAdvanced.new(database)
+	var ids: Array = database.reactions.keys()
+	ids.sort()
+	var executed := 0
+	var not_ready: Array = []
+	for reaction_id in ids:
+		var reaction: ReactionDefinition = database.reactions[reaction_id]
+		var problems: Array = []
+		if not registry.has_reaction(reaction_id):
+			problems.append("not registered")
+		for participant in (reaction.reactants + reaction.products) if reaction.type != "visual_demo" else []:
+			if typeof(participant) != TYPE_DICTIONARY:
+				problems.append("non-object participant %s" % str(participant))
+				continue
+			var chemical_id := str(participant.get("chemical_id", ""))
+			if database.get_chemical(chemical_id) == null:
+				problems.append("unknown chemical '%s'" % chemical_id)
+		var enabled := registry.is_enabled(reaction_id)
+		if not enabled and str(registry.get_entry(reaction_id).get("disabled_reason", "")).is_empty():
+			problems.append("disabled without a disabled_reason")
+		for condition in reaction.conditions:
+			if typeof(condition) != TYPE_DICTIONARY:
+				# Plain-text tags are only legitimate on the observation-only visual demo.
+				if reaction.type != "visual_demo" or enabled:
+					problems.append("non-object condition %s" % str(condition))
+			elif enabled and not ["temperature", "pressure", "ph", "closed_system", "catalyst"].has(str(condition.get("type", ""))):
+				problems.append("unsupported condition %s on an enabled reaction" % str(condition))
+		_check(problems.is_empty(), "reaction '%s' is consistent (%s)" % [reaction_id, ", ".join(problems)])
+		if not registry.is_enabled(reaction_id):
+			continue
+
+		var vessel := VesselState.new()
+		vessel.capacity_ml = 1000.0
+		for participant in reaction.reactants:
+			var chemical_id := str(participant.get("chemical_id", ""))
+			match str(participant.get("phase", "")):
+				"liquid":
+					vessel.add_liquid(chemical_id, 20.0)
+				"solid":
+					vessel.add_solid(chemical_id, 0.2)
+				"dissolved":
+					vessel.dissolved[chemical_id] = 0.2
+				"gas":
+					vessel.add_gas(chemical_id, 0.001)
+		if reaction.type == "boiling":
+			vessel.add_liquid(reaction.substance, 20.0)
+			vessel.temperature_c = float(database.get_chemical(reaction.substance).boiling_point_c) + 1.0
+		for condition in reaction.conditions:
+			if typeof(condition) != TYPE_DICTIONARY:
+				continue
+			match str(condition.get("type", "")):
+				"temperature":
+					var low := float(condition.get("min", condition.get("value", 22.0) if not condition.has("max") else -50.0))
+					var high := float(condition.get("max", condition.get("value", 22.0) if not condition.has("min") else low + 100.0))
+					vessel.temperature_c = (low + high) * 0.5 if condition.has("min") and condition.has("max") else (low + 1.0 if condition.has("min") else (high - 1.0 if condition.has("max") else low))
+				"catalyst":
+					vessel.add_solid(str(condition.get("chemical_id", "")), 1.0)
+				"closed_system":
+					vessel.seal_system()
+		var before_total := vessel.liquid_volume_ml()
+		var result: ReactionResult = engine.execute_registered_reaction(reaction_id, vessel)
+		var sane := result.errors.is_empty() and result.status != ReactionResult.Status.INVALID \
+			and result.status != ReactionResult.Status.REJECTED
+		for bucket in [vessel.liquids, vessel.solids, vessel.dissolved, vessel.gases]:
+			for key in (bucket as Dictionary).keys():
+				var amount := float(bucket[key])
+				if not is_finite(amount) or amount < -1e-9:
+					sane = false
+		if vessel.liquid_volume_ml() > vessel.capacity_ml + 1e-6 or not is_finite(vessel.temperature_c):
+			sane = false
+		_check(sane, "enabled reaction '%s' executes sanely (status %d, errors %s, volume %.2f->%.2f mL)" % [
+			reaction_id, result.status, str(result.errors), before_total, vessel.liquid_volume_ml()])
+		if result.status == ReactionResult.Status.EXECUTED:
+			executed += 1
+		else:
+			not_ready.append("%s(%d: %s)" % [reaction_id, result.status, result.message])
+	_check(not_ready.is_empty() and executed == registry.enabled_reaction_ids().size(),
+		"all %d enabled reactions execute end-to-end on a vessel built from their own reactants (not executed: %s)" % [
+			registry.enabled_reaction_ids().size(), str(not_ready)])
+	engine = null
+
 
 func _test_simulation_clock() -> void:
 	print("-- simulation clock and speed control")

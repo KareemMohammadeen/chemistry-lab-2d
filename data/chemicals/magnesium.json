@@ -7,7 +7,12 @@
   "formula_display": "Mg",
   "state": "solid",
   "category": "metal",
-  "color": [0.92, 0.92, 0.9, 1.0],
+  "color": [
+    0.92,
+    0.92,
+    0.9,
+    1.0
+  ],
   "color_status": "display",
   "density_g_ml": {
     "value": 1.74,
@@ -15,7 +20,10 @@
     "unit": "g/mL",
     "source": "Educational classroom reference value used for the simulation"
   },
-  "label_lines": ["Magnesium", "Mg"],
+  "label_lines": [
+    "Magnesium",
+    "Mg"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "A common classroom metal used in virtual demonstrations.",
@@ -29,5 +37,11 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "molar_mass_g_mol": {
+    "value": 24.305,
+    "status": "reference",
+    "unit": "g/mol",
+    "source": "Sum of IUPAC standard atomic weights for the formula"
   }
 }
