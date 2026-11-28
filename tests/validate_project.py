@@ -178,6 +178,117 @@ def check_reactions() -> list[str]:
     return errors
 
 
+def check_thermal_data() -> list[str]:
+    """Thermal/phase data: every number is sourced and status-tagged, and physically plausible.
+
+    Mirrors ThermalProfile / BinaryMeltSystem in GDScript. Nothing here invents data; it only
+    refuses entries that lack provenance or that contradict basic physics.
+    """
+    errors: list[str] = []
+    allowed_status = {"reference", "derived", "unverified_reference", "placeholder"}
+    chemicals = {p.stem: load_json(rel(p)) for p in sorted((ROOT / "data/chemicals").glob("*.json"))}
+    value_keys = (
+        "enthalpy_fusion_j_per_g", "enthalpy_vaporization_j_per_g",
+        "specific_heat_solid_j_per_g_k", "specific_heat_liquid_j_per_g_k", "specific_heat_gas_j_per_g_k",
+        "density_solid_g_ml", "density_liquid_g_ml",
+    )
+
+    def number(entry):
+        return entry.get("value") if isinstance(entry, dict) else entry
+
+    for name, data in chemicals.items():
+        thermal = data.get("thermal")
+        if thermal is None:
+            continue
+        where = f"data/chemicals/{name}.json thermal"
+        family = thermal.get("family")
+        if family:
+            root = chemicals.get(family)
+            if root is None or "thermal" not in root or "family" in root["thermal"]:
+                errors.append(f"{where}: family '{family}' is not a thermal root")
+            elif name not in root["thermal"].get("phases", {}).values():
+                errors.append(f"{where}: '{family}' does not list '{name}' in its phases")
+            continue
+        for key in value_keys:
+            if key not in thermal:
+                continue
+            entry = thermal[key]
+            if not isinstance(entry, dict):
+                errors.append(f"{where}.{key}: needs value, unit, status and source")
+                continue
+            if entry.get("status") not in allowed_status:
+                errors.append(f"{where}.{key}: status must be one of {sorted(allowed_status)}")
+            if not str(entry.get("source", "")).strip():
+                errors.append(f"{where}.{key}: no source")
+            if not str(entry.get("unit", "")).strip():
+                errors.append(f"{where}.{key}: no unit")
+            if not isinstance(entry.get("value"), (int, float)) or entry["value"] <= 0:
+                errors.append(f"{where}.{key}: value must be a positive number")
+        for phase, member in thermal.get("phases", {}).items():
+            if phase not in ("solid", "liquid", "gas"):
+                errors.append(f"{where}.phases: unknown phase '{phase}'")
+            if member not in chemicals:
+                errors.append(f"{where}.phases: unknown chemical '{member}'")
+            elif member != name and chemicals[member].get("thermal", {}).get("family") != name:
+                errors.append(f"{where}.phases: '{member}' must declare thermal.family '{name}'")
+        melting = number(data.get("melting_point_c"))
+        boiling = number(data.get("boiling_point_c"))
+        if "enthalpy_fusion_j_per_g" in thermal and melting is None:
+            errors.append(f"{where}: a heat of fusion needs a melting_point_c on the chemical")
+        if "enthalpy_vaporization_j_per_g" in thermal and boiling is None:
+            errors.append(f"{where}: a heat of vaporisation needs a boiling_point_c on the chemical")
+        if "enthalpy_vaporization_j_per_g" in thermal and number(data.get("molar_mass_g_mol")) is None \
+                and not (ROOT / f"data/compounds/{name}.json").exists():
+            errors.append(f"{where}: boiling needs a molar mass (chemical or compound record)")
+        if melting is not None and boiling is not None and melting >= boiling:
+            errors.append(f"{where}: melting point must be below the boiling point")
+        vapor = thermal.get("vapor_pressure")
+        if vapor:
+            if vapor.get("model") != "antoine_log10_bar_kelvin" or vapor.get("status") not in allowed_status \
+                    or not str(vapor.get("source", "")).strip():
+                errors.append(f"{where}.vapor_pressure: needs the antoine_log10_bar_kelvin model, a status and a source")
+            else:
+                lo, hi = vapor["t_min_k"], vapor["t_max_k"]
+                # Evaluate at the boiling point, or at the edge of the fit when that is within 1 K of it.
+                if boiling is not None:
+                    kelvin = min(boiling + 273.15, hi)
+                    if lo <= kelvin and boiling + 273.15 - kelvin <= 1.0:
+                        kpa = 100.0 * 10 ** (vapor["a"] - vapor["b"] / (kelvin + vapor["c"]))
+                        if abs(kpa - 101.325) / 101.325 > 0.03:
+                            errors.append(f"{where}.vapor_pressure: gives {kpa:.1f} kPa near the boiling point, expected about 101.3")
+        if "specific_heat_liquid_j_per_g_k" in thermal and number(thermal["specific_heat_liquid_j_per_g_k"]) > 10:
+            errors.append(f"{where}: a liquid specific heat above 10 J/(g K) is implausible; check the unit")
+
+    systems_path = ROOT / "data/materials/binary_systems.json"
+    if systems_path.exists():
+        for system in load_json(rel(systems_path)).get("systems", []):
+            sid = system.get("id", "?")
+            if system.get("kind") != "eutectic":
+                errors.append(f"binary system '{sid}': only 'eutectic' is implemented")
+                continue
+            parts = []
+            for key in ("component_a", "component_b"):
+                component = chemicals.get(system.get(key))
+                if component is None or "thermal" not in component or "family" in component["thermal"]:
+                    errors.append(f"binary system '{sid}': {key} needs a chemical with its own thermal block")
+                    continue
+                if number(component.get("melting_point_c")) is None or "enthalpy_fusion_j_per_g" not in component["thermal"]:
+                    errors.append(f"binary system '{sid}': {key} needs a melting point and heat of fusion")
+                    continue
+                parts.append(number(component["melting_point_c"]))
+            te = number(system.get("eutectic_temperature_c"))
+            xe = number(system.get("eutectic_mass_fraction_b"))
+            for key in ("eutectic_temperature_c", "eutectic_mass_fraction_b"):
+                entry = system.get(key)
+                if not isinstance(entry, dict) or entry.get("status") not in allowed_status or not str(entry.get("source", "")).strip():
+                    errors.append(f"binary system '{sid}'.{key}: needs a status and a source")
+            if te is None or xe is None or not 0 < xe < 1:
+                errors.append(f"binary system '{sid}': eutectic composition must lie strictly between 0 and 1")
+            elif len(parts) == 2 and te >= min(parts):
+                errors.append(f"binary system '{sid}': the eutectic must lie below both melting points")
+    return errors
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -196,6 +307,7 @@ def main() -> int:
     errors.extend(check_workspace_layering())
     errors.extend(check_ghost_interaction_guards())
     errors.extend(check_reactions())
+    errors.extend(check_thermal_data())
 
     if errors:
         for error in errors:

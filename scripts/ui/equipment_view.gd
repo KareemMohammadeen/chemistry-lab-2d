@@ -41,6 +41,7 @@ const SPECKLE_COUNT := 12
 const ELLIPSE_STEPS := 28
 const GLASS_TINT := Color(0.85, 0.93, 0.97)
 const PLATE_GLOW := Color("#F0A04B")
+const PLATE_CHILL := Color("#6FB8F0")
 const KNOB_SWEEP_RAD := 2.3
 const DRAG_LIFT_PX := 22.0
 const DRAG_SCALE_FACTOR := 1.045
@@ -666,10 +667,12 @@ func _draw_hot_plate(item: LabObject) -> void:
 	var width := half_width()
 	var ambient := _sim.database.constant("ambient_temperature_c", 22.0)
 	var maximum := float(_equipment.heater.get("max_surface_temperature_c", 300.0))
+	var minimum := float(_equipment.heater.get("min_surface_temperature_c", ambient))
 	var heat := clampf((item.surface_temperature_c - ambient) / maxf(maximum - ambient, 1.0), 0.0, 1.0)
+	var chill := clampf((ambient - item.surface_temperature_c) / maxf(ambient - minimum, 1.0), 0.0, 1.0)
 	draw_style_box(_plate_style, Rect2(-width, -height, width * 2.0, height))
 	draw_rect(Rect2(-width + 4.0, -height + 12.0, width * 2.0 - 8.0, 3.0), Color(1.0, 1.0, 1.0, 0.1))
-	var plate_color := LabColors.METAL.lightened(0.35).lerp(PLATE_GLOW, heat)
+	var plate_color := LabColors.METAL.lightened(0.35).lerp(PLATE_GLOW, heat).lerp(PLATE_CHILL, chill)
 	var disc := _ellipse(Vector2(0.0, -height), width - 10.0, 9.0)
 	draw_colored_polygon(disc, plate_color)
 	draw_polyline(_closed(_ellipse(Vector2(0.0, -height), width * 0.6, 6.0)), plate_color.darkened(0.25), 1.5, true)
@@ -680,7 +683,7 @@ func _draw_hot_plate(item: LabObject) -> void:
 			draw_colored_polygon(_ellipse(Vector2(0.0, -height - 4.0 - float(layer) * 5.0), width - 14.0 - float(layer) * 8.0, 7.0),
 				Color(PLATE_GLOW, 0.12 * heat))
 	var knob_center := Vector2(-width + 26.0, -height * 0.4)
-	var setpoint := clampf((item.target_temperature_c - ambient) / maxf(maximum - ambient, 1.0), 0.0, 1.0)
+	var setpoint := clampf((item.target_temperature_c - minimum) / maxf(maximum - minimum, 1.0), 0.0, 1.0)
 	var angle := lerpf(-KNOB_SWEEP_RAD, KNOB_SWEEP_RAD, setpoint)
 	draw_circle(knob_center, 10.0, LabColors.TEXT_ON_DARK.darkened(0.1))
 	draw_circle(knob_center, 7.0, LabColors.TEXT_ON_DARK)

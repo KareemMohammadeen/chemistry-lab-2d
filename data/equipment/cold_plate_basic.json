@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "id": "cold_plate_basic",
+  "name": "Cooling plate",
+  "category": "appliance",
+  "material": "metal top, thermoelectric cooler",
+  "capacity_ml": null,
+  "default_state": "off",
+  "movable": false,
+  "interactions": [
+    "select",
+    "heat"
+  ],
+  "default_pour_ml": 0.0,
+  "default_solid_g": 0.0,
+  "glass_mass_g": null,
+  "placement": {
+    "surface": true,
+    "support": false,
+    "insert_into_vessel": false
+  },
+  "interaction_points": {
+    "base": [
+      0,
+      0
+    ],
+    "support_top": [
+      0,
+      -46
+    ]
+  },
+  "support": {
+    "accepts_categories": [
+      "vessel"
+    ],
+    "half_width": 110,
+    "top_offset_y": -46
+  },
+  "heater": {
+    "status": "placeholder",
+    "note": "Illustrative values for a small thermoelectric (Peltier) cooling plate; check the datasheet of the device being modelled. It is driven by the same temperature-controlled plate model as the hot plate.",
+    "min_surface_temperature_c": -20.0,
+    "max_surface_temperature_c": 40.0,
+    "heating_rate_c_per_s": 0.5,
+    "cooling_rate_c_per_s": 0.8,
+    "heat_transfer_w_per_k": 12.0,
+    "default_setpoint_c": -10.0
+  },
+  "visual": {
+    "style": "hot_plate",
+    "height": 46,
+    "half_width": 120,
+    "profile": [],
+    "wall_px": 3.0,
+    "graduation_ml": 0.0
+  }
+}

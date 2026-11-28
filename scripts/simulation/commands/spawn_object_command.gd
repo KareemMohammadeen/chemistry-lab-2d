@@ -5,9 +5,9 @@ extends LabCommand
 
 const ALLOWED_EQUIPMENT: Array[String] = [
 	"beaker_250ml", "erlenmeyer_flask_250ml", "test_tube_20ml",
-	"reagent_bottle_500ml", "dropper_3ml", "thermometer_general", "hot_plate_basic"
+	"reagent_bottle_500ml", "dropper_3ml", "thermometer_general", "hot_plate_basic", "cold_plate_basic"
 ]
-const ALLOWED_REAGENTS: Array[String] = ["water", "sodium_chloride"]
+const ALLOWED_REAGENTS: Array[String] = ["water", "ice", "sodium_chloride", "tin", "bismuth"]
 const MAX_COORDINATE := 1000000.0
 
 var created_object_id: String = ""
@@ -47,7 +47,7 @@ func validate(sim: LabSimulation) -> InteractionResult:
 		for chemical_key in amounts.keys():
 			var chemical_id := str(chemical_key)
 			if not ALLOWED_REAGENTS.has(chemical_id) or sim.database.get_chemical(chemical_id) == null:
-				return InteractionResult.failure("Only classroom water and sodium chloride can be spawned as reagents.")
+				return InteractionResult.failure("Only the classroom reagents (water, ice, sodium chloride, tin, bismuth) can be spawned.")
 			var amount: Variant = amounts[chemical_key]
 			if typeof(amount) != TYPE_INT and typeof(amount) != TYPE_FLOAT:
 				return InteractionResult.failure("A starting reagent amount is invalid.")

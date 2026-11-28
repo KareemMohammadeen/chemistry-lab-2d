@@ -51,3 +51,10 @@ Format: ID - decision - reason - alternatives considered.
 **D-021 Reaction results come only from data plus the engine.** Dissolution, neutralisation and boiling are defined in `data/reactions`; equipment and UI contain no chemical rules.
 
 **D-022 Provenance on values.** Numeric content carries a status. The validator reports how many `placeholder` values remain.
+
+**D-023 Enthalpy method for phase changes.** Heat is conserved as H = C·T + latent state; temperature is found by inverting the monotone H(T). Plateaus and ordering of several melting solids fall out without special cases. Alternative: per-step temperature clamps, rejected (they lose energy).
+
+**D-024 Fusing solids only for listed binary systems.** Two solids become one material only if listed in `data/materials/binary_systems.json` and melted together; otherwise a physical mixture. Never invent alloys.
+
+**D-025 Legacy `ReactionEngine` deprecated.** Kept until Phase 2, not extended. `phase_change` reaction definitions are no longer stepped ambiently; `PhaseChangeSystem` handles them.
+

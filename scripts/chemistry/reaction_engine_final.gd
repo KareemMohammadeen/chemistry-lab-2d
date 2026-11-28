@@ -55,6 +55,11 @@ func execute_step_reactions(vessel: VesselState, dt: float = 1.0, extra_heat_cap
 		var reaction := _db.reactions.get(reaction_id) as ReactionDefinition
 		if reaction == null or reaction.virtual_only or reaction.type == "visual_demo":
 			continue
+		# Phase changes of substances with a thermal profile are done by PhaseChangeSystem, which
+		# conserves energy through the latent heats. These definitions stay valid for explicit
+		# execution through execute_registered_reaction() but never run in the ambient step.
+		if reaction.type == "phase_change":
+			continue
 		var result := _execute_reaction(reaction, vessel, dt, extra_heat_capacity_j_per_k, true)
 		if result.status == ReactionResult.Status.EXECUTED or result.status == ReactionResult.Status.MATCHED:
 			results.append(result)

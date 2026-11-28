@@ -23,15 +23,17 @@
   },
   "melting_point_c": {
     "value": 0,
-    "status": "unverified_reference",
     "unit": "°C",
-    "condition": "1 atm"
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Properties_of_water (infobox: 0.00 °C) (fetched 2026-11-28)"
   },
   "boiling_point_c": {
-    "value": 100,
-    "status": "unverified_reference",
+    "value": 100.0,
     "unit": "°C",
-    "condition": "1 atm"
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Properties_of_water (infobox 99.98 °C) and NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=4 (Tboil 373.17 ± 0.04 K = 100.02 °C); rounded to the conventional 100.0 °C, within both (fetched 2026-11-28)"
   },
   "is_aqueous_solvent": true,
   "acid_base": {
@@ -55,5 +57,66 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "molar_mass_g_mol": {
+    "value": 18.015,
+    "unit": "g/mol",
+    "status": "reference",
+    "source": "Sum of IUPAC standard atomic weights for the formula (NIST WebBook lists 18.0153) (fetched 2026-11-28)"
+  },
+  "thermal": {
+    "phases": {
+      "solid": "ice",
+      "liquid": "water",
+      "gas": "water_vapor"
+    },
+    "enthalpy_fusion_j_per_g": {
+      "value": 333.55,
+      "unit": "J/g",
+      "status": "reference",
+      "condition": "0 °C, 1 atm",
+      "source": "https://en.wikipedia.org/wiki/Properties_of_water (\"specific enthalpy of fusion ... 333.55 kJ/kg at 0 °C\") (fetched 2026-11-28)"
+    },
+    "enthalpy_vaporization_j_per_g": {
+      "value": 2257,
+      "unit": "J/g",
+      "status": "reference",
+      "condition": "normal boiling point",
+      "source": "https://en.wikipedia.org/wiki/Properties_of_water (\"40.65 kJ/mol or 2257 kJ/kg at the normal boiling point\") (fetched 2026-11-28)"
+    },
+    "specific_heat_liquid_j_per_g_k": {
+      "value": 4.182,
+      "unit": "J/(g·K)",
+      "status": "reference",
+      "condition": "25 °C",
+      "source": "https://en.wikipedia.org/wiki/Properties_of_water (4182 J/(kg·K)) (fetched 2026-11-28)"
+    },
+    "specific_heat_solid_j_per_g_k": {
+      "value": 2.03,
+      "unit": "J/(g·K)",
+      "status": "reference",
+      "condition": "-10 °C",
+      "source": "https://en.wikipedia.org/wiki/Properties_of_water (ice, 2030 J/(kg·K)) (fetched 2026-11-28)"
+    },
+    "specific_heat_gas_j_per_g_k": {
+      "value": 2.08,
+      "unit": "J/(g·K)",
+      "status": "reference",
+      "condition": "100 °C",
+      "source": "https://en.wikipedia.org/wiki/Properties_of_water (steam, 2080 J/(kg·K)) (fetched 2026-11-28)"
+    },
+    "vapor_pressure": {
+      "model": "antoine_log10_bar_kelvin",
+      "a": 4.6543,
+      "b": 1435.264,
+      "c": -64.848,
+      "t_min_k": 255.9,
+      "t_max_k": 373.0,
+      "unit": "bar",
+      "status": "reference",
+      "source": "NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=4 (Antoine row 255.9-373 K, Stull 1947, coefficients calculated by NIST); log10(P/bar) = A - B/(T/K + C) (fetched 2026-11-28)",
+      "note": "Reproduces about 3.18 kPa at 25 °C and 99.8 kPa at 100 °C; checked against the same page's value for the normal boiling point."
+    },
+    "notes": "Dissolved solutes are not yet modelled as lowering the freezing point or raising the boiling point; the model treats water as pure."
   }
 }

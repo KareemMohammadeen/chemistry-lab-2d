@@ -43,5 +43,57 @@
     "status": "reference",
     "unit": "g/mol",
     "source": "Sum of IUPAC standard atomic weights for the formula"
+  },
+  "melting_point_c": {
+    "value": 650,
+    "unit": "°C",
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Magnesium (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "boiling_point_c": {
+    "value": 1091,
+    "unit": "°C",
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Magnesium (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "thermal": {
+    "enthalpy_fusion_j_per_g": {
+      "value": 348.899,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "melting point",
+      "source": "https://en.wikipedia.org/wiki/Magnesium (infobox, values cite the CRC Handbook): heat of fusion 8.48 kJ/mol ÷ 24.305 g/mol (fetched 2026-11-28)"
+    },
+    "enthalpy_vaporization_j_per_g": {
+      "value": 5266.41,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "normal boiling point",
+      "source": "https://en.wikipedia.org/wiki/Magnesium (infobox, values cite the CRC Handbook): heat of vaporization 128 kJ/mol ÷ 24.305 g/mol (fetched 2026-11-28)"
+    },
+    "specific_heat_solid_j_per_g_k": {
+      "value": 1.0232,
+      "unit": "J/(g·K)",
+      "status": "derived",
+      "condition": "25 °C",
+      "source": "https://en.wikipedia.org/wiki/Magnesium (infobox, values cite the CRC Handbook): molar heat capacity 24.869 J/(mol·K) ÷ 24.305 g/mol (fetched 2026-11-28)"
+    },
+    "density_solid_g_ml": {
+      "value": 1.737,
+      "unit": "g/mL",
+      "status": "reference",
+      "condition": "20 °C",
+      "source": "https://en.wikipedia.org/wiki/Magnesium (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+    },
+    "density_liquid_g_ml": {
+      "value": 1.584,
+      "unit": "g/mL",
+      "status": "reference",
+      "condition": "melting point",
+      "source": "https://en.wikipedia.org/wiki/Magnesium (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+    },
+    "notes": "No liquid heat capacity was found in a fetched source; the model reuses the solid value for the melt (documented approximation). "
   }
 }

@@ -3,7 +3,7 @@ extends LabCommand
 ## Adds one of the two classroom-demo reagents directly to a receiving vessel.
 ## This is a virtual teaching interaction, not a real-world lab procedure.
 
-const ALLOWED_REAGENTS: Array[String] = ["water", "sodium_chloride"]
+const ALLOWED_REAGENTS: Array[String] = ["water", "ice", "sodium_chloride", "tin", "bismuth"]
 
 
 func command_name() -> String:
@@ -22,7 +22,7 @@ func validate(sim: LabSimulation) -> InteractionResult:
 		return InteractionResult.failure("This vessel is closed. Return it to the open-system model before adding liquid or solid.")
 	var chemical_id := str(context.payload.get("chemical_id", ""))
 	if not ALLOWED_REAGENTS.has(chemical_id):
-		return InteractionResult.failure("Only classroom water and sodium chloride can be added from the Library.")
+		return InteractionResult.failure("Only the classroom reagents (water, ice, sodium chloride, tin, bismuth) can be added from the Library.")
 	var chemical := sim.database.get_chemical(chemical_id)
 	if chemical == null:
 		return InteractionResult.failure("That classroom reagent is not in the chemistry database.")

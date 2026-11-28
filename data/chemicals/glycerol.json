@@ -22,16 +22,20 @@
   },
   "boiling_point_c": {
     "value": 290,
-    "status": "unverified_reference",
     "unit": "°C",
-    "source": "commonly quoted textbook value; check a primary source before citing"
+    "status": "reference",
+    "condition": "1 atm; NIST lists Tboil 550 ± 40 K (average of 6 values)",
+    "source": "https://en.wikipedia.org/wiki/Glycerol_(data_page) (vapour-pressure table: 760 mm Hg at 290.0 °C) (fetched 2026-11-28)"
   },
   "solubility_in_water": {
     "unit": "g/100 mL",
     "status": "unverified_reference",
     "source": "miscible with water; commonly quoted textbook value; check a primary source before citing",
     "curve": [
-      [20, 100]
+      [
+        20,
+        100
+      ]
     ]
   },
   "label_lines": [
@@ -51,5 +55,35 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "molar_mass_g_mol": {
+    "value": 92.0938,
+    "unit": "g/mol",
+    "status": "reference",
+    "source": "NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C56815&Mask=4 (molecular weight 92.0938) (fetched 2026-11-28)"
+  },
+  "melting_point_c": {
+    "value": 18.7,
+    "unit": "°C",
+    "status": "reference",
+    "condition": "triple point; NIST lists Tfus 290 ± 5 K (average of 9 values)",
+    "source": "https://en.wikipedia.org/wiki/Glycerol_(data_page) (triple point 291.8 K = 18.7 °C) (fetched 2026-11-28)"
+  },
+  "thermal": {
+    "enthalpy_fusion_j_per_g": {
+      "value": 198.493,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "293 K",
+      "source": "NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C56815&Mask=4 (ΔfusH 18.28 kJ/mol, Acree 1991, evaluated) ÷ 92.0938 g/mol (fetched 2026-11-28)"
+    },
+    "specific_heat_liquid_j_per_g_k": {
+      "value": 2.4095,
+      "unit": "J/(g·K)",
+      "status": "derived",
+      "condition": "25 °C",
+      "source": "https://en.wikipedia.org/wiki/Glycerol_(data_page) (221.9 J/(mol·K)) ÷ 92.0938 g/mol (fetched 2026-11-28)"
+    },
+    "notes": "Heat of vaporisation at the boiling point was not found in a fetched source, so boiling and evaporation of glycerol are not modelled."
   }
 }

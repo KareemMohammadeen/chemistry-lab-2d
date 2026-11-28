@@ -12,15 +12,15 @@ signal object_focus_requested(object_id: String)
 const REFRESH_INTERVAL_S := 0.5
 const GROUP_GAP_PX := 6
 ## Display titles for the data categories; an unknown category shows its own name.
-const CHEMICAL_GROUP_TITLES := {"solvent": "Solvents", "salt": "Salts", "dilute acid": "Acids", "dilute base": "Bases", "virtual gas": "Virtual gases"}
-const CHEMICAL_GROUP_ORDER: Array = ["solvent", "salt", "dilute acid", "dilute base", "virtual gas"]
-const EQUIPMENT_GROUP_TITLES := {"vessel": "Glassware", "appliance": "Heating", "tool": "Instruments"}
+const CHEMICAL_GROUP_TITLES := {"solvent": "Solvents", "salt": "Salts", "dilute acid": "Acids", "dilute base": "Bases", "metal": "Metals", "phase change material": "Phase-change materials", "virtual gas": "Virtual gases"}
+const CHEMICAL_GROUP_ORDER: Array = ["solvent", "phase change material", "salt", "metal", "dilute acid", "dilute base", "virtual gas"]
+const EQUIPMENT_GROUP_TITLES := {"vessel": "Glassware", "appliance": "Heating and cooling", "tool": "Instruments"}
 const EQUIPMENT_GROUP_ORDER: Array = ["vessel", "appliance", "tool"]
 ## Equipment whose style is listed here is a container for reagents, shown through the reagent cards.
 const HIDDEN_EQUIPMENT_STYLES: Array = ["bottle"]
 ## The classroom-facing Library deliberately exposes only this safe teaching subset.
-const CLASSROOM_CHEMICAL_IDS: Array[String] = ["water", "sodium_chloride", "carbon_dioxide"]
-const CLASSROOM_EQUIPMENT_IDS: Array[String] = ["beaker_250ml", "erlenmeyer_flask_250ml", "test_tube_20ml", "thermometer_general", "dropper_3ml", "hot_plate_basic"]
+const CLASSROOM_CHEMICAL_IDS: Array[String] = ["water", "ice", "sodium_chloride", "tin", "bismuth", "carbon_dioxide"]
+const CLASSROOM_EQUIPMENT_IDS: Array[String] = ["beaker_250ml", "erlenmeyer_flask_250ml", "test_tube_20ml", "thermometer_general", "dropper_3ml", "hot_plate_basic", "cold_plate_basic"]
 const SAFE_REFERENCE_COMPOUND_IDS: Array[String] = ["glucose", "sucrose", "starch"]
 const LEARNING_GUIDE_PATH := "res://data/learning/learning_guide.json"
 const TEACHER_PREVIEWS_PATH := "res://data/learning/teacher_previews.json"

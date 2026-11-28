@@ -43,5 +43,57 @@
     "status": "reference",
     "unit": "g/mol",
     "source": "Sum of IUPAC standard atomic weights for the formula"
+  },
+  "melting_point_c": {
+    "value": 419.53,
+    "unit": "°C",
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Zinc (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "boiling_point_c": {
+    "value": 907,
+    "unit": "°C",
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Zinc (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "thermal": {
+    "enthalpy_fusion_j_per_g": {
+      "value": 111.961,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "melting point",
+      "source": "https://en.wikipedia.org/wiki/Zinc (infobox, values cite the CRC Handbook): heat of fusion 7.32 kJ/mol ÷ 65.38 g/mol (fetched 2026-11-28)"
+    },
+    "enthalpy_vaporization_j_per_g": {
+      "value": 1758.95,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "normal boiling point",
+      "source": "https://en.wikipedia.org/wiki/Zinc (infobox, values cite the CRC Handbook): heat of vaporization 115 kJ/mol ÷ 65.38 g/mol (fetched 2026-11-28)"
+    },
+    "specific_heat_solid_j_per_g_k": {
+      "value": 0.3896,
+      "unit": "J/(g·K)",
+      "status": "derived",
+      "condition": "25 °C",
+      "source": "https://en.wikipedia.org/wiki/Zinc (infobox, values cite the CRC Handbook): molar heat capacity 25.47 J/(mol·K) ÷ 65.38 g/mol (fetched 2026-11-28)"
+    },
+    "density_solid_g_ml": {
+      "value": 7.14,
+      "unit": "g/mL",
+      "status": "reference",
+      "condition": "20 °C",
+      "source": "https://en.wikipedia.org/wiki/Zinc (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+    },
+    "density_liquid_g_ml": {
+      "value": 6.57,
+      "unit": "g/mL",
+      "status": "reference",
+      "condition": "melting point",
+      "source": "https://en.wikipedia.org/wiki/Zinc (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+    },
+    "notes": "No liquid heat capacity was found in a fetched source; the model reuses the solid value for the melt (documented approximation). "
   }
 }

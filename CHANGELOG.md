@@ -1,3 +1,10 @@
+## Phase 1: thermal properties and phase changes (2026-11-28) - NOT run in Godot
+- New per-material thermal profiles (`ThermalProfile`), energy-conserving `PhaseChangeSystem` (melting, freezing, boiling, evaporation, condensation), Sn-Bi eutectic fusing (`BinaryMeltSystem`), cold plate, `fused_systems` in vessel state and sessions (old sessions load unchanged), inspector text for mixtures vs fused solids.
+- Data: thermal blocks for water/ice/vapour, ethanol, glycerol, NaCl, Zn, Mg; new tin and bismuth; `data/materials/binary_systems.json`.
+- Allowlists widened: ice, tin, bismuth, carbon dioxide, cold plate.
+- Legacy `ReactionEngine` marked deprecated.
+- Tests: `tests/test_phase_model.py` (21 checks, run), validator thermal checks (run), `tests/run_phase_change_tests.tscn` (written, not run). See `docs/MATERIAL_THERMODYNAMICS.md`.
+
 ## Stability pass (2026-11-24) - verified in Godot 4.7.2
 Simulation suite: 295 checks, 0 failures (was 215 checks with 13 failures); UI probe 61/61; `validate_project.py`, `validate_curriculum.py`, `validate_teacher_demo.py` pass; all 84 scripts compile; no runtime errors or exit-time leak warnings.
 - **Save/Load ("The saved object counter is invalid")**: `JSON.parse` returns every number as a float, but the loader required `TYPE_INT`, so every correctly saved file was refused. It now accepts whole-number values (`_is_whole_number`). Sessions are written with `full_precision`; Godot's JSON writer can still move a double by one ulp, so reload equality is within 1e-12 relative.

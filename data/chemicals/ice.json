@@ -49,5 +49,8 @@
     "status": "reference",
     "unit": "g/mol",
     "source": "Sum of IUPAC standard atomic weights for the formula"
+  },
+  "thermal": {
+    "family": "water"
   }
 }

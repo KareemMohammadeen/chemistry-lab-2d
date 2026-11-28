@@ -1,5 +1,10 @@
 class_name ReactionEngine
 extends RefCounted
+## DEPRECATED (Phase 1 decision, to be removed in Phase 2). The simulation runs on
+## ReactionEngineAdvanced -> ReactionEngineFinal; nothing instantiates this class. It is kept
+## unchanged only until Phase 2 so its history stays readable. Do not extend it and do not
+## add behaviour here: put new reaction logic in ReactionEngineFinal.
+##
 ## A data-driven reaction executor. Specialised handlers cover common classroom
 ## models, while a generic pipeline handles future reaction families that are
 ## described in data and approved by the registry.

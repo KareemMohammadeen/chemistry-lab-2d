@@ -107,5 +107,35 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "molar_mass_g_mol": {
+    "value": 58.44,
+    "unit": "g/mol",
+    "status": "reference",
+    "source": "Sum of IUPAC standard atomic weights for the formula (fetched 2026-11-28)"
+  },
+  "thermal": {
+    "enthalpy_fusion_j_per_g": {
+      "value": 520,
+      "unit": "J/g",
+      "status": "reference",
+      "condition": "melting point",
+      "source": "https://en.wikipedia.org/wiki/Sodium_chloride_(data_page) (ΔfusH 30.39 kJ/mol, 0.52 kJ/g) (fetched 2026-11-28)"
+    },
+    "specific_heat_solid_j_per_g_k": {
+      "value": 0.853,
+      "unit": "J/(g·K)",
+      "status": "reference",
+      "condition": "near room temperature",
+      "source": "https://en.wikipedia.org/wiki/Sodium_chloride_(data_page) (50 J/(mol·K); 0.853 J/(g·K)) (fetched 2026-11-28)"
+    },
+    "density_liquid_g_ml": {
+      "value": 1.549,
+      "unit": "g/mL",
+      "status": "reference",
+      "condition": "850 °C",
+      "source": "https://en.wikipedia.org/wiki/Sodium_chloride_(data_page) (1.549 g/cm3 at 850 °C) (fetched 2026-11-28)"
+    },
+    "notes": "The sources fetched disagree about the boiling point (1413 °C vs 1465 °C) and no liquid heat capacity was found, so boiling is not modelled. Melting is far above the hot plate range."
   }
 }

@@ -7,33 +7,49 @@
   "formula_display": "C₂H₆O",
   "state": "liquid",
   "category": "alcohol",
-  "color": [0.98, 0.98, 0.99, 0.95],
+  "color": [
+    0.98,
+    0.98,
+    0.99,
+    0.95
+  ],
   "color_status": "display",
   "density_g_ml": {
     "value": 0.789,
-    "status": "unverified_reference",
     "unit": "g/mL",
-    "source": "commonly quoted textbook value; check a primary source before citing"
+    "status": "reference",
+    "condition": "20 °C",
+    "source": "https://en.wikipedia.org/wiki/Ethanol_(data_page) (0.78945 g/cm3 at 20 °C, Lange 1967) (fetched 2026-11-28)"
   },
   "boiling_point_c": {
     "value": 78.4,
-    "status": "unverified_reference",
     "unit": "°C",
-    "source": "commonly quoted textbook value; check a primary source before citing"
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Ethanol_(data_page) (760 mm Hg at 78.4 °C); NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C64175&Mask=4 lists Tboil 351.5 ± 0.2 K (fetched 2026-11-28)"
   },
   "melting_point_c": {
     "value": -114.1,
-    "status": "unverified_reference",
     "unit": "°C",
-    "source": "commonly quoted textbook value; check a primary source before citing"
+    "status": "reference",
+    "condition": "1 atm; uncertainty about ±2 K",
+    "source": "NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C64175&Mask=4 (Tfus 159 ± 2 K = -114.15 °C, average of 11 values); https://en.wikipedia.org/wiki/Ethanol_(data_page) lists -114.3 °C (fetched 2026-11-28)"
   },
   "solubility_in_water": {
     "unit": "g/100 mL",
     "status": "unverified_reference",
     "source": "miscible with water; commonly quoted textbook value; check a primary source before citing",
-    "curve": [[20, 100]]
+    "curve": [
+      [
+        20,
+        100
+      ]
+    ]
   },
-  "label_lines": ["Ethanol", "C₂H₆O"],
+  "label_lines": [
+    "Ethanol",
+    "C₂H₆O"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "Low hazard classroom liquid. Keep away from heat sources in real use.",
@@ -47,5 +63,29 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "thermal": {
+    "enthalpy_fusion_j_per_g": {
+      "value": 100.7185,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "158.8 K",
+      "source": "NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C64175&Mask=4 (ΔfusH 4.64 kJ/mol, Domalski and Hearing 1996, evaluated) ÷ 46.069 g/mol (fetched 2026-11-28)",
+      "note": "Published values range from 4.626 to 5.021 kJ/mol."
+    },
+    "enthalpy_vaporization_j_per_g": {
+      "value": 837.0054,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "normal boiling point",
+      "source": "NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C64175&Mask=4 (ΔvapH 38.56 kJ/mol at 351.5 K, Majer and Svoboda 1985) ÷ 46.069 g/mol (fetched 2026-11-28)"
+    },
+    "specific_heat_liquid_j_per_g_k": {
+      "value": 2.4376,
+      "unit": "J/(g·K)",
+      "status": "derived",
+      "condition": "298.15 K",
+      "source": "NIST WebBook https://webbook.nist.gov/cgi/cbook.cgi?ID=C64175&Mask=6 (Cp,liquid 112.30 J/(mol·K) at 298.15 K, Vesely et al. 1979) ÷ 46.069 g/mol (fetched 2026-11-28)"
+    }
   }
 }

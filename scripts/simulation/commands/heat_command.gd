@@ -31,10 +31,14 @@ func validate(sim: LabSimulation) -> InteractionResult:
 	var target := float(context.payload.get("target_c", heater.target_temperature_c))
 	var maximum := float(heater_equipment.heater.get("max_surface_temperature_c", 300.0))
 	var ambient := sim.database.constant("ambient_temperature_c", 22.0)
+	# A cooling plate declares how far below room temperature it can go; a hot plate cannot.
+	var minimum := float(heater_equipment.heater.get("min_surface_temperature_c", ambient))
 	if target > maximum:
 		return InteractionResult.failure("The %s cannot go above %.0f °C." % [heater_equipment.display_name, maximum])
-	if target < ambient:
-		return InteractionResult.failure("The setpoint cannot be below room temperature (%.0f °C)." % ambient)
+	if target < minimum:
+		if minimum >= ambient:
+			return InteractionResult.failure("The setpoint cannot be below room temperature (%.0f °C)." % ambient)
+		return InteractionResult.failure("The %s cannot go below %.0f °C." % [heater_equipment.display_name, minimum])
 	return InteractionResult.success()
 
 
@@ -52,8 +56,12 @@ func execute(sim: LabSimulation) -> InteractionResult:
 	var note := ""
 	if heater.power_on:
 		description = "Switched the %s on (setpoint %.0f °C)" % [heater_equipment.display_name, heater.target_temperature_c]
-		note = "The surface heats toward %.0f °C and stays hot after it is switched off." % heater.target_temperature_c
+		var ambient_c := sim.database.constant("ambient_temperature_c", 22.0)
+		if heater.target_temperature_c < ambient_c:
+			note = "The surface cools toward %.0f °C and stays cold after it is switched off." % heater.target_temperature_c
+		else:
+			note = "The surface heats toward %.0f °C and stays hot after it is switched off." % heater.target_temperature_c
 	else:
 		description = "Switched the %s off" % heater_equipment.display_name
-		note = "The %s is off but its surface stays hot while it cools." % heater_equipment.display_name
+		note = "The %s is off; its surface drifts back to room temperature." % heater_equipment.display_name
 	return InteractionResult.success(note, {"heater_id": heater.id, "power_on": heater.power_on})

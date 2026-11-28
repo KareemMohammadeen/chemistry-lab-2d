@@ -4,7 +4,9 @@ extends RefCounted
 ## Hot plates ramp toward their setpoint; vessels standing on them exchange heat by
 ## conduction and lose heat to the room. Exchange never overshoots equilibrium, so large
 ## time steps (high simulation speed) stay stable. Boiling is only partly simulated:
-## the temperature is held at the boiling point.
+## the temperature is held at the boiling point. Melting, freezing, boiling, evaporation and
+## condensation of substances with a thermal profile are done by PhaseChangeSystem, which conserves
+## energy through the latent heats; the clamp here remains for aqueous solutions.
 
 const DEFAULT_BOILING_POINT_C := 100.0
 const DEFAULT_TRANSFER_W_PER_K := 5.0
@@ -70,6 +72,9 @@ static func _step_vessel(state: LabState, db: ContentDatabase, item: LabObject, 
 			vessel.temperature_c = _exchange(vessel.temperature_c, plate.surface_temperature_c, conductance, capacity, dt)
 	var room_loss := db.constant("ambient_loss_w_per_k", 0.3)
 	vessel.temperature_c = _exchange(vessel.temperature_c, ambient, room_loss, capacity, dt)
+
+	for phase_entry in PhaseChangeSystem.step(vessel, db, capacity, ambient, dt):
+		events.append({"object_id": item.id, "entry": phase_entry})
 
 	var boiling_point := boiling_point_c(db)
 	if AcidBase.aqueous_volume_ml(vessel, db) > 0.0 and vessel.temperature_c > boiling_point:

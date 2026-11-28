@@ -41,10 +41,14 @@ static func inspect(sim: LabSimulation, object_id: String) -> Dictionary:
 			"available": true,
 			"power_on": item.power_on,
 			"target_c": item.target_temperature_c,
-			"min_c": db.constant("ambient_temperature_c", 22.0),
+			"min_c": float(equipment.heater.get("min_surface_temperature_c", db.constant("ambient_temperature_c", 22.0))),
 			"max_c": float(equipment.heater.get("max_surface_temperature_c", 300.0)),
 		}
-		data["summary"] = "Hot surfaces stay hot after switching off. Check the surface temperature before touching."
+		var coldest := float(equipment.heater.get("min_surface_temperature_c", db.constant("ambient_temperature_c", 22.0)))
+		if coldest < db.constant("ambient_temperature_c", 22.0):
+			data["summary"] = "Cooled surfaces warm slowly back to room temperature. Very cold surfaces can hurt skin; check the surface temperature before touching."
+		else:
+			data["summary"] = "Hot surfaces stay hot after switching off. Check the surface temperature before touching."
 	elif not equipment.thermometer.is_empty():
 		rows.append({"label": "Reading", "value": UnitFormat.temperature_c(sim.thermometer_reading_c(object_id))})
 		data["summary"] = "Put it into a vessel to measure the temperature of its contents."
@@ -66,6 +70,10 @@ static func _describe_vessel(sim: LabSimulation, item: LabObject, equipment: Equ
 	rows.append({"label": "System", "value": "Closed · gas retained" if vessel.is_closed_system else "Open"})
 	if vessel.is_closed_system:
 		rows.append({"label": "Pressure (model)", "value": "%.1f kPa" % vessel.pressure_kpa(db.constant("ambient_pressure_kpa", 101.325))})
+
+	var material_text := material_state_text(vessel, db)
+	if not material_text.is_empty():
+		rows.append({"label": "Material", "value": material_text})
 
 	var contents: Array = data["contents"]
 	var chemical_ids: Array = []
@@ -91,7 +99,11 @@ static func _describe_vessel(sim: LabSimulation, item: LabObject, equipment: Equ
 		var undissolved := float(vessel.solids.get(solute_id, 0.0))
 		var dissolved_g := float(vessel.dissolved.get(solute_id, 0.0))
 		var detail := ""
-		if vessel.has_liquid():
+		var melts_instead_of_dissolving := solute != null and solute.thermal != null and solute.thermal.can_melt() \
+			and db.find_dissolution(str(solute_id)) == null and dissolved_g <= 0.0
+		if melts_instead_of_dissolving:
+			detail = "solid"
+		elif vessel.has_liquid():
 			detail = "%s dissolved, %s undissolved" % [UnitFormat.mass_g(dissolved_g), UnitFormat.mass_g(undissolved)]
 		contents.append({"name": _name_of(solute, str(solute_id)),
 			"amount": UnitFormat.mass_g(undissolved + dissolved_g), "detail": detail})
@@ -146,6 +158,44 @@ static func _describe_vessel(sim: LabSimulation, item: LabObject, equipment: Equ
 			rows.append({"label": "Suggested experiments", "value": "%d virtual demos" % experiments.size()})
 			data["experiments"] = experiments.slice(0, 5)
 	data["summary"] = main_chemical.summary if main_chemical != null else "Empty. Drag a bottle onto it to fill it."
+
+
+## Plain-language classification of what the solids and melts in a vessel are: a physical mixture,
+## a molten solution, or one fused alloy. Empty when there is nothing to classify.
+## A pair is only called an alloy after it was melted together (VesselState.fused_systems) and
+## only for pairs listed in data/materials/binary_systems.json; any other pair of solids is a
+## physical mixture, never a chemical fusion.
+static func material_state_text(vessel: VesselState, db: ContentDatabase) -> String:
+	var parts := PackedStringArray()
+	var covered := {}
+	for system_value in db.binary_systems:
+		var system: BinaryMeltSystem = system_value
+		var has_a := float(vessel.solids.get(system.component_a, 0.0)) > 0.0 or float(vessel.liquids.get(system.component_a, 0.0)) > 0.0
+		var has_b := float(vessel.solids.get(system.component_b, 0.0)) > 0.0 or float(vessel.liquids.get(system.component_b, 0.0)) > 0.0
+		if not (has_a and has_b):
+			continue
+		covered[system.component_a] = true
+		covered[system.component_b] = true
+		var any_liquid := float(vessel.liquids.get(system.component_a, 0.0)) > 0.0 or float(vessel.liquids.get(system.component_b, 0.0)) > 0.0
+		var any_solid := float(vessel.solids.get(system.component_a, 0.0)) > 0.0 or float(vessel.solids.get(system.component_b, 0.0)) > 0.0
+		if vessel.fused_systems.has(system.id):
+			if any_liquid and any_solid:
+				parts.append("%s, partly melted" % system.product_name)
+			elif any_liquid:
+				parts.append("Molten %s (one liquid solution)" % system.product_name.to_lower())
+			else:
+				parts.append("%s: one fused solid material" % system.product_name)
+		else:
+			parts.append("Physical mixture of %s and %s (not melted together)" % [
+				_name_of(db.get_chemical(system.component_a), system.component_a),
+				_name_of(db.get_chemical(system.component_b), system.component_b)])
+	var loose: Array = []
+	for solid_id in vessel.solids.keys():
+		if not covered.has(solid_id) and float(vessel.solids[solid_id]) > 0.0 and db.find_dissolution(str(solid_id)) == null:
+			loose.append(_name_of(db.get_chemical(str(solid_id)), str(solid_id)))
+	if loose.size() >= 2:
+		parts.append("Physical mixture of solids (%s); no alloy data, so they stay separate" % ", ".join(loose))
+	return "; ".join(parts)
 
 
 static func _state_text(sim: LabSimulation, item: LabObject, equipment: EquipmentDefinition) -> String:

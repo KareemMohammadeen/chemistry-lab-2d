@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "id": "bismuth",
+  "name": "Bismuth",
+  "short_name": "Bismuth",
+  "formula": "Bi",
+  "formula_display": "Bi",
+  "state": "solid",
+  "category": "metal",
+  "color": [
+    0.78,
+    0.74,
+    0.76,
+    1.0
+  ],
+  "color_status": "display",
+  "density_g_ml": {
+    "value": 9.807,
+    "unit": "g/mL",
+    "status": "reference",
+    "condition": "20 °C",
+    "source": "https://en.wikipedia.org/wiki/Bismuth (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "molar_mass_g_mol": {
+    "value": 208.9804,
+    "unit": "g/mol",
+    "status": "reference",
+    "source": "https://en.wikipedia.org/wiki/Bismuth (infobox, values cite the CRC Handbook) (standard atomic weight) (fetched 2026-11-28)"
+  },
+  "melting_point_c": {
+    "value": 271.5,
+    "unit": "°C",
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Bismuth (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "boiling_point_c": {
+    "value": 1564,
+    "unit": "°C",
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Bismuth (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "label_lines": [
+    "Bismuth",
+    "Bi"
+  ],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "Solid metal for virtual melting and alloy demonstrations. Molten metal causes severe burns.",
+    "storage": "Dry, closed container.",
+    "source": "General laboratory safety guidance written for this project; no GHS classification was sourced, check the supplier's safety data sheet before real use."
+  },
+  "display": {
+    "summary": "A brittle, dense metal with a low melting point; it forms a low-melting eutectic alloy with tin."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  },
+  "thermal": {
+    "enthalpy_fusion_j_per_g": {
+      "value": 54.072,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "melting point",
+      "source": "https://en.wikipedia.org/wiki/Bismuth (infobox, values cite the CRC Handbook): heat of fusion 11.3 kJ/mol ÷ 208.9804 g/mol (fetched 2026-11-28)"
+    },
+    "enthalpy_vaporization_j_per_g": {
+      "value": 856.54,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "normal boiling point",
+      "source": "https://en.wikipedia.org/wiki/Bismuth (infobox, values cite the CRC Handbook): heat of vaporization 179 kJ/mol ÷ 208.9804 g/mol (fetched 2026-11-28)"
+    },
+    "specific_heat_solid_j_per_g_k": {
+      "value": 0.1221,
+      "unit": "J/(g·K)",
+      "status": "derived",
+      "condition": "25 °C",
+      "source": "https://en.wikipedia.org/wiki/Bismuth (infobox, values cite the CRC Handbook): molar heat capacity 25.52 J/(mol·K) ÷ 208.9804 g/mol (fetched 2026-11-28)"
+    },
+    "density_solid_g_ml": {
+      "value": 9.807,
+      "unit": "g/mL",
+      "status": "reference",
+      "condition": "20 °C",
+      "source": "https://en.wikipedia.org/wiki/Bismuth (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+    },
+    "density_liquid_g_ml": {
+      "value": 10.05,
+      "unit": "g/mL",
+      "status": "reference",
+      "condition": "melting point",
+      "source": "https://en.wikipedia.org/wiki/Bismuth (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+    },
+    "notes": "No liquid heat capacity was found in a fetched source; the model reuses the solid value for the melt (documented approximation). "
+  }
+}
