@@ -18,7 +18,13 @@ var solution_color: Color = Color.WHITE
 var color_full_at_g_per_100ml: float = 1.0
 var density_g_ml: float = 1.0
 ## NAN when unknown.
+var melting_point_c: float = NAN
 var boiling_point_c: float = NAN
+## Heat capacities, latent heats and phase ids of this substance's family. Null when the file
+## has no "thermal" block. Members of a shared family (ice, water vapour) point at the same object.
+var thermal: ThermalProfile = null
+## Id of the family root when this chemical is one phase of another record ("ice" -> "water").
+var thermal_family_id: String = ""
 var is_aqueous_solvent: bool = false
 ## NAN when unknown. Needed to convert grams or millilitres of this substance to moles.
 var molar_mass_g_mol: float = NAN
@@ -56,6 +62,7 @@ static func from_dictionary(data: Dictionary) -> ChemicalDefinition:
 		chemical.solution_color = DataValue.color(data["solution_color"], Color.WHITE)
 	chemical.color_full_at_g_per_100ml = float(data.get("color_full_at_g_per_100ml", 1.0))
 	chemical.density_g_ml = DataValue.number(data, "density_g_ml", 1.0)
+	chemical.melting_point_c = DataValue.number(data, "melting_point_c", NAN)
 	chemical.boiling_point_c = DataValue.number(data, "boiling_point_c", NAN)
 	chemical.molar_mass_g_mol = DataValue.number(data, "molar_mass_g_mol", NAN)
 	chemical.concentration_mol_per_l = DataValue.number(data, "concentration_mol_per_l", 0.0)
@@ -72,6 +79,12 @@ static func from_dictionary(data: Dictionary) -> ChemicalDefinition:
 	var simulation: Dictionary = data.get("simulation", {})
 	chemical.virtual_simulation_enabled = bool(simulation.get("enabled", false))
 	chemical.simulation_role = str(simulation.get("role", ""))
+	var thermal_data: Variant = data.get("thermal", {})
+	if typeof(thermal_data) == TYPE_DICTIONARY:
+		var thermal_block: Dictionary = thermal_data
+		chemical.thermal_family_id = str(thermal_block.get("family", ""))
+		if chemical.thermal_family_id.is_empty() and not thermal_block.is_empty():
+			chemical.thermal = ThermalProfile.from_dictionary(chemical_id, thermal_block, data, chemical.molar_mass_g_mol)
 	for key in data.keys():
 		if typeof(data[key]) == TYPE_DICTIONARY and data[key].has("status") and not DataValue.is_trusted(data, key):
 			chemical.unreviewed_fields.append(str(key))

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "description": "Binary melting systems: which pairs of solids form a single alloy when melted together and re-frozen. A pair that is not listed is a physical mixture and each component melts on its own.",
+  "systems": [
+    {
+      "id": "tin_bismuth",
+      "kind": "eutectic",
+      "component_a": "tin",
+      "component_b": "bismuth",
+      "product_name": "Tin–bismuth eutectic alloy",
+      "eutectic_temperature_c": {
+        "value": 138.8,
+        "unit": "°C",
+        "status": "reference",
+        "condition": "1 atm",
+        "source": "https://www.metallurgy.nist.gov/phase/solder/bisn.html (calculated Bi-Sn diagram, L → (Bi) + (Sn)); https://pmc.ncbi.nlm.nih.gov/articles/PMC5578286 gives 138 °C (fetched 2026-11-28)"
+      },
+      "eutectic_mass_fraction_b": {
+        "value": 0.5697,
+        "unit": "mass fraction Bi",
+        "status": "reference",
+        "source": "https://www.metallurgy.nist.gov/phase/solder/bisn.html (56.97 mass % Bi); the PMC5578286 paper rounds to 58 wt % (fetched 2026-11-28)"
+      },
+      "liquidus_model": "linear_between_endpoints",
+      "liquidus_note": "Only the two melting points and the eutectic point were found in fetched sources; the real liquidus curves between them are curved, so liquidus temperatures at other compositions are an approximation.",
+      "terminal_solid_solubility": {
+        "b_in_a_mass_fraction": 0.2101,
+        "a_in_b_mass_fraction": 0.0011,
+        "treatment": "neglected",
+        "source": "https://www.metallurgy.nist.gov/phase/solder/bisn.html (21.01 mass % Bi in (Sn) and 0.11 mass % Sn in (Bi) at the eutectic temperature); the model neglects these solid solutions"
+      },
+      "enthalpy_of_mixing": "neglected",
+      "status": "derived"
+    }
+  ]
+}

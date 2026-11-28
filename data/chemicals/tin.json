@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "id": "tin",
+  "name": "Tin",
+  "short_name": "Tin",
+  "formula": "Sn",
+  "formula_display": "Sn",
+  "state": "solid",
+  "category": "metal",
+  "color": [
+    0.8,
+    0.82,
+    0.84,
+    1.0
+  ],
+  "color_status": "display",
+  "density_g_ml": {
+    "value": 7.289,
+    "unit": "g/mL",
+    "status": "reference",
+    "condition": "20 °C",
+    "source": "https://en.wikipedia.org/wiki/Tin (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "molar_mass_g_mol": {
+    "value": 118.71,
+    "unit": "g/mol",
+    "status": "reference",
+    "source": "https://en.wikipedia.org/wiki/Tin (infobox, values cite the CRC Handbook) (standard atomic weight) (fetched 2026-11-28)"
+  },
+  "melting_point_c": {
+    "value": 231.93,
+    "unit": "°C",
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Tin (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "boiling_point_c": {
+    "value": 2602,
+    "unit": "°C",
+    "status": "reference",
+    "condition": "1 atm",
+    "source": "https://en.wikipedia.org/wiki/Tin (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+  },
+  "label_lines": [
+    "Tin",
+    "Sn"
+  ],
+  "safety": {
+    "status": "unverified_reference",
+    "summary": "Solid metal for virtual melting and alloy demonstrations. Molten metal causes severe burns.",
+    "storage": "Dry, closed container.",
+    "source": "General laboratory safety guidance written for this project; no GHS classification was sourced, check the supplier's safety data sheet before real use."
+  },
+  "display": {
+    "summary": "A soft silvery metal with a low melting point, used with bismuth in virtual alloy demonstrations."
+  },
+  "simulation": {
+    "enabled": true,
+    "role": "classroom_reagent",
+    "scope": "approved virtual teaching subset"
+  },
+  "thermal": {
+    "enthalpy_fusion_j_per_g": {
+      "value": 59.22,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "melting point",
+      "source": "https://en.wikipedia.org/wiki/Tin (infobox, values cite the CRC Handbook): heat of fusion 7.03 kJ/mol ÷ 118.71 g/mol (fetched 2026-11-28)"
+    },
+    "enthalpy_vaporization_j_per_g": {
+      "value": 2494.31,
+      "unit": "J/g",
+      "status": "derived",
+      "condition": "normal boiling point",
+      "source": "https://en.wikipedia.org/wiki/Tin (infobox, values cite the CRC Handbook): heat of vaporization 296.1 kJ/mol ÷ 118.71 g/mol (fetched 2026-11-28)"
+    },
+    "specific_heat_solid_j_per_g_k": {
+      "value": 0.2284,
+      "unit": "J/(g·K)",
+      "status": "derived",
+      "condition": "25 °C",
+      "source": "https://en.wikipedia.org/wiki/Tin (infobox, values cite the CRC Handbook): molar heat capacity 27.112 J/(mol·K) ÷ 118.71 g/mol (fetched 2026-11-28)"
+    },
+    "density_solid_g_ml": {
+      "value": 7.289,
+      "unit": "g/mL",
+      "status": "reference",
+      "condition": "20 °C",
+      "source": "https://en.wikipedia.org/wiki/Tin (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+    },
+    "density_liquid_g_ml": {
+      "value": 6.99,
+      "unit": "g/mL",
+      "status": "reference",
+      "condition": "melting point",
+      "source": "https://en.wikipedia.org/wiki/Tin (infobox, values cite the CRC Handbook) (fetched 2026-11-28)"
+    },
+    "notes": "No liquid heat capacity was found in a fetched source; the model reuses the solid value for the melt (documented approximation). Values are for white (β) tin; the α/β transition is not modelled."
+  }
+}

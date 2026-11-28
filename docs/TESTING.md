@@ -21,6 +21,12 @@ conservation of dissolved salt when pouring, gas auto-sealing and pressure, open
 observation-only visual model, guided water/salt activity progress from first accepted action through its dissolution condition, and session save/load of gas/system state including invalid-file refusal and log restoration.
 Exit code 0 means all checks passed.
 
+## 2b. Phase 1 tests (thermal / phase change)
+- `python3 tests/test_phase_model.py`: independent reference model on the project data (energy conservation, plateaus,
+  eutectic, equilibrium). Runs without Godot.
+- `res://tests/run_phase_change_tests.tscn` (Godot 4.7, run as a scene): 16 tests of the GDScript implementation.
+  **Written but never executed so far.**
+
 ## 3. In-engine checklist (not yet performed)
 - [ ] Project opens with no script errors in Output / Debugger (reload once if class names are unknown).
 - [ ] F5 shows wall, two shelves with 5 bottles and glassware, the bench with the hot plate, top bar and Inspector.

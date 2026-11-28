@@ -13,6 +13,7 @@ const ELEMENTS_PATH := "res://data/elements/elements.json"
 const COMPOUNDS_DIR := "res://data/compounds"
 const CONSTANTS_PATH := "res://data/simulation/simulation_constants.json"
 const LAYOUT_PATH := "res://data/lab/layout.json"
+const BINARY_SYSTEMS_PATH := "res://data/materials/binary_systems.json"
 
 var chemicals: Dictionary = {}
 var reactions: Dictionary = {}
@@ -25,6 +26,10 @@ var elements_by_number: Dictionary = {}
 var element_catalog: Dictionary = {}
 var compounds: Dictionary = {}
 var layout: LabLayout = null
+## ThermalProfile by family root id (one entry per substance family, not per phase id).
+var thermal_families: Dictionary = {}
+## BinaryMeltSystem list from data/materials/binary_systems.json.
+var binary_systems: Array = []
 ## Human-readable problems found while loading. Empty when everything loaded cleanly.
 var errors: PackedStringArray = []
 
@@ -42,6 +47,8 @@ func load_all() -> void:
 	elements_by_number.clear()
 	element_catalog.clear()
 	compounds.clear()
+	thermal_families.clear()
+	binary_systems.clear()
 	constants = JsonDataLoader.load_dictionary(CONSTANTS_PATH).get("values", {})
 	layout = LabLayout.from_dictionary(JsonDataLoader.load_dictionary(LAYOUT_PATH))
 	for path in JsonDataLoader.list_json_files(CHEMICALS_DIR):
@@ -59,6 +66,8 @@ func load_all() -> void:
 		var reaction := ReactionDefinition.from_dictionary(JsonDataLoader.load_dictionary(path))
 		_register(reactions, reaction, path)
 	_load_reference_data()
+	_resolve_thermal_profiles()
+	_load_binary_systems()
 	for reaction_id in reactions.keys():
 		var reaction: ReactionDefinition = reactions[reaction_id]
 		if reaction.type == "dissolution":
@@ -190,6 +199,69 @@ func _load_reference_data() -> void:
 		_register(compounds, compound, path)
 		if compound != null and not compound.simulation_chemical_id.is_empty() and not chemicals.has(compound.simulation_chemical_id):
 			errors.append("Compound '%s' refers to unknown chemical '%s'." % [compound.id, compound.simulation_chemical_id])
+
+
+## Completes thermal profiles after chemicals and compounds are loaded: fills a missing molar
+## mass from the compound record, links the phase members of a family (ice, water vapour) to the
+## root profile, and indexes the families. Problems are appended to errors.
+func _resolve_thermal_profiles() -> void:
+	for chemical_id in chemicals.keys():
+		var chemical: ChemicalDefinition = chemicals[chemical_id]
+		# Members of a family ("ice") only link to the root's profile; they are never roots.
+		if chemical.thermal == null or not chemical.thermal_family_id.is_empty():
+			continue
+		if not is_finite(chemical.thermal.molar_mass_g_mol):
+			chemical.thermal.molar_mass_g_mol = molar_mass_g_mol(str(chemical_id))
+		thermal_families[chemical.id] = chemical.thermal
+		for member_id in chemical.thermal.member_ids():
+			var member := get_chemical(str(member_id))
+			if member == null:
+				errors.append("Thermal profile of '%s' names unknown phase chemical '%s'." % [chemical.id, member_id])
+			elif member.id != chemical.id:
+				if member.thermal_family_id != chemical.id:
+					errors.append("Chemical '%s' is a phase of '%s' but does not declare thermal.family." % [member.id, chemical.id])
+				member.thermal = chemical.thermal
+	for chemical_id in chemicals.keys():
+		var chemical: ChemicalDefinition = chemicals[chemical_id]
+		if not chemical.thermal_family_id.is_empty() and not thermal_families.has(chemical.thermal_family_id):
+			errors.append("Chemical '%s' declares thermal family '%s', which has no thermal profile." % [chemical.id, chemical.thermal_family_id])
+
+
+func _load_binary_systems() -> void:
+	var file := JsonDataLoader.load_dictionary(BINARY_SYSTEMS_PATH)
+	for entry in file.get("systems", []):
+		if typeof(entry) != TYPE_DICTIONARY:
+			errors.append("Binary systems file contains a non-dictionary entry.")
+			continue
+		var problems: Array = []
+		var system := BinaryMeltSystem.from_dictionary(entry, self, problems)
+		for problem in problems:
+			errors.append("Binary systems: %s" % str(problem))
+		if system != null:
+			binary_systems.append(system)
+
+
+## Molar mass in g/mol of a chemical: its own value, else its compound record, else NAN.
+func molar_mass_g_mol(chemical_id: String) -> float:
+	var chemical := get_chemical(chemical_id)
+	if chemical != null and is_finite(chemical.molar_mass_g_mol) and chemical.molar_mass_g_mol > 0.0:
+		return chemical.molar_mass_g_mol
+	var compound := get_compound(chemical_id)
+	if compound != null and is_finite(compound.molar_mass_g_mol) and compound.molar_mass_g_mol > 0.0:
+		return compound.molar_mass_g_mol
+	return NAN
+
+
+## Density (g/mL) used to convert between the millilitres of a liquid ledger entry and grams.
+## A substance whose molten phase differs from its solid (metals) names it in its thermal profile.
+func liquid_density_g_ml(chemical_id: String) -> float:
+	var chemical := get_chemical(chemical_id)
+	if chemical == null:
+		return 1.0
+	if chemical.thermal != null and is_finite(chemical.thermal.density_liquid_g_ml) and chemical.thermal.density_liquid_g_ml > 0.0 \
+			and chemical.thermal.id_for_phase("liquid") == chemical.id:
+		return chemical.thermal.density_liquid_g_ml
+	return chemical.density_g_ml
 
 
 func get_element(symbol: String) -> ElementDefinition:

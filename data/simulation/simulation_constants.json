@@ -23,7 +23,8 @@
     "temperature_hot_label_c": 60,
     "ambient_pressure_kpa": 101.325,
     "max_virtual_pressure_kpa": 300,
-    "virtual_gas_addition_moles": 0.002
+    "virtual_gas_addition_moles": 0.002,
+    "evaporation_mass_transfer_g_per_s_per_kpa": 0.0005
   },
   "status": {
     "specific_heat_water_j_per_g_k": "unverified_reference",
@@ -33,6 +34,7 @@
     "stir_duration_s": "placeholder",
     "ambient_pressure_kpa": "reference",
     "max_virtual_pressure_kpa": "safety_limit_for_virtual_model",
-    "virtual_gas_addition_moles": "virtual_demo_limit_not_a_real_world_quantity"
+    "virtual_gas_addition_moles": "virtual_demo_limit_not_a_real_world_quantity",
+    "evaporation_mass_transfer_g_per_s_per_kpa": "placeholder"
   }
 }

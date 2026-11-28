@@ -31,6 +31,15 @@ python3 tools/build_compounds.py    # data/compounds/*.json
 python3 tests/validate_project.py   # cross-checks (118 elements, molar masses, links)
 ```
 
+## Thermal block (Phase 1)
+A chemical may carry `thermal`: `phases` (family root only), `family` (members), `enthalpy_fusion_j_per_g`,
+`enthalpy_vaporization_j_per_g`, `specific_heat_solid|liquid|gas_j_per_g_k`, `density_solid|liquid_g_ml`, `antoine`.
+Each value: `value`, `unit`, `status`, `source` (URL plus fetch date), optional `condition`/`note`. Rules: never estimate a
+missing value; leave it out and say so in `notes`. `tests/validate_project.py` checks structure, sources, ranges and
+Antoine consistency. See `docs/MATERIAL_THERMODYNAMICS.md`. Coverage so far: water family, ethanol, glycerol, sodium
+chloride, zinc, magnesium, tin, bismuth. Solubility, GHS/safety classification and chemical-property profiles for the
+remaining materials are not yet sourced.
+
 ## Still missing
 Oxidation states only for common teaching elements; appearance and hazard text only for the common ones; compound reaction
 data is descriptive, not yet executable by the ReactionEngine.

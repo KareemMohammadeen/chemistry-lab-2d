@@ -24,6 +24,10 @@ var stir_time_left_s: float = 0.0
 var neutralised_mol: float = 0.0
 var fired_observations: Dictionary = {}
 var observations: Array = []
+## Ids of binary melting systems (data/materials/binary_systems.json) whose components have been
+## melted together in this vessel: system id -> true. Once set, re-frozen solid is one alloy,
+## not two separate metals. Absent in sessions saved before alloys existed (treated as empty).
+var fused_systems: Dictionary = {}
 
 
 func liquid_volume_ml() -> float:
@@ -168,6 +172,7 @@ func to_dictionary() -> Dictionary:
 		"neutralised_mol": neutralised_mol,
 		"fired_observations": fired_observations.duplicate(true),
 		"observations": observations.duplicate(true),
+		"fused_systems": fused_systems.duplicate(),
 	}
 
 
@@ -185,4 +190,7 @@ static func from_dictionary(data: Dictionary) -> VesselState:
 	vessel.neutralised_mol = float(data.get("neutralised_mol", 0.0))
 	vessel.fired_observations = (data.get("fired_observations", {}) as Dictionary).duplicate(true)
 	vessel.observations = (data.get("observations", []) as Array).duplicate(true)
+	var fused: Variant = data.get("fused_systems", {})
+	if typeof(fused) == TYPE_DICTIONARY:
+		vessel.fused_systems = (fused as Dictionary).duplicate()
 	return vessel

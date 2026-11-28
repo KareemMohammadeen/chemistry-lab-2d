@@ -7,10 +7,18 @@
   "formula_display": "H2O(g)",
   "state": "gas",
   "category": "gas",
-  "color": [0.70, 0.85, 1.0, 0.05],
+  "color": [
+    0.7,
+    0.85,
+    1.0,
+    0.05
+  ],
   "color_status": "display",
   "density_g_ml": 0.0006,
-  "label_lines": ["Water vapour", "H2O(g)"],
+  "label_lines": [
+    "Water vapour",
+    "H2O(g)"
+  ],
   "safety": {
     "status": "unverified_reference",
     "summary": "Water in its gaseous form for safe virtual phase-change models.",
@@ -24,5 +32,14 @@
     "enabled": true,
     "role": "classroom_reagent",
     "scope": "approved virtual teaching subset"
+  },
+  "thermal": {
+    "family": "water"
+  },
+  "molar_mass_g_mol": {
+    "value": 18.015,
+    "unit": "g/mol",
+    "status": "reference",
+    "source": "Sum of IUPAC standard atomic weights for the formula (fetched 2026-11-28)"
   }
 }

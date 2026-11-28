@@ -163,6 +163,12 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 			var raw_fired: Variant = vessel.get("fired_observations", {})
 			if typeof(raw_fired) != TYPE_DICTIONARY:
 				return "A saved vessel has invalid observation flags."
+			var raw_fused: Variant = vessel.get("fused_systems", {})
+			if typeof(raw_fused) != TYPE_DICTIONARY:
+				return "A saved vessel has invalid alloy records."
+			for system_key in (raw_fused as Dictionary).keys():
+				if not _is_known_binary_system(database, str(system_key)):
+					return "A saved vessel refers to unknown alloy system '%s'." % str(system_key)
 			var raw_observations: Variant = vessel.get("observations", [])
 			if typeof(raw_observations) != TYPE_ARRAY or (raw_observations as Array).size() > VesselState.MAX_OBSERVATIONS:
 				return "A saved vessel has an invalid observation history."
@@ -181,15 +187,7 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 					var chemical := database.get_chemical(chemical_id)
 					if chemical == null:
 						return "The session refers to unknown simulated chemical '%s'." % chemical_id
-					var expected_state := ""
-					match bucket:
-						"liquids":
-							expected_state = "liquid"
-						"solids":
-							expected_state = "solid"
-						"dissolved":
-							expected_state = "solid"
-					if not expected_state.is_empty() and chemical.state != expected_state:
+					if not _fits_phase_bucket(chemical, bucket):
 						return "A saved vessel contains '%s' in the wrong phase bucket." % chemical_id
 					var amount: Variant = amounts[chemical_key]
 					if not _is_finite_number(amount) or float(amount) < 0.0:
@@ -200,13 +198,18 @@ static func _validate_snapshot(snapshot: Dictionary, database: ContentDatabase) 
 			if typeof(raw_gases) != TYPE_DICTIONARY:
 				return "A saved vessel has an invalid gas ledger."
 			var gas_total := 0.0
+			# Largest plausible amount of one gas: the vessel filled to the virtual pressure limit at
+			# 0 degC (and never below the original 0.01 mol demo limit). Vapour from boiling or
+			# evaporation can exceed the demo limit in a hot sealed vessel.
+			var max_gas_moles := maxf(0.01, database.constant("max_virtual_pressure_kpa", 300.0) * float(capacity) / 1000.0 \
+				/ (VesselState.GAS_CONSTANT_J_PER_MOL_K * ThermalProfile.KELVIN_OFFSET))
 			for gas_key in (raw_gases as Dictionary).keys():
 				var gas_id := str(gas_key)
 				var gas := database.get_chemical(gas_id)
 				if gas == null or gas.state != "gas" or not gas.virtual_simulation_enabled:
 					return "The session refers to an unsupported virtual gas '%s'." % gas_id
 				var moles: Variant = raw_gases[gas_key]
-				if not _is_finite_number(moles) or float(moles) <= 0.0 or float(moles) > 0.01:
+				if not _is_finite_number(moles) or float(moles) <= 0.0 or float(moles) > max_gas_moles:
 					return "A saved virtual gas amount is invalid."
 				gas_total += float(moles)
 			if typeof(vessel.get("is_closed_system", false)) != TYPE_BOOL:
@@ -278,6 +281,23 @@ static func _is_whole_number(value: Variant) -> bool:
 	if not _is_finite_number(value):
 		return false
 	return is_equal_approx(float(value), roundf(float(value)))
+
+
+## A chemical belongs in a ledger bucket of its own state, or of another phase its thermal profile
+## defines: molten zinc is a liquid entry although "zinc" is a solid, and frozen ethanol a solid one.
+static func _fits_phase_bucket(chemical: ChemicalDefinition, bucket: String) -> bool:
+	var wanted := "liquid" if bucket == "liquids" else "solid"
+	if chemical.state == wanted:
+		return true
+	var profile := chemical.thermal
+	return profile != null and profile.can_melt() and profile.id_for_phase(wanted) == chemical.id
+
+
+static func _is_known_binary_system(database: ContentDatabase, system_id: String) -> bool:
+	for system_value in database.binary_systems:
+		if (system_value as BinaryMeltSystem).id == system_id:
+			return true
+	return false
 
 
 static func _is_finite_number(value: Variant) -> bool:
